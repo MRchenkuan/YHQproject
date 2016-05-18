@@ -67,7 +67,7 @@ function getImgPath($path){
 </div>
 
 
-<!--各种面板 home-->
+<!--面板 home-->
 <div id="home" class="contentBoard currentboard">
     <div id="slider"
          style="height: 450px;width: 1024px;margin: 0 auto;font-family:'Arial','Times New Roman', Times, serif;color: grey ">
@@ -82,8 +82,12 @@ function getImgPath($path){
     </div>
 </div>
 
-<!--各种面板 contact-->
-<introduce id="contact" class="contentBoard" style="font-family:'微软雅黑',Arial,'黑体';color: #202020">
+
+
+
+
+<!--面板 contact-->
+<div id="contact" class="contentBoard" style="font-family:'微软雅黑',Arial,'黑体';color: #202020">
     <div id="contact-frame" style="height: 350px;width: 1024px;margin: 20px auto;">
         <img src="img/contact/1.jpg" alt="" style="height: 350px;"/>
 
@@ -129,20 +133,26 @@ function getImgPath($path){
             </div>
         </div>
     </div>
-</introduce>
+</div>
 
-<!--各种面板 相册-->
+
+
+
+
+
+
+<!--面板 相册-->
 <div id="photos" class="contentBoard">
     <span id="leftward" style="background:url('img/ui/left.png');background-size: contain"> </span>
     <span id="rightward" style="background:url('img/ui/right.png');background-size: contain"> </span>
 
     <div id="photos_nav">
         <ul>
-            <li id="prewedding"><a href="javascript:void(0);">PREWEDDING</a></li>
-            <li id="wedding"><a href="javascript:void(0);">WEDDING</a></li>
-            <li id="boysandgirls"><a href="javascript:void(0);">BOYS&GIRLS</a></li>
-            <li id='childrenandfamily'><a href="javascript:void(0);">KIDS&FAMILY</a></li>
-            <li id='street'><a href="javascript:void(0);">STREET</a></li>
+            <li id="prewedding"><a href="javascript:void(0);">订婚</a></li>
+            <li id="wedding"><a href="javascript:void(0);">婚礼</a></li>
+            <li id="boysandgirls"><a href="javascript:void(0);">人物写真</a></li>
+            <li id='childrenandfamily'><a href="javascript:void(0);">全家福</a></li>
+            <li id='street'><a href="javascript:void(0);">街拍</a></li>
         </ul>
     </div>
     <div id="photos_frame">
@@ -156,14 +166,20 @@ function getImgPath($path){
     <div style="background: #efa;margin: 0 auto;width: 60%;height: 500px;"></div>
 </div>
 
-<!--底部部分-->
+
+
+
+
+
+<!--底部-->
 <div id="fot"><span>Copyright ©2014 Terryyhq.com Powered By Adol Version 1.0.0 - <a href="http://www.miitbeian.gov.cn/">湘ICP备:24320053609</a></span></div>
 </body>
+
+
 
 <script src="js/jquery.customer.slider.js"></script>
 <script src="js/jquery.customer.board_switch.js"></script>
 <script src="js/jquery.customer.photo_wall.js"></script>
-
 <script>
 //<!--图片地址的数据结构-->
 var ImagePool = {

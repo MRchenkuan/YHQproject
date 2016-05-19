@@ -2,7 +2,7 @@
 <mapper>
     <!--根据相册分类ID查询相册 包括cover-->
     <select id="getAlbumsByGroupId" >
-        select *,(SELECT p.`PATH` FROM T_PHOTO p WHERE p.`id` = a.cover) COVER from T_ALBUM a where a.GROUP = 1;
+        select *,(SELECT p.`PATH` FROM T_PHOTO p WHERE p.`id` = a.cover) COVER from T_ALBUM a where a.GROUP = 1 order by a.order;
     </select>
 
 

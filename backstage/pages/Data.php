@@ -11,11 +11,9 @@ $DATABASEURL = DATA_TABLE_DIR.'T_TABLE_ADVTS.xml';
 /**
  * 引入数据库
  */
-
-
-require_once($_SERVER['DOCUMENT_ROOT']."/backstage/DO/DAO/photoAlbumDAO.php");
-require_once($_SERVER['DOCUMENT_ROOT']."/backstage/DO/DAO/photoAlbumDAO.php");
-require_once($_SERVER['DOCUMENT_ROOT']."/backstage/DO/DAO/photosDAO.php");
+require_once(DATABASE_DAO_DIR."photoAlbumDAO.php");
+require_once(DATABASE_DAO_DIR."newsDAO.php");
+require_once(DATABASE_DAO_DIR."photosDAO.php");
 
 /*****************************************************
  *
@@ -53,10 +51,8 @@ $config[$APIID]();
  */
 function getAlbumsByGroupId(){
 
-    echo 1;
     $groupId = $_GET['groupId'];
     $db = new photoAlbumDAO();
-    echo 2;
     echo json_encode($db->getAlbumsByGroupId($groupId));
 }
 

@@ -244,9 +244,17 @@ $(document).ready(function () {
     $('#prewedding').click(function () {
 
         $.ajax({
-           url:"",
+            url:"./backstage/pages/Data.php?id=getAlbumsByGroupId&groupId=1",
+            method:"GET",
+            success:function (e) {
+                var albums = [];
+                JSON.parse(e).some(function (it,id,ar) {
+                    albums.push(it['COVER'])
+                });
+                photosframe = $('#photos_frame').imagesInject(albums)
+            }
         });
-        photosframe = $('#photos_frame').imagesInject(ImagePool.prewedding)
+
     });
 
     $('#wedding').click(function () {

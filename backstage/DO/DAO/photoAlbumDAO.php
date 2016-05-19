@@ -21,9 +21,8 @@ class photoAlbumDAO extends DBC{
      */
     function getAlbumsByGroupId($id)
     {
-        echo 12;
         $rs = $this->getResult(__FUNCTION__,array('id'=>$id));
-        $row = $rs->fetch();
+        $row = $rs->fetchAll(PDO::FETCH_ASSOC);
         return $row;
     }
 

@@ -15,9 +15,16 @@ class DBC{
         $USERNAME = $DB['USERNAME'];
         $PASSWORD = $DB['PASSWORD'];
         $PORT = $DB['PORT'];
+
         $dsn = $TYPE.":host=".$HOST.";port=".$PORT.";dbname=".$NAME;
 
-        $this->pdo = new PDO($dsn, $USERNAME, $PASSWORD);
+        try{
+            $this->pdo = new PDO($dsn, $USERNAME, $PASSWORD);
+        }catch (Exception $e){
+            var_dump($e);
+        }
+
+
         $this->DAO = simplexml_load_file(DATABASE_DAO_DIR . $DAONAME.'.xml');
     }
 

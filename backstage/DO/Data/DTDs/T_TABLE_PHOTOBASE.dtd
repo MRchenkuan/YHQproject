@@ -1,0 +1,10 @@
+<!ELEMENT database (item+)>
+        <!ELEMENT item EMPTY>
+        <!ATTLIST database NOWID #REQUIRED>
+        <!ATTLIST item id #REQUIRED>
+        <!ATTLIST item albumid #IMPLIED>
+        <!ATTLIST item stat #IMPLIED>
+        <!ATTLIST item remark #IMPLIED>
+        <!ATTLIST item imgsrc #IMPLIED>
+        <!ATTLIST item pubdata #IMPLIED>
+        <!ATTLIST item count #IMPLIED>

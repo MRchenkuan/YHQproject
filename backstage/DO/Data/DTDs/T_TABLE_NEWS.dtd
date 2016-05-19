@@ -1,0 +1,11 @@
+<!ELEMENT database (item+)>
+        <!ELEMENT item EMPTY>
+        <!ATTLIST database NOWID #REQUIRED>
+        <!ATTLIST item id #REQUIRED>
+        <!ATTLIST item text #IMPLIED>
+        <!ATTLIST item stat #IMPLIED>
+        <!ATTLIST item title #IMPLIED>
+        <!ATTLIST item cover #IMPLIED>
+        <!ATTLIST item auth #IMPLIED>
+        <!ATTLIST item origin #IMPLIED>
+        <!ATTLIST item pubdata #IMPLIED>

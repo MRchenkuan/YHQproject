@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE database SYSTEM "T_TABLE_PHOTO_ALBUM.dtd">
+<database NOWID="31">
+    <item id="0" stat="disable" remark="系统相册:未分类" editable="0" count="31" pubdata="2015-06-12T10:19"/>
+    <item id="13" stat="disable" remark="系统相册:A" editable="0" count="4" pubdata="2015-06-12T10:19"/>
+    <item id="14" stat="disable" remark="系统相册:B" editable="0" count="8" pubdata="2015-06-12T10:19"/>
+    <item id="15" stat="disable" remark="系统相册:C" editable="0" count="1" pubdata="2015-06-12T10:19"/>
+    <item id="16" stat="disable" remark="系统相册:D" editable="0" count="0" pubdata="2015-06-12T10:19"/>
+    
+<item id="28" stat="disable" remark="生活-摄影" editable="1" count="2" pubdata="2015-06-25T06:13"/><item id="29" stat="disable" remark="旅行" editable="1" count="1" pubdata="2015-06-25T08:51"/></database>

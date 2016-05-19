@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper>
+    <!--根据相册分类ID查询相册 包括cover-->
+    <select id="getAlbumsByGroupId" >
+        select *,(SELECT p.`PATH` FROM T_PHOTO p WHERE p.`id` = a.cover) COVER from T_ALBUM a where a.GROUP = 1;
+    </select>
+
+
+
+
+    <!--根据ID查询相册信息-->
+    <select id="getAlbumInfoById" >
+        select * from T_TABLE_PHOTO_ALBUM a where a.id = #{id};
+    </select>
+
+    <!--根据ID查询所有照片-->
+    <select id="getPhotoInfoByAlbumId" >
+        select * from T_TABLE_PHOTOS a where a.albumid = #{id};
+    </select>
+
+    <!-- 得到所有相册 -->
+    <select id="getAllAlbums" >
+        select * from T_TABLE_PHOTO_ALBUM limit #{count};
+    </select>
+
+    <!-- 根据id更新相册信息 -->
+    <update id="updateAlbumById" >
+        replace into T_TABLE_PHOTO_ALBUM(#{colname}) VALUES(#{value});
+    </update>
+
+</mapper>

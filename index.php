@@ -87,7 +87,7 @@ function getImgPath($path){
 
 
 <!--面板 contact-->
-<div id="contact" class="contentBoard" style="font-family:'微软雅黑',Arial,'黑体';color: #202020">
+<div id="contact" class="contentBoard">
     <div id="contact-frame" style="height: 350px;width: 1024px;margin: 20px auto;">
         <img src="img/contact/1.jpg" alt="" style="height: 350px;"/>
 
@@ -242,6 +242,10 @@ $(document).ready(function () {
 
 //    注册各个按钮点击事件
     $('#prewedding').click(function () {
+
+        $.ajax({
+           url:"",
+        });
         photosframe = $('#photos_frame').imagesInject(ImagePool.prewedding)
     });
 

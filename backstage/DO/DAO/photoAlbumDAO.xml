@@ -5,6 +5,19 @@
         select *,(SELECT p.`PATH` FROM T_PHOTO p WHERE p.`id` = a.cover) COVER from T_ALBUM a where a.GROUP = 1 order by a.order;
     </select>
 
+    <!--获取相册groupId-->
+    <select id="getGroupList" >
+        select * from T_GROUP order by `ORDER`;
+    </select>
+
+    <!--获取网站封面-->
+    <select id="getCoverList" >
+        select
+        LINK,
+        (select p.PATH from T_PHOTO p where p.id=c.cover) PATH
+        from T_COVER c order by `ORDER`;
+    </select>
+
 
 
 

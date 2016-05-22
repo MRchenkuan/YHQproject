@@ -15,6 +15,28 @@ class photoAlbumDAO extends DBC{
     }
 
     /**
+     * 获取网站封面
+     */
+    public function getCoverList()
+    {
+        $rs = $this->getResult(__FUNCTION__);
+        $row = $rs->fetchAll(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+    /**
+     * 获取groupList
+     */
+    public function getGroupList()
+    {
+        $rs = $this->getResult(__FUNCTION__);
+        $row = $rs->fetchAll(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+
+
+    /**
      * 根据相册分类查找所有相册
      * @param $id
      * @return mixed
@@ -91,6 +113,8 @@ class photoAlbumDAO extends DBC{
         $info['id'] = $id;
         $this->updateAlbumById($id,$info);
     }
+
+
 
 }
 //

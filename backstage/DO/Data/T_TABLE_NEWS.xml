@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE database SYSTEM "T_TABLE_NEWS.dtd">
+<database NOWID="17">
+<item id="1" stat="" title="2013年湖南卫视大型广告活动招标顺风再创佳绩" auth="顺风传媒" origin="" pubdata="2013-03-20T12:59" text="./news/20151219/1450512308.news" cover="./images/20151221/1450661314.jpg"/>
+<item id="2" stat="" title="2013年《快乐男声》广告招标，顺风传媒再传佳讯" auth="顺风传媒" origin="" pubdata="2013-06-08T12:59" text="./news/20151221/1450666869.news" cover="./image/20151221/1450666778.jpg"/>
+<item id="3" stat="" title="2013年半年活动——《变形记》在张家界顺利举行" auth="顺风传媒" origin="" pubdata="2013-05-31T12:59" text="./news/20151221/1450667925.news" cover="./image/20151221/1450667869.jpg"/>
+<item id="4" stat="" title="2013大型公益活动《加油吧！湘菜》正式启动" auth="顺风传媒" origin="" pubdata="2013-06-28T12:59" text="./news/20151221/1450668310.news" cover="./image/20151221/1450668127.jpg"/>
+<item id="5" stat="" title="2014《策神集结令》活动正式启动" auth="顺风传媒" origin="" pubdata="2014-05-31T12:59" text="./news/20151221/1450670741.news" cover="./image/20151221/1450670701.jpg"/>
+<item id="6" stat="" title="2014湖南卫视《爸爸去哪2》招标" auth="顺风传媒" origin="" pubdata="2014-12-31T12:59" text="./news/20151221/1450678101.news" cover="./image/20151221/1450677960.jpg"/>
+<item id="7" stat="" title="2014美品快付－打造中国美妆行业“快的”平台" auth="顺风传媒" origin="" pubdata="2014-11-02T12:59" text="./news/20151221/1450678232.news" cover="./image/20151221/1450688126.jpg"/>
+<item id="8" stat="" title="2015走起来更青春！顺风传媒五四青年节运动会" auth="顺风传媒" origin="" pubdata="2015-05-04T12:59" text="./news/20151221/1450678834.news" cover="./image/20151221/1450679730.jpg"/>
+<item id="10" stat="" title=" 2015湖南卫视《爸爸去哪儿3》招标会议" auth="顺风传媒" origin="" pubdata="2015-11-22T12:59" text="./news/20151221/1450679687.news" cover="./image/20151221/1450679707.jpg"/>
+<item id="11" stat="" title="2015浙江卫视《奔跑吧兄弟第三季》招标" auth="顺风传媒" origin="" pubdata="2015-10-31T12:59" text="./news/20151221/1450679969.news" cover="./image/20151221/1450680039.jpg"/>
+<item id="12" stat="" title="2015顺风传媒正式宣布与盛美广告合并" auth="顺风传媒" origin="" pubdata="2015-10-24T12:59" text="./news/20151221/1450680195.news" cover="./image/20151221/1450680265.jpg"/>
+<item id="13" stat="" title="2015 加速中，更青春——顺风传媒再次荣获“湖南卫视十大代理公司" auth="站长" origin="原创" pubdata="2015-11-04T17:25" text="./news/20151225/1451034282.news" cover="./image/20151225/1451033744.jpg"/><item id="15" stat="" title="2016釜山国际广告节参访团来访顺风盛美传媒" auth="顺风盛美" origin="策划部" pubdata="2016-03-04T04:33" text="./news/20160304/1457078095.news" cover="./image/20160304/1457082594.jpg"/></database>

@@ -1,0 +1,11 @@
+<!ELEMENT database (item+)>
+<!ELEMENT item EMPTY>
+<!ATTLIST database NOWID #REQUIRED>
+<!ATTLIST item id #REQUIRED>
+<!ATTLIST item order #REQUIRED>
+<!ATTLIST item stat #REQUIRED>
+<!ATTLIST item title #REQUIRED>
+<!ATTLIST item imgsrc #REQUIRED>
+<!ATTLIST item update #REQUIRED>
+<!ATTLIST item dndate #REQUIRED>
+<!ATTLIST item remark #IMPLIED>

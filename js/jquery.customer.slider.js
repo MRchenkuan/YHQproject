@@ -78,8 +78,10 @@
     };
 
     $.fn.buildSlider = function () {
-        frameWidth = $(this).width();
-        frameHeight = $(this).height();
+        frameWidth = $(this).innerWidth();
+        frameHeight = $(this).innerHeight();
+        console.log(frameHeight);
+        setTimeout(function(){console.log($(document.getElementById("slider")).innerHeight())},1000);
         opt = $.extend(defaults, arguments[0] || '');
         var frame = this;
         var $frame = $(frame);
@@ -87,7 +89,7 @@
         divCount = $contentDivs.length;
         // 框架设置为相对位置,容器为绝对位置
         $frame.css({
-            'position': 'relative'
+            //'position': 'abso'
         });
         $contentDivs.css({
             'position': 'absolute'

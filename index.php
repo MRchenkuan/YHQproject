@@ -53,7 +53,7 @@ require_once "functions.php";
 <div id="boards">
     <!--面板 home-->
     <div id="home" class="contentBoard currentboard">
-        <div id="slider" style="width: 80%;height: 80%;  margin: 0 auto;">
+        <div id="slider" style="width: 100%;height:100%;border: 1px solid grey;position: relative">
             <!--封面-->
             <?php
             $coverList = getCoverList();
@@ -64,7 +64,7 @@ require_once "functions.php";
     </div>
 
     <!--面板 相册-->
-    <div id="photos" class="contentBoard"  style="border: 1px dashed grey">
+    <div id="photos" class="contentBoard"  style="border: 1px dashed grey;">
         <div id="photos_nav">
             <ul>
                 <!--导航条-->
@@ -72,7 +72,7 @@ require_once "functions.php";
                 $groupList = getGroupList();
                 foreach($groupList as $item){
                     $item['NAME'];
-                    echo "<li class=\"groups\" data-group=\"".$item['id']."\"><a href=\"javascript:void(0);\">".$item['NAME']."</a></li>";
+                    echo "<li class=\"groups\" data-group=\"".$item['id']."\">".$item['NAME']."</li>";
                 } ?>
             </ul>
         </div>
@@ -173,12 +173,14 @@ require_once "functions.php";
 var photosframe;
 $(document).ready(function () {
     //    首页出现
-    $('.contentBoard').eq(0).moveDownIn(1000);
+    $('.contentBoard').eq(0).moveDownIn(1000).queue(function(){
+        var slider = $('#slider').buildSlider();
+        setInterval(function () {
+            slider.slidernext()
+        }, 2000);
+    });
 
-    var slider = $('#slider').buildSlider();
-    setInterval(function () {
-        slider.slidernext()
-    }, 2000);
+
 
     boxjumping(document.getElementById('menu_home'), '20px', function () {
         boxjumping(document.getElementById('menu_photos'), '20px', function () {
@@ -220,10 +222,12 @@ $(document).ready(function () {
         var currentElem = $('.currentboard');
         if (currentElem.is(":animated"))return;
         //  滑出板块
-        currentElem.moveDownOut(500);
-        targetElem.moveDownIn(1000);
-        targetElem.addClass("currentboard");
-        currentElem.removeClass("currentboard");
+        currentElem.moveDownOut(500).queue(function(){
+            targetElem.moveDownIn(1000);
+            targetElem.addClass("currentboard");
+            currentElem.removeClass("currentboard");
+        });
+
     });
 });
 

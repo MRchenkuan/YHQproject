@@ -72,7 +72,7 @@ require_once "functions.php";
                 $groupList = getGroupList();
                 foreach($groupList as $item){
                     $item['NAME'];
-                    echo "<li class=\"groups\" data-group=\"".$item['id']."\">".$item['NAME']."</li>";
+                    echo "<li class=\"groups\" data-group=\"".$item['id']."\"><a href=\"javascript:void(0);\">".$item['NAME']."</a></li>";
                 } ?>
             </ul>
         </div>

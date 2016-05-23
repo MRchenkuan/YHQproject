@@ -116,10 +116,10 @@ a {
     list-style: none;
 }
 
-/*#photos_nav ul li a {*/
-    /*color: grey;*/
-    /*padding: 3px;*/
-/*}*/
+#photos_nav ul li a {
+    color: grey;
+    padding: 3px;
+}
 
 #photos_nav ul li a:hover {
     color: #202020;

@@ -78,17 +78,14 @@
     };
 
     $.fn.buildSlider = function () {
-        frameWidth = $(this).innerWidth();
-        frameHeight = $(this).innerHeight();
-        console.log(frameHeight);
-        setTimeout(function(){console.log($(document.getElementById("slider")).innerHeight())},1000);
+        var $this =$(this);
+        frameWidth = $this.width();
+        frameHeight = $this.height();
         opt = $.extend(defaults, arguments[0] || '');
-        var frame = this;
-        var $frame = $(frame);
-        $contentDivs = $frame.find('div');
+        $contentDivs = $this.find('div');
         divCount = $contentDivs.length;
         // 框架设置为相对位置,容器为绝对位置
-        $frame.css({
+        $this.css({
             //'position': 'abso'
         });
         $contentDivs.css({

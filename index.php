@@ -53,7 +53,7 @@ require_once "functions.php";
 <div id="boards">
     <!--面板 home-->
     <div id="home" class="contentBoard currentboard">
-        <div id="slider" style="border: 1px solid grey">
+        <div id="slider" style="border: 1px solid grey ;position:relative;width: 100%;height: 100%">
             <!--封面-->
             <?php
             $coverList = getCoverList();
@@ -83,52 +83,53 @@ require_once "functions.php";
 
 
     <!--面板 contact-->
-    <div id="contact" class="contentBoard">
-        <div id="contact-frame" style="height: 350px;width: 1024px;margin: 20px auto;">
-            <img src="img/contact/1.jpg" alt="" style="height: 350px;"/>
-
-            <div style="height:350px;width:530px;float: right;position: relative">
-                <div style="height: 220px;border-bottom: 1px solid grey">
-                    <span style="display: block">About</span>
-
-                    <div class='abouttext' style="width: 180px;">
-                        <br>
-                        喻虎奇 我是一名摄影师。<br>
-                        我拍摄不同题材的照片。<br>
-                        我的拍摄对象大多是普通人。<br>
-                        我追求真实自然精致的画面。<br>
-                        我认为照片承载的是一段记忆，<br>
-                        是一种情感表达，<br>
-                        更是一个意犹未尽的故事……<br>
-                        期待遇见有故事的你！<br>
-                    </div>
-                    <div class='abouttext' style="width: 348px;">
-                        <br>
-                        Terry Yu<br>
-                        I am a photographer.<br>
-                        I shoot different kinds of photos.<br>
-                        My customers are mostly ordinary people.<br>
-                        I pursue the pictures which are true, natural and exquisite.<br>
-                        I consider that a photo is like a kind of memory,<br>
-                        a kind of emotion and a boundless story.<br>
-                        I am looking forward to meeting you and your story.<br>
-                        <br>
-                    </div>
-                </div>
-                <div style="position: absolute;bottom: 0">
-                    <div class="erweima"><span>Wechat</span><img src="img/contact/2.png"></div>
-                    <div class="erweima"><span>Weibo</span><img src="img/contact/3.png"></div>
-                    <div class="erweima" style="height: 123px;width: 240px;">
-                        <span></span>
-                        wechat: terryyhq<br>
-                        QQ：444010958<br>
-                        Weibo: weibo.com/terryyhq<br>
-                        Email: 444010958@qq.com<br>
-                        Instagram: terryyhq
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div id="contact" class="contentBoard" style="border: 1px dashed grey;">
+        fdsafdsafdsafdsafdsfds
+<!--        <div id="contact-frame" style="height: 350px;width: 1024px;margin: 20px auto;">-->
+<!--            <img src="img/contact/1.jpg" alt="" style="height: 350px;"/>-->
+<!---->
+<!--            <div style="height:350px;width:530px;float: right;position: relative">-->
+<!--                <div style="height: 220px;border-bottom: 1px solid grey">-->
+<!--                    <span style="display: block">About</span>-->
+<!---->
+<!--                    <div class='abouttext' style="width: 180px;">-->
+<!--                        <br>-->
+<!--                        喻虎奇 我是一名摄影师。<br>-->
+<!--                        我拍摄不同题材的照片。<br>-->
+<!--                        我的拍摄对象大多是普通人。<br>-->
+<!--                        我追求真实自然精致的画面。<br>-->
+<!--                        我认为照片承载的是一段记忆，<br>-->
+<!--                        是一种情感表达，<br>-->
+<!--                        更是一个意犹未尽的故事……<br>-->
+<!--                        期待遇见有故事的你！<br>-->
+<!--                    </div>-->
+<!--                    <div class='abouttext' style="width: 348px;">-->
+<!--                        <br>-->
+<!--                        Terry Yu<br>-->
+<!--                        I am a photographer.<br>-->
+<!--                        I shoot different kinds of photos.<br>-->
+<!--                        My customers are mostly ordinary people.<br>-->
+<!--                        I pursue the pictures which are true, natural and exquisite.<br>-->
+<!--                        I consider that a photo is like a kind of memory,<br>-->
+<!--                        a kind of emotion and a boundless story.<br>-->
+<!--                        I am looking forward to meeting you and your story.<br>-->
+<!--                        <br>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div style="position: absolute;bottom: 0">-->
+<!--                    <div class="erweima"><span>Wechat</span><img src="img/contact/2.png"></div>-->
+<!--                    <div class="erweima"><span>Weibo</span><img src="img/contact/3.png"></div>-->
+<!--                    <div class="erweima" style="height: 123px;width: 240px;">-->
+<!--                        <span></span>-->
+<!--                        wechat: terryyhq<br>-->
+<!--                        QQ：444010958<br>-->
+<!--                        Weibo: weibo.com/terryyhq<br>-->
+<!--                        Email: 444010958@qq.com<br>-->
+<!--                        Instagram: terryyhq-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 
 </div>
@@ -173,11 +174,15 @@ require_once "functions.php";
 var photosframe;
 $(document).ready(function () {
     //    首页出现
-    $('.contentBoard').eq(0).moveDownIn(1000);
-    var slider = $('#slider').buildSlider();
-    setInterval(function () {
-        slider.slidernext()
-    }, 2000);
+    $('.contentBoard').eq(0).moveDownIn(1000).queue(function(){
+        var $slider = $('#slider');
+        $slider.height("100%");
+        var slider = $slider.buildSlider();
+        setInterval(function () {
+            slider.slidernext()
+        }, 2000);
+    });
+
 
 
 
@@ -221,10 +226,11 @@ $(document).ready(function () {
         if (currentElem.is(":animated"))return;
         //  滑出板块
         currentElem.moveDownOut(500).queue(function(){
+            currentElem.removeClass("currentboard");
             targetElem.moveDownIn(1000);
-        });
-        targetElem.addClass("currentboard");
-        currentElem.removeClass("currentboard");
+            targetElem.addClass("currentboard");
+        }).dequeue();
+
 
     });
 });

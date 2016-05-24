@@ -9,7 +9,11 @@
     $.fn.moveDownIn = function (speed) {
         var target = $(this);
         // 先定位到起始位置
-        target.css({'position': 'absolute', 'top': '-' + target.height() / 2 + 'px'});
+        target.css({
+            'position': 'absolute',
+            'top': '-' + target.height() / 2 + 'px',
+            'height':target.parent().innerHeight()
+        });
         // 动画到目标位置
         target.animate({top: 0}, speed, 'easeOutExpo').dequeue().fadeIn(speed/2);
         return target

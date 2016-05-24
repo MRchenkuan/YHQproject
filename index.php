@@ -53,7 +53,7 @@ require_once "functions.php";
 <div id="boards">
     <!--面板 home-->
     <div id="home" class="contentBoard currentboard">
-        <div id="slider" style="width: 100%;height:100%;border: 1px solid grey;position: relative">
+        <div id="slider" style="border: 1px solid grey">
             <!--封面-->
             <?php
             $coverList = getCoverList();
@@ -173,12 +173,11 @@ require_once "functions.php";
 var photosframe;
 $(document).ready(function () {
     //    首页出现
-    $('.contentBoard').eq(0).moveDownIn(1000).queue(function(){
-        var slider = $('#slider').buildSlider();
-        setInterval(function () {
-            slider.slidernext()
-        }, 2000);
-    });
+    $('.contentBoard').eq(0).moveDownIn(1000);
+    var slider = $('#slider').buildSlider();
+    setInterval(function () {
+        slider.slidernext()
+    }, 2000);
 
 
 
@@ -200,7 +199,6 @@ $(document).ready(function () {
             JSON.parse(data).some(function (it,id,ar) {
                 albums.push(it['COVER'])
             });
-//            photosframe = $('#albums').imagesInject(albums)
         })
     });
 
@@ -224,9 +222,9 @@ $(document).ready(function () {
         //  滑出板块
         currentElem.moveDownOut(500).queue(function(){
             targetElem.moveDownIn(1000);
-            targetElem.addClass("currentboard");
-            currentElem.removeClass("currentboard");
         });
+        targetElem.addClass("currentboard");
+        currentElem.removeClass("currentboard");
 
     });
 });

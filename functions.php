@@ -38,3 +38,14 @@ function getCoverList(){
     $data = $data->getCoverList();
     return $data;
 }
+
+/**
+ * 获取相册列表
+ * @param $albumId
+ * @return photoAlbumDAO
+ */
+function getAlbumList($albumId){
+    $data = new photoAlbumDAO();
+    $data = $data->getAlbumList($albumId);
+    return $data;
+}

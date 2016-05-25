@@ -18,6 +18,17 @@
         from T_COVER c order by `ORDER`;
     </select>
 
+    <!--获取相册列表-->
+    <select id="getAlbumList" >
+        select
+        id,
+        (select p.PATH from T_PHOTO p where p.id=a.COVER) COVER,
+        a.NAME,
+        a.DESC,
+        a.ORDER
+        from T_ALBUM a where a.group=#{albumId} order by a.ORDER;
+    </select>
+
 
 
 

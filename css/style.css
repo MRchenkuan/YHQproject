@@ -131,6 +131,14 @@ a {
     height:8%;}
 #albums{
     height: 92%;}
+
+.album{
+    float: left;
+    border: 1px solid grey;
+    margin: 5px;
+    padding: 5px;
+}
+
 #photos_frame {
     overflow: visible;
     margin: 0 auto;

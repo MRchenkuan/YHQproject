@@ -71,13 +71,18 @@ require_once "functions.php";
                 <?php
                 $groupList = getGroupList();
                 foreach($groupList as $item){
-                    $item['NAME'];
-                    echo "<li class=\"groups\" data-group=\"".$item['id']."\"><a href=\"javascript:void(0);\">".$item['NAME']."</a></li>";
+                    echo "<li class=\"groups\" data-groupid=\"".$item['id']."\"><a href=\"javascript:void(0);\">".$item['NAME']."</a></li>";
                 } ?>
             </ul>
         </div>
         <div id="albums" style="border:1px solid grey">
-
+            <!--相册-->
+            <?php
+            $albumId = $groupList[0]['id'];
+            $albumList = getAlbumList($albumId);
+            foreach($albumList as $item){
+                echo "<div class=\"album\" data-id=\"".$item['id']."\" >".$item['COVER']."<br>".$item['NAME']."<br>".$item['DESC']."</div>";
+            } ?>
         </div>
     </div>
 
@@ -85,51 +90,7 @@ require_once "functions.php";
     <!--面板 contact-->
     <div id="contact" class="contentBoard" style="border: 1px dashed grey;">
         fdsafdsafdsafdsafdsfds
-<!--        <div id="contact-frame" style="height: 350px;width: 1024px;margin: 20px auto;">-->
-<!--            <img src="img/contact/1.jpg" alt="" style="height: 350px;"/>-->
-<!---->
-<!--            <div style="height:350px;width:530px;float: right;position: relative">-->
-<!--                <div style="height: 220px;border-bottom: 1px solid grey">-->
-<!--                    <span style="display: block">About</span>-->
-<!---->
-<!--                    <div class='abouttext' style="width: 180px;">-->
-<!--                        <br>-->
-<!--                        喻虎奇 我是一名摄影师。<br>-->
-<!--                        我拍摄不同题材的照片。<br>-->
-<!--                        我的拍摄对象大多是普通人。<br>-->
-<!--                        我追求真实自然精致的画面。<br>-->
-<!--                        我认为照片承载的是一段记忆，<br>-->
-<!--                        是一种情感表达，<br>-->
-<!--                        更是一个意犹未尽的故事……<br>-->
-<!--                        期待遇见有故事的你！<br>-->
-<!--                    </div>-->
-<!--                    <div class='abouttext' style="width: 348px;">-->
-<!--                        <br>-->
-<!--                        Terry Yu<br>-->
-<!--                        I am a photographer.<br>-->
-<!--                        I shoot different kinds of photos.<br>-->
-<!--                        My customers are mostly ordinary people.<br>-->
-<!--                        I pursue the pictures which are true, natural and exquisite.<br>-->
-<!--                        I consider that a photo is like a kind of memory,<br>-->
-<!--                        a kind of emotion and a boundless story.<br>-->
-<!--                        I am looking forward to meeting you and your story.<br>-->
-<!--                        <br>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div style="position: absolute;bottom: 0">-->
-<!--                    <div class="erweima"><span>Wechat</span><img src="img/contact/2.png"></div>-->
-<!--                    <div class="erweima"><span>Weibo</span><img src="img/contact/3.png"></div>-->
-<!--                    <div class="erweima" style="height: 123px;width: 240px;">-->
-<!--                        <span></span>-->
-<!--                        wechat: terryyhq<br>-->
-<!--                        QQ：444010958<br>-->
-<!--                        Weibo: weibo.com/terryyhq<br>-->
-<!--                        Email: 444010958@qq.com<br>-->
-<!--                        Instagram: terryyhq-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
+
     </div>
 
 </div>
@@ -146,29 +107,19 @@ require_once "functions.php";
 <script src="js/jquery.customer.ajax_maneger.js"></script>
 <script>
 
-
-//var ImagePool = {
-//    prewedding: [
-//        <?php //echo getImgPath('img20141010/1prewedding');?>//,
-//        <?php //echo getImgPath('1prewedding');?>
-//        ],
-//    wedding: [
-//        <?php //echo getImgPath('img20141010/2wedding');?>//,
-//        <?php //echo getImgPath('2wedding');?>
-//        ],
-//    boysandgirls: [
-//        <?php //echo getImgPath('img20141010/3boysNgirls');?>//,
-//        <?php //echo getImgPath('3boysNgirls');?>
-//        ],
-//    childrenandfamily: [
-//        <?php //echo getImgPath('img20141010/4childrenNfamily');?>//,
-//        <?php //echo getImgPath('4childrenNfamily');?>
-//        ],
-//    street: [
-//        <?php //echo getImgPath('img20141010/5street');?>//,
-//        <?php //echo getImgPath('5street');?>
-//        ]
-//};
+    var albumPool =
+        <?php
+        $allGroup = array();
+        foreach($groupList as $item){
+            $oneGroup = array(
+                "name"=>$item['NAME'],
+                "list"=>getAlbumList($item['id'])
+            );
+            $allGroup[$item['id']] = $oneGroup;
+        }
+        echo json_encode($allGroup);
+        ?>
+    ;
 
 //文档加载入口
 var photosframe;
@@ -186,6 +137,7 @@ $(document).ready(function () {
 
 
 
+
     boxjumping(document.getElementById('menu_home'), '20px', function () {
         boxjumping(document.getElementById('menu_photos'), '20px', function () {
             boxjumping(document.getElementById('menu_contact'), '20px', function () {
@@ -197,26 +149,18 @@ $(document).ready(function () {
 
 //    注册各个分组按钮点击事件
     $('.groups').click(function () {
-        var group_id = this.getAttribute("data-group");
-        console.log(group_id);
-        getAlbumsByGroupId(group_id,function(data){
-            var albums = [];
-            JSON.parse(data).some(function (it,id,ar) {
-                albums.push(it['COVER'])
-            });
-        })
+        var group_id = this.getAttribute("data-groupid");
+        var albumList = albumPool[group_id]['list'];
+        var innerHtml = "";
+        for(var i=0;i<albumList.length;i++){
+            innerHtml += "<div class='album' data-id='"+albumList[i]['id']+"' >"+albumList[i]['NAME']+"</div>"
+        }
+        $("#albums").html(innerHtml);
     });
 
-//
-//    $('#leftward').click(function () {
-//        photosframe.moveLeft();
-//    });
-//    $('#rightward').click(function () {
-//        photosframe.moveRight();
-//    });
 
 
-//  注册主菜单点击事件
+    //  注册主菜单点击事件
     $("#index_nav>ul>li").click(function(){
         var id = $(this).attr('data-tar');
         //  滑下当前board

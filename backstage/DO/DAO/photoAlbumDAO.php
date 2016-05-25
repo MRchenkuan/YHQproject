@@ -34,6 +34,19 @@ class photoAlbumDAO extends DBC{
         return $row;
     }
 
+    /**
+     * 根据相册id获取相册列表
+     * @param $albumId 相册ID
+     * @return 返回结果
+     */
+    public function getAlbumList($albumId)
+    {
+        $rs = $this->getResult(__FUNCTION__,array('albumId'=>$albumId));
+        $row = $rs->fetchAll(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+
 
 
     /**
@@ -86,7 +99,6 @@ class photoAlbumDAO extends DBC{
 
     /**
      * 更新相册
-     * @param $id
      * @param $info
      * @return mixed
      */
@@ -111,10 +123,8 @@ class photoAlbumDAO extends DBC{
      */
     public function updateItem($id, $info){
         $info['id'] = $id;
-        $this->updateAlbumById($id,$info);
+        $this->updateAlbumById($info);
     }
-
-
 
 }
 //

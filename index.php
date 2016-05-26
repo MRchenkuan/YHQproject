@@ -81,7 +81,7 @@ require_once "functions.php";
             $albumId = $groupList[0]['id'];
             $albumList = getAlbumList($albumId);
             foreach($albumList as $item){
-                echo "<div class=\"album\" data-id=\"".$item['id']."\" >".$item['COVER']."<br>".$item['NAME']."<br>".$item['DESC']."</div>";
+                echo "<div class=\"album\" data-id=\"".$item['id']."\" data-cover='".$item['COVER']."' >".$item['COVER']."<br>".$item['NAME']."<br>".$item['DESC']."</div>";
             } ?>
         </div>
     </div>
@@ -134,10 +134,6 @@ $(document).ready(function () {
         }, 2000);
     });
 
-
-
-
-
     boxjumping(document.getElementById('menu_home'), '20px', function () {
         boxjumping(document.getElementById('menu_photos'), '20px', function () {
             boxjumping(document.getElementById('menu_contact'), '20px', function () {
@@ -147,15 +143,16 @@ $(document).ready(function () {
         });
     });
 
-//    注册各个分组按钮点击事件
+    // 注册各个分组按钮点击事件
     $('.groups').click(function () {
         var group_id = this.getAttribute("data-groupid");
         var albumList = albumPool[group_id]['list'];
         var innerHtml = "";
         for(var i=0;i<albumList.length;i++){
-            innerHtml += "<div class='album' data-id='"+albumList[i]['id']+"' >"+albumList[i]['NAME']+"</div>"
+            innerHtml += "<div class='album' data-id='"+albumList[i]['id']+"' data-cover='"+albumList[i]['COVER']+"' >"+albumList[i]['NAME']+"</div>"
         }
         $("#albums").html(innerHtml);
+        $("#albums").resizeAlbumsSize();
     });
 
 
@@ -173,10 +170,50 @@ $(document).ready(function () {
             currentElem.removeClass("currentboard");
             targetElem.moveDownIn(1000);
             targetElem.addClass("currentboard");
+            $("#albums").resizeAlbumsSize();
         }).dequeue();
-
-
     });
+
+    // 计算相册图片大小和位置
+    $.fn.resizeAlbumsSize = function(){
+        var $this = $(this);
+        // 计算相册和相册容器宽高
+        var verticalCount = 3;
+        var aspectRatio = 16/9;
+        var frameHeight =$this.height();
+        console.log(frameHeight);
+        var albumFullHeight =frameHeight*(1/verticalCount);
+        var albumFullWidth = albumFullHeight*aspectRatio;
+        var albumHeight = albumFullHeight*.95;//根据竖向个数计算相册高度-除去边距
+        var albumWidth = albumFullWidth*.95;
+        var $innerAlbums = $this.find('.album');
+        // 设置相册容器宽度和滚动
+        $this.css({
+            position:"relative",
+            minWidth:"100%",
+//            width:albumFullWidth*Math.ceil($innerAlbums.length/verticalCount)+10,
+            overflowY:"hidden",
+            overflowX:"auto"
+        });
+
+        // 设置相册的大小/位置/背景图
+        $innerAlbums.each(function(index,ele){
+            var $$this =$(ele);
+            var position = {// x:0-n,y:0-3
+                y:index%verticalCount,
+                x:Math.ceil((index+1)/verticalCount)-1
+            };
+            $$this.css({
+                position:"absolute",
+                opacity:1,
+                height:albumHeight,
+                width:albumWidth,
+                top:position.y*albumFullHeight,
+                left:position.x*albumFullWidth,
+                backgroundImage:"url("+$$this.attr('data-cover')+")"
+            });
+        });
+    };
 });
 
 
@@ -195,6 +232,7 @@ function boxjumping(elem, distance, callback) {
         top: "+=" + distance
     }, 600, 'easeInOutQuad');
 }
+
 
 //定义左右动画
 </script>

@@ -130,13 +130,17 @@ a {
 #photos_nav{
     height:8%;}
 #albums{
-    height: 92%;}
+    height: 92%;
+    position: relative;
+}
 
 .album{
     float: left;
     border: 1px solid grey;
-    margin: 5px;
-    padding: 5px;
+    background: no-repeat center;
+    background-size: cover;
+    transition: all .5s ease;
+    opacity: 0;
 }
 
 #photos_frame {

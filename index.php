@@ -57,8 +57,12 @@ require_once "functions.php";
             <!--封面-->
             <?php
             $coverList = getCoverList();
-            foreach($coverList as $item){
-                echo "<div class=\"sliderImg\" data-rdrt=\"".$item['LINK']."\" style=\"background-image: url('".$item['PATH']."');\"></div>";
+            try{
+                foreach($coverList as $item){
+                    echo "<div class=\"sliderImg\" data-rdrt=\"".$item['LINK']."\" style=\"background-image: url('".$item['PATH']."');\"></div>";
+                }
+            }catch (Exception $e){
+                var_dump($e->getTrace());
             } ?>
         </div>
     </div>
@@ -70,19 +74,28 @@ require_once "functions.php";
                 <!--导航条-->
                 <?php
                 $groupList = getGroupList();
-                foreach($groupList as $item){
-                    echo "<li class=\"groups\" data-groupid=\"".$item['id']."\"><a href=\"javascript:void(0);\">".$item['NAME']."</a></li>";
+                try{
+                    foreach($groupList as $item) {
+                        echo "<li class=\"groups\" data-groupid=\"" . $item['id'] . "\"><a href=\"javascript:void(0);\">" . $item['NAME'] . "</a></li>";
+                    }
+                }catch (Exception $e){
+                    var_dump($e->getTrace());
                 } ?>
             </ul>
         </div>
         <div id="albums" style="border:1px solid grey">
             <!--相册-->
             <?php
-            $groupId = $groupList[0]['id'];
-            $albumList = getAlbumList($groupId);
-            foreach($albumList as $item){
-                echo "<div class=\"album\" data-id=\"".$item['id']."\" data-cover='".$item['COVER']."' >".$item['COVER']."<br>".$item['NAME']."<br>".$item['DESC']."<div class='cover'></div></div>";
-            } ?>
+            try{
+                $groupId = $groupList[0]['id'];
+                $albumList = getAlbumList($groupId);
+                foreach($albumList as $item){
+                    echo "<div class=\"album\" data-id=\"".$item['id']."\" data-cover='".$item['COVER']."' >".$item['COVER']."<br>".$item['NAME']."<br>".$item['DESC']."<div class='cover'></div></div>";
+                }
+            }catch(Exception $e){
+                var_dump($e->getTrace());
+            }
+             ?>
         </div>
     </div>
 

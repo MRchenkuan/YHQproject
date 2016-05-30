@@ -41,7 +41,7 @@ function getCoverList(){
 
 /**
  * 获取相册列表
- * @param $albumId
+ * @param $groupId
  * @return photoAlbumDAO
  */
 function getAlbumList($groupId){

@@ -158,7 +158,7 @@ a {
 }
 
 .thumbBox{transition:all .5s ease }
-.thumbBox:hover{transition:none;border: 1px solid grey;box-shadow: 0 0 5px grey}
+.thumbBox:hover{transition:all .1s ease;transform: scale(1.15)}
 
 #photos_frame {
     overflow: visible;

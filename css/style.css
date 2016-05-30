@@ -24,7 +24,7 @@ a {
 #nav {
     width: 100%;
     height: 10%;
-    background: blue;
+    background-color: #f6f6f6;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -32,7 +32,7 @@ a {
 #boards{
     width: 100%;
     height: 90%;
-    background: #d8d8d8;
+    background: #f6f6f6;
     position: absolute;
     top: 10%;
     bottom: 0;
@@ -80,10 +80,9 @@ a {
 }
 
 #fot span {
-    margin: 0 auto;
     color: rgba(128, 128, 128, 0.5);
     font-size: 14px;
-    margin-right: 20px;
+    margin: 0 20px 0 auto;
     text-shadow: 1px 1px 1px #FFF, 0 0 0 #000;
 }
 #fot span a{
@@ -153,96 +152,17 @@ a {
     right:0;
     width: 100%;
     height: 100%;
-    background: grey;
     transition: width 1s ease;
+    background: grey url('../img/ui/logo.png') center no-repeat;
+    background-size: 20%;
 }
 
 .thumbBox{transition:all .5s ease }
 .thumbBox:hover{transition:all .1s ease;transform: scale(1.15)}
-
-#photos_frame {
-    overflow: visible;
-    margin: 0 auto;
-    position: relative;
-}
-
-
-#photos_content {
-    width: 100%;
-    height: 100%; /*border: green solid 1px;*/
-    position: relative
-}
-
-.imgBoxLine {
-    float: left;
-}
-
-.imgbox {;
-    background: grey;
-    float: left;
-    position: relative
-}
 
 .innerShadWhite {
     color: rgba(128, 128, 128, 0.5);
     text-shadow: 1px 1px 1px #FFF, 0 0 0 #000;
 }
 
-.coverImgBox {
-    float: left;
-    width: 230px;
-    margin: 0 5px;
-    position: relative
-}
 
-.coverImgBox:hover {;
-    box-shadow: 0 0 5px #595959;
-    background: #d1d1d1;
-    text-shadow: 0 1px 0 #f6f6f6;
-}
-
-.coverImgBox img {
-    float: left;
-    width: 229px;
-    height: 152px
-}
-
-.coverImgBox span {
-    text-align: center;
-    float: left;
-    width: 230px;
-    margin-top: 20px;
-}
-
-.coverImgBox a {
-    background: #14182E;
-    opacity: .5
-}
-
-.grayscale {
-}
-
-.abouttext {
-    height: 100%;
-    float: left;
-    font-size: 12px;
-    line-height: 1.75
-}
-
-.erweima {
-    width: 90px;
-    float: left;
-    margin-right: 35px;
-    line-height: 1.65;
-    font-size: 12px;
-}
-
-.erweima span {
-    display: block;
-    height: 30px;
-    line-height: 30px;
-}
-
-.erweima img {
-    width: 100%;
-}

@@ -22,11 +22,8 @@ require_once "functions.php";
 <!--音乐部分-->
 <audio src="media/Laura_Story_Grace.mp3" hidden="true" autoplay="true" loop="true"></audio>
 <!--导航部分-->
-<div id="nav">
-    <span style="position:absolute;left:110px;display: inline;color: #202020;line-height: 30px;">
-        <img src="img/ui/logo.png" style="width: 100px;float: left;margin-right: 10px;opacity:.65;">
-    </span>
-
+<img src="img/ui/logo.png" style="height:10%;position:absolute;margin:20px 0 0 40px;opacity:.65;z-index: 9999">
+<div id="nav" style="overflow: visible">
     <div id="index_nav">
         <ul>
             <li id="menu_home" style="background-image: url('img/ui/home.png') ;width: 65px" data-tar="home"></li>

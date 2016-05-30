@@ -39,7 +39,6 @@
             height:"100%",
             position:"fixed",
             backgroundColor:"rgb(21, 25, 47)",
-            // backgroundImage:"url(img/ui/loading.gif)",
             border:"5px #fff solid"
         });
         // 定义遮罩样式
@@ -303,10 +302,15 @@
         });
 
         $_image.error(function () {
-            alert("图片加载失败");
             $image.css({
-                backgroundImage:"none"
+                backgroundImage:"none",
+                backgroundColor:"grey",
+                color:"#000",
+                textAlign:"center"
+                // lineHeight:$image.height()
+
             });
+            // $image.html("图片加载失败");
         });
 
         this.show = function(photos,index){

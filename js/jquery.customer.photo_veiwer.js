@@ -200,8 +200,8 @@
     function PhotoWin(){
         var self = this;
         var nowIndex = 0;
+        var photoObjs;
         // 初始化一个相册
-        var photos;
         var cover = document.createElement("div");// 遮罩
         var $cover = $(cover);
         var imageBox = document.createElement("div");// 图片容器
@@ -235,6 +235,10 @@
             backgroundRepeat:"no-repeat",
             backgroundPosition:"center"
         });
+        // 临时图片
+        $_image.css({
+            display:"none"
+        });
 
         $leftButton.css({
             width:"40%",
@@ -248,12 +252,14 @@
         });
 
         // 注册点击事件
-        $leftButton.click(function () {
-            self.showPrev()
+        $leftButton.click(function (e) {
+            e.stopPropagation();
+            self.showPrev();
         });
 
-        $rightButton.click(function () {
-            self.showNext()
+        $rightButton.click(function (e) {
+            e.stopPropagation();
+            self.showNext();
         });
 
         // 注册关闭事件
@@ -266,37 +272,33 @@
 
         // 注册加载事件
         $_image.load(function () {
-            var top,left;
+            // 放入临时图片算出宽高比再移走
+            imageBox.appendChild(_image);
             var IMG_WH_rate = $_image.width()/$_image.height(); // 原图宽高比
+            _image.remove();
+
             var SRC_WH_rate = $imageBox.width()/$imageBox.height(); // 屏幕宽高比
             var isVertical = (IMG_WH_rate/SRC_WH_rate)>1; // 根据屏幕比例与图片比例,确定横向参照还是竖向参照
+            var maxWidth = $imageBox.width()*0.8;
+            var maxHeight = $imageBox.height()*0.8;
 
-            var maxWidth = $imageBox.width()*.8;
-            var maxHeight = $imageBox.height()*.8;
+            var width = isVertical?maxWidth:maxHeight*IMG_WH_rate;
+            var height = isVertical?maxWidth/IMG_WH_rate:maxHeight;
 
-            console.log(isVertical);
             $image.css({
-                width:isVertical?maxWidth:maxHeight*IMG_WH_rate,
-                height:isVertical?maxWidth/IMG_WH_rate:maxHeight,
+                width:width,
+                height:height,
                 border:"none",
                 backgroundImage:"url('"+_image.src+"')",
                 backgroundRepeat:"no-repeat",
                 backgroundPosition:"center",
                 backgroundSize:"contain"
             });
-            // 根据宽高比计算位置
-            if(isVertical){
-                top = $imageBox.height()*0.2;
-                left=$imageBox.width()/2-$image.width()/2;
-            }else{
-                top=$imageBox.height()/2-$image.height()/2;
-                left=$imageBox.width()*0.2;
-            }
 
             // 固定图片位置
             $image.css({
-                top:top,
-                left:left
+                top:$imageBox.height()/2-$image.height()/2,
+                left:$imageBox.width()/2-$image.width()/2
             });
         });
 
@@ -309,6 +311,7 @@
 
         this.show = function(photos,index){
             nowIndex = index;
+            photoObjs = photos;
             // 展示框架
             self.visable();
 
@@ -340,13 +343,31 @@
 
         // 展示下一张
         this.showNext = function(){
+            if(nowIndex>=photoObjs.length-1)return;
+            nowIndex = nowIndex+1;
+            console.log(nowIndex)
+            var photoObj = photoObjs[nowIndex];
+            var id = photoObj["id"];
+            var desc = photoObj["DESC"];
+            var name = photoObj["name"];
+            var url = photoObj["PATH"];
 
+            _image.src = url;
         };
 
         // 展示前一张
 
         this.showPrev = function(){
+            if(nowIndex<1)return;
+            nowIndex = nowIndex-1;
+            console.log(nowIndex);
+            var photoObj = photoObjs[nowIndex];
+            var id = photoObj["id"];
+            var desc = photoObj["DESC"];
+            var name = photoObj["name"];
+            var url = photoObj["PATH"];
 
+            _image.src = url;
         };
 
         // 移开大图

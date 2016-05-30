@@ -15,6 +15,18 @@ class photoAlbumDAO extends DBC{
     }
 
     /**
+     * 根据相册ID获取相册照片
+     * @param $albumId
+     * @return array
+     */
+    public function getPhotosByAlbumId($albumId)
+    {
+        $rs = $this->getResult(__FUNCTION__,array('albumId'=>$albumId));
+        $row = $rs->fetchAll(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+    /**
      * 获取网站封面
      */
     public function getCoverList()
@@ -36,12 +48,12 @@ class photoAlbumDAO extends DBC{
 
     /**
      * 根据相册id获取相册列表
-     * @param $albumId 相册ID
-     * @return 返回结果
+     * @param $groupId
+     * @return array
      */
-    public function getAlbumList($albumId)
+    public function getAlbumList($groupId)
     {
-        $rs = $this->getResult(__FUNCTION__,array('albumId'=>$albumId));
+        $rs = $this->getResult(__FUNCTION__,array('groupId'=>$groupId));
         $row = $rs->fetchAll(PDO::FETCH_ASSOC);
         return $row;
     }
@@ -125,6 +137,8 @@ class photoAlbumDAO extends DBC{
         $info['id'] = $id;
         $this->updateAlbumById($info);
     }
+
+
 
 }
 //

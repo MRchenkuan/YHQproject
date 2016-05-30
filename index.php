@@ -78,10 +78,10 @@ require_once "functions.php";
         <div id="albums" style="border:1px solid grey">
             <!--相册-->
             <?php
-            $albumId = $groupList[0]['id'];
-            $albumList = getAlbumList($albumId);
+            $groupId = $groupList[0]['id'];
+            $albumList = getAlbumList($groupId);
             foreach($albumList as $item){
-                echo "<div class=\"album\" data-id=\"".$item['id']."\" data-cover='".$item['COVER']."' >".$item['COVER']."<br>".$item['NAME']."<br>".$item['DESC']."</div>";
+                echo "<div class=\"album\" data-id=\"".$item['id']."\" data-cover='".$item['COVER']."' >".$item['COVER']."<br>".$item['NAME']."<br>".$item['DESC']."<div class='cover'></div></div>";
             } ?>
         </div>
     </div>
@@ -103,7 +103,7 @@ require_once "functions.php";
 
 <script src="js/jquery.customer.slider.js"></script>
 <script src="js/jquery.customer.board_switch.js"></script>
-<script src="js/jquery.customer.photo_wall.js"></script>
+<script src="js/jquery.customer.photo_veiwer.js"></script>
 <script src="js/jquery.customer.ajax_maneger.js"></script>
 <script>
 
@@ -149,7 +149,7 @@ $(document).ready(function () {
         var albumList = albumPool[group_id]['list'];
         var innerHtml = "";
         for(var i=0;i<albumList.length;i++){
-            innerHtml += "<div class='album' data-id='"+albumList[i]['id']+"' data-cover='"+albumList[i]['COVER']+"' >"+albumList[i]['NAME']+"</div>"
+            innerHtml += "<div class='album' data-id='"+albumList[i]['id']+"' data-cover='"+albumList[i]['COVER']+"' >"+albumList[i]['NAME']+"<div class='cover'></div></div>"
         }
         $("#albums").html(innerHtml);
         $("#albums").resizeAlbumsSize();
@@ -181,7 +181,6 @@ $(document).ready(function () {
         var verticalCount = 3;
         var aspectRatio = 16/9;
         var frameHeight =$this.height();
-        console.log(frameHeight);
         var albumFullHeight =frameHeight*(1/verticalCount);
         var albumFullWidth = albumFullHeight*aspectRatio;
         var albumHeight = albumFullHeight*.95;//根据竖向个数计算相册高度-除去边距
@@ -191,7 +190,6 @@ $(document).ready(function () {
         $this.css({
             position:"relative",
             minWidth:"100%",
-//            width:albumFullWidth*Math.ceil($innerAlbums.length/verticalCount)+10,
             overflowY:"hidden",
             overflowX:"auto"
         });
@@ -212,8 +210,25 @@ $(document).ready(function () {
                 left:position.x*albumFullWidth,
                 backgroundImage:"url("+$$this.attr('data-cover')+")"
             });
+
+            // 延迟加载动画
+            var _img = document.createElement("img");
+            _img.src = $$this.attr('data-cover');
+            $(_img).load(function(){
+                // 图片加载完成时
+                $$this.find('.cover').css({
+                    width:"0"
+                });
+            });
+
         });
     };
+
+    // 给相册注册点击时间
+    $("#albums").delegate(".album","click",function(){
+        var albumid = $(this).attr("data-id");
+        $.createPhotoViewer(albumid);
+    });
 });
 
 

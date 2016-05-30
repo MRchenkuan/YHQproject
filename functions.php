@@ -44,8 +44,8 @@ function getCoverList(){
  * @param $albumId
  * @return photoAlbumDAO
  */
-function getAlbumList($albumId){
+function getAlbumList($groupId){
     $data = new photoAlbumDAO();
-    $data = $data->getAlbumList($albumId);
+    $data = $data->getAlbumList($groupId);
     return $data;
 }

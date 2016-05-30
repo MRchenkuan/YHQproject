@@ -37,6 +37,7 @@ $config = array(
     'createAlbum' => createAlbum,
     'delAlbum' => delAlbum,
     'getNewsContent' => getNewsContent,
+    'getPhotosByAlbumId' => getPhotosByAlbumId,
     'getAlbumsByGroupId'=>getAlbumsByGroupId
 );
 $config[$APIID]();
@@ -54,6 +55,15 @@ function getAlbumsByGroupId(){
     $groupId = $_GET['groupId'];
     $db = new photoAlbumDAO();
     echo json_encode($db->getAlbumsByGroupId($groupId));
+}
+/**
+ * 根据相册ID获取所有照片
+ */
+function getPhotosByAlbumId(){
+
+    $albumId = $_GET['albumId'];
+    $db = new photoAlbumDAO();
+    echo json_encode($db->getPhotosByAlbumId($albumId));
 }
 
 /*****************************************************

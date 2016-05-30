@@ -26,7 +26,14 @@
         a.NAME,
         a.DESC,
         a.ORDER
-        from T_ALBUM a where a.group=#{albumId} order by a.ORDER;
+        from T_ALBUM a where a.group=#{groupId} order by a.ORDER;
+    </select>
+
+    <!--获取图片列表-->
+    <select id="getPhotosByAlbumId" >
+        select
+        id,`NAME`,`DESC`,`PATH`
+        from T_PHOTO where albumid = #{albumId}
     </select>
 
 

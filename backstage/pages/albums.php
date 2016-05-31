@@ -3,7 +3,7 @@
 //error_reporting(0);
 session_start();
 $pageID='photoLib';
-require($_SERVER['DOCUMENT_ROOT'] . '/backstage/definitions.php');
+require_once('../definitions.php');
 include(WIDGETS_DIR.'head.php');
 /*--连接数据库--*/
 if(strtoupper(DB_TYPE)=='FILE') {

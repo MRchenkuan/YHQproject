@@ -15,7 +15,7 @@
 <body style="overflow-x: hidden;padding: 20px 5%;">
 <!--content-->
 <?php
-require($_SERVER['DOCUMENT_ROOT'] . '/backstage/definitions.php');
+require_once('../definitions.php');
 /*连接数据库*/
 $newsid = $_GET['id'];
 

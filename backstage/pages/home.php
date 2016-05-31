@@ -2,7 +2,7 @@
 //error_reporting(0);
 session_start();
 $pageID='home';
-require($_SERVER['DOCUMENT_ROOT'] . '/backstage/definitions.php');
+require_once('../definitions.php');
 include(WIDGETS_DIR.'head.php');
 ?>
 

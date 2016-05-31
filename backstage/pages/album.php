@@ -6,7 +6,7 @@
  * Time: 下午5:21
  */
 $pageID = 'photoLib';
-require($_SERVER['DOCUMENT_ROOT'] . '/backstage/definitions.php');
+require_once('../definitions.php');
 include(WIDGETS_DIR.'/head.php');
 $id = $_GET['id'];
 

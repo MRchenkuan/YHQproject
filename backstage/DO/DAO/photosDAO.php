@@ -1,7 +1,6 @@
 <?php
 error_reporting(0);
-require_once($_SERVER['DOCUMENT_ROOT'] . '/backstage/definitions.php');
-require_once($_SERVER['DOCUMENT_ROOT'].'/backstage/DO/DBC.class.php');
+require_once(BACKSTAGE_DIR.'/DO/DBC.class.php');
 /**
  * Created by PhpStorm.
  * User: chenkuan

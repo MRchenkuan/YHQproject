@@ -213,6 +213,9 @@
         var rightButton = document.createElement("div");// 下一张图按钮
         var $leftButton = $(leftButton);
         var $rightButton = $(rightButton);
+        // 初始图片框序号
+        var number_index = document.createElement("span");
+        var $number_index = $(number_index);
 
 
         $cover.css({
@@ -239,6 +242,7 @@
             display:"none"
         });
 
+        // 左右按钮
         $leftButton.css({
             width:"40%",
             height:"100%",
@@ -248,6 +252,14 @@
             width:"40%",
             height:"100%",
             float:"right"
+        });
+
+        // 图片序号
+        $number_index.css({
+            position:"absolute",
+            top:0,
+            left:0,
+            fontSize:"24px"
         });
 
         // 注册点击事件
@@ -303,12 +315,10 @@
 
         $_image.error(function () {
             $image.css({
-                backgroundImage:"none",
+                backgroundImage:"url('img/ui/logo.png')",
                 backgroundColor:"grey",
                 color:"#000",
                 textAlign:"center"
-                // lineHeight:$image.height()
-
             });
             // $image.html("图片加载失败");
         });
@@ -319,7 +329,7 @@
             // 展示框架
             self.visable();
 
-            // 初始图片框
+            // 初始图片框大小
             $image.css({
                 width:"60%",
                 height:"60%",
@@ -327,10 +337,13 @@
                 border:"1px solid #fff"
             });
 
+            // 初始图片框位置
             $image.css({
                 left:$imageBox.width()/2-$image.width()/2,
                 top:$imageBox.height()/2-$image.height()/2
             });
+
+            image.appendChild(number_index);
 
 
             var photoObj = photos[nowIndex];
@@ -342,6 +355,7 @@
             var name = photoObj["name"];
             var url = photoObj["PATH"];
             _image.src = url;
+            number_index.innerHTML = nowIndex;
             console.log(url);
         };
 
@@ -349,7 +363,6 @@
         this.showNext = function(){
             if(nowIndex>=photoObjs.length-1)return;
             nowIndex = nowIndex+1;
-            console.log(nowIndex)
             var photoObj = photoObjs[nowIndex];
             var id = photoObj["id"];
             var desc = photoObj["DESC"];
@@ -364,13 +377,11 @@
         this.showPrev = function(){
             if(nowIndex<1)return;
             nowIndex = nowIndex-1;
-            console.log(nowIndex);
             var photoObj = photoObjs[nowIndex];
             var id = photoObj["id"];
             var desc = photoObj["DESC"];
             var name = photoObj["name"];
             var url = photoObj["PATH"];
-
             _image.src = url;
         };
 

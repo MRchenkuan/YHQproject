@@ -1,10 +1,6 @@
 <?php
 //error_reporting(0);
-
-require_once($_SERVER['DOCUMENT_ROOT'] . '/backstage/definitions.php');
-require_once($_SERVER['DOCUMENT_ROOT'].'/backstage/TOOLS/Config.class.php');
-
-
+require_once(BACKSTAGE_DIR.'/tools/Config.class.php');
 class DBC{
     private $DAO,$SQL,$fuc;
     public function __construct($DAONAME){

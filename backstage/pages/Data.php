@@ -1,7 +1,7 @@
 <?php
 //error_reporting(0);
 session_start();
-require_once($_SERVER['DOCUMENT_ROOT'] . '/backstage/definitions.php');
+require_once('../definitions.php');
 //require_once(KODBC_PATH);
 
 $APIID = $_GET['id'] ? $_GET['id'] : 'defaultMethod';

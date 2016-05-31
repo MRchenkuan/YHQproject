@@ -5,8 +5,8 @@
  * Date: 16/5/22
  * Time: 下午6:55
  */
-require_once "backstage/definitions.php";
-require_once(DATABASE_DAO_DIR."photoAlbumDAO.php");
+include_once "./backstage/definitions.php";
+include_once(DATABASE_DAO_DIR."photoAlbumDAO.php");
 // 获取图片地址
 function getImgPath($path){
     $dirs = dirname('./img/'.$path.'/1');

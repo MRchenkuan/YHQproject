@@ -46,7 +46,7 @@
             width:"100%",
             height:"100%",
             position:"fixed",
-            backgroundColor:"#202020",
+            backgroundColor:"#ccc",
             backgroundImage:"url(img/ui/loading.gif)",
             backgroundRepeat:"no-repeat",
             backgroundPosition:"center"
@@ -222,7 +222,7 @@
             width:"100%",
             height:"100%",
             position:"fixed",
-            backgroundColor:"#202020",
+            backgroundColor:"#15192F",
             opacity:.7
         });
 
@@ -259,7 +259,8 @@
             position:"absolute",
             top:0,
             left:0,
-            fontSize:"24px"
+            fontSize:"24px",
+            color:"#fff"
         });
 
         // 注册点击事件
@@ -316,7 +317,7 @@
         $_image.error(function () {
             $image.css({
                 backgroundImage:"url('img/ui/logo.png')",
-                backgroundColor:"grey",
+                backgroundColor:"#ccc",
                 color:"#000",
                 textAlign:"center"
             });
@@ -347,7 +348,6 @@
 
 
             var photoObj = photos[nowIndex];
-            console.log(photoObj)
             if(!photoObj) return (console.log("找不到原图"));
 
             var id = photoObj["id"];
@@ -355,7 +355,7 @@
             var name = photoObj["name"];
             var url = photoObj["PATH"];
             _image.src = url;
-            number_index.innerHTML = nowIndex;
+            $number_index.text(nowIndex);
             console.log(url);
         };
 
@@ -368,7 +368,7 @@
             var desc = photoObj["DESC"];
             var name = photoObj["name"];
             var url = photoObj["PATH"];
-
+            $number_index.text(nowIndex);
             _image.src = url;
         };
 
@@ -383,6 +383,7 @@
             var name = photoObj["name"];
             var url = photoObj["PATH"];
             _image.src = url;
+            $number_index.text(nowIndex);
         };
 
         // 移开大图

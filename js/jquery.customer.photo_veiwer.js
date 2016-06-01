@@ -162,6 +162,7 @@
                 var isImageVertical = $ele.height()>$ele.width();
                 var width,height,top,left;
 
+
                 if(isImageVertical){
                     width = "auto";
                     height = albumHeight;
@@ -184,6 +185,7 @@
                     left = frameLeft;
                 }
 
+                console.log($ele.width());
                 // 设置位置
                 $ele.css({
                     top:top,
@@ -356,7 +358,6 @@
             var url = photoObj["PATH"];
             _image.src = url;
             $number_index.text(nowIndex);
-            console.log(url);
         };
 
         // 展示下一张

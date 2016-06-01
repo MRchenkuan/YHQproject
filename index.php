@@ -29,7 +29,7 @@ include_once "functions.php";
             <li id="menu_home" style="background-image: url('img/ui/home.png') ;width: 65px" data-tar="home"></li>
             <li id="menu_photos" style="background-image: url('img/ui/gallery.png');width: 70px" data-tar="photos"></li>
             <li id="menu_contact" style="background-image: url('img/ui/contact.png');width: 95px" data-tar="contact"></li>
-            <a href="http://terryyhq.diandian.com/" target="_blank"><li id="menu_stories" style="background-image: 'url('\./img/ui/stories.png\')';width: 65px"></li></a>
+            <a href="http://terryyhq.diandian.com/" target="_blank"><li id="menu_stories" style="background-image: url('img/ui/stories.png');width: 65px"></li></a>
             <script>
                 $('#index_nav').find('li').each(function () {
                     var t = $(this);
@@ -189,7 +189,7 @@ $(document).ready(function () {
         var $this = $(this);
         // 计算相册和相册容器宽高
         var verticalCount = 3;
-        var aspectRatio = 16/9;
+        var aspectRatio = 1;
         var frameHeight =$this.height();
         var albumFullHeight =frameHeight*(1/verticalCount);
         var albumFullWidth = albumFullHeight*aspectRatio;
@@ -235,19 +235,10 @@ $(document).ready(function () {
     };
 
     // 给相册注册点击时间
-    $("#albums").delegate(".album","keyup",function(){
+    $("#albums").delegate(".album","click",function(){
         var albumid = $(this).attr("data-id");
         $.createPhotoViewer(albumid);
-        $(this).css({
-            opacity:1
-        })
-    });
-
-    $("#albums").delegate(".album","keydown",function(){
-        $(this).css({
-            opacity:0.7
-        })
-    });
+    })
 });
 
 

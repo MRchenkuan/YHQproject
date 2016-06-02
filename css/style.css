@@ -165,4 +165,27 @@ a {
     text-shadow: 1px 1px 1px #FFF, 0 0 0 #000;
 }
 
+.albumInfoBar{
+    float: right;
+}
+
+.albumInfoBar span{
+    margin:0 0 0 20px;
+    color: grey;
+}
+
+.backOff{
+    color: grey;
+    padding: 3px;
+    text-decoration: underline;
+    float: left;
+}
+
+.backOff:hover{
+    color: #202020;
+    background: #ddd;
+    border-radius: 3px;
+    text-shadow: 0 1px 0 #fcfcfc
+}
+
 

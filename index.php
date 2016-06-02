@@ -87,7 +87,10 @@ include_once "functions.php";
                 $groupId = $groupList[0]['id'];
                 $albumList = getAlbumList($groupId);
                 foreach($albumList as $item){
-                    echo "<div class=\"album\" data-id=\"".$item['id']."\" data-cover='".$item['COVER']."' >".$item['COVER']."<br>".$item['NAME']."<br>".$item['DESC']."<div class='cover'></div></div>";
+                    echo "<div class=\"album\" data-id=\"".$item['id']
+                        ."\" data-cover='".$item['COVER']
+                        ."' data-name='".$item['NAME']
+                        ."' data-desc='".$item['DESC']."' ><div class='cover'></div></div>";
                 }
             }catch(Exception $e){
                 var_dump($e->getTrace());
@@ -153,12 +156,15 @@ $(document).ready(function () {
     });
 
     // 注册各个分组按钮点击事件
-    $('.groups').click(function () {
+    $('#photos_nav').delegate(".groups","click",function () {
         var group_id = this.getAttribute("data-groupid");
         var albumList = albumPool[group_id]['list'];
         var innerHtml = "";
         for(var i=0;i<albumList.length;i++){
-            innerHtml += "<div class='album' data-id='"+albumList[i]['id']+"' data-cover='"+albumList[i]['COVER']+"' >"+albumList[i]['NAME']+"<div class='cover'></div></div>"
+            innerHtml += ("<div class='album' data-id='"+albumList[i]['id']
+                +"' data-cover='"+albumList[i]['COVER']
+                +"' data-name='"+albumList[i]['NAME']
+                +"' data-desc='"+albumList[i]['DESC']+"'><div class='cover'></div></div>")
         }
         $("#albums").html(innerHtml);
         $("#albums").resizeAlbumsSize();
@@ -247,7 +253,7 @@ $(document).ready(function () {
                 backgroundImage:"url("+$$this.attr('data-cover')+")"
             });
 
-            // 注册图片加载动画
+            // 图片加载动画
             var _img = document.createElement("img");
             _img.src = $$this.attr('data-cover');
             $(_img).load(function(){
@@ -260,10 +266,9 @@ $(document).ready(function () {
         });
     };
 
-    // 给相册注册点击时间
+    // 相册的点击事件
     $("#albums").delegate(".album","click",function(){
-        var albumid = $(this).attr("data-id");
-        $.createPhotoViewer(albumid);
+        $(this).createPhotoViewer();
     })
 });
 

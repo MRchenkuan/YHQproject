@@ -3,49 +3,56 @@
 * */
 ;
 (function($){
+    // 顶部导航条
+    var $navFrame = $("#photos_nav");
+    var $groupNav = $navFrame.find(">ul");
+
+    var cached = {};
     // 创建图片浏览器
-    var cache = {};
     var photoViewer = new PhotoViewer();
-    $.createPhotoViewer = function(albumid){
-        photoViewer.show();
-        if(cache[albumid]){
-            photoViewer.init(cache[albumid]);
+    $.fn.createPhotoViewer = function(){
+        var $this = $(this);
+        var albumId = $this.attr("data-id");
+        var albumName = $this.attr("data-name");
+        var albumDesc = $this.attr("data-desc");
+
+        photoViewer.show(albumName,albumDesc);
+        if(cached[albumId]){
+            photoViewer.init(cached[albumId]);
         }else{
             photoViewer.showLoading(true);
             $.ajax({
-                url:"./backstage/pages/Data.php?id=getPhotosByAlbumId&albumId="+albumid,
+                url:"./backstage/pages/Data.php?id=getPhotosByAlbumId&albumId="+albumId,
                 success:function(data){
                     photoViewer.showLoading(false);
-                    cache[albumid]=JSON.parse(data);
-                    photoViewer.init(cache[albumid]);
+                    cached[albumId]=JSON.parse(data);
+                    photoViewer.init(cached[albumId]);
                 }
             })
         }
     };
 
-    // 创建相册图片浏览器
+    // 创建相册展示器
     function PhotoViewer(){
         var self = this;
+        var $displayBox = $("#albums");
         var coverEle = document.createElement("div");
         var frame = document.createElement("div");
         var $coverEle = $(coverEle);
         var $frame = $(frame);
-        var photoEle = document.createElement("div");
-        var $photoEle = $(photoEle);
+        var backBtn = document.createElement("span");
+        var $backBtn = $(backBtn);
+        var albumInfoBar = document.createElement("span");
+        var $albumInfoBar = $(albumInfoBar);
+        albumInfoBar.appendChild(document.createElement("span"));
+        albumInfoBar.appendChild(document.createElement("span"));
         var photoWin = new PhotoWin();
 
-        $photoEle.css({
-            width:"100%",
-            height:"100%",
-            position:"fixed",
-            backgroundColor:"rgb(21, 25, 47)",
-            border:"5px #fff solid"
-        });
         // 定义遮罩样式
         $coverEle.css({
             width:"100%",
             height:"100%",
-            position:"fixed",
+            position:"absolute",
             backgroundColor:"#ccc",
             backgroundImage:"url(img/ui/loading.gif)",
             backgroundRepeat:"no-repeat",
@@ -56,7 +63,7 @@
         $frame.css({
             width:"100%",
             height:"100%",
-            position:"fixed",
+            position:"absolute",
             overflowY:"hidden",
             overflowX:"auto",
             display:"none",// !定义为none,后续淡入
@@ -75,14 +82,28 @@
 
 
         // 展示遮罩方法
-        this.show = function(){
-            document.body.appendChild(coverEle);
+        this.show = function(albumName,albumDesc){
+            self.albumName = albumName;
+            self.albumDesc = albumDesc;
+            $displayBox.append(coverEle);
+            // 禁用底层滚动
+            $displayBox.css({
+                overflowX:"hidden"
+            });
+            // 切换为相册模式
+            self.switchToAlbumInfo();
         };
 
         // 隐藏遮罩方法
         this.out = function(){
             coverEle.remove();
             frame.remove();
+            // 启用底层滚动
+            $displayBox.css({
+                overflowX:"auto"
+            });
+            // 切换回相册组模式
+            self.switchToGroupNav();
         };
 
         // loading图开关
@@ -92,8 +113,32 @@
             })
         };
 
+        // 顶部切换为相册组模式
+        this.switchToGroupNav = function(){
+            backBtn.remove();
+            albumInfoBar.remove();
+            $navFrame.append($groupNav); // 加入导航条
+        };
+
+        // 顶部切换为相册组模式
+        this.switchToAlbumInfo = function(){
+            $groupNav.remove(); // 移开导航条
+            $navFrame.append($backBtn);
+            $navFrame.append($albumInfoBar);
+            // 定义返回按钮样式
+            $backBtn.html("返回");
+            $backBtn.addClass("backOff");
+            $backBtn.click(self.out);
+            // 定义相册信息样式
+            $albumInfoBar.addClass("albumInfoBar");
+            // 更新相册顶部信息
+            $albumInfoBar.children(":first").html(self.albumName);
+            $albumInfoBar.children(":last").html(self.albumDesc);
+
+        };
+
         // 相册浏览器初始化方法
-        this.init = function(photos){
+        this.init = function(photos,albumName,albumDesc){
             if(photos&&photos.length>0){
                 photos.some(function(it,id,ar){
                     // 组合相片到相册
@@ -105,27 +150,27 @@
                     $thumbBox.attr("data-path",it["PATH"]);
                     $thumbBox.attr("data-desc",it["DESC"]);
                     $thumbBox.attr("data-name",it["NAME"]);
-                    frame.appendChild(thumbBox);
+                    $frame.append(thumbBox);
                     $thumbBox.click(function(e){
                         e.stopPropagation();
                         // 触发相册展示
                         photoWin.show(photos,id);
                     });
                 });
-                document.body.appendChild(frame);
+                $displayBox.append(frame);
                 resizePhotos($frame);
                 $frame.fadeIn();
             }else{
                 alert("没有图片");
                 setTimeout(function(){
-                    coverEle.remove();
-                    frame.remove();
+                    self.out()
                 },1000)
             }
         };
+
     }
 
-    // 重拍图片的方法
+    // 相册重排器
     function resizePhotos($frame){
         var $thumbBoxex = $frame.find(".thumbBox");
         var verticalCount=3;
@@ -197,7 +242,7 @@
         });
     }
 
-    // 相片展示方法
+    // 相片展示器
     function PhotoWin(){
         var self = this;
         var nowIndex = 0;

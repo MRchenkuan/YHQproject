@@ -132,7 +132,6 @@ include_once "functions.php";
     ;
 
 //文档加载入口
-var photosframe;
 $(document).ready(function () {
     //    首页出现
     $('.contentBoard').eq(0).moveDownIn(1000).queue(function(){
@@ -186,15 +185,27 @@ $(document).ready(function () {
 
     // 计算相册图片大小和位置
     $.fn.resizeAlbumsSize = function(){
+        // 基本数据
         var $this = $(this);
-        // 计算相册和相册容器宽高
-        var verticalCount = 3;
-        var aspectRatio = 1;
         var frameHeight =$this.height();
+        var frameWidth =$this.width();
+        var verticalCount,horizontalCount;
+        // 设置横向竖向图片数
+        var aspectRatio = frameWidth/frameHeight;
+        if(aspectRatio>=1){
+            // 宽高比不同的情况下的展示方式
+            verticalCount=3;
+            horizontalCount=4;
+        }else{
+            verticalCount=4;
+            horizontalCount=3;
+        }
+
         var albumFullHeight =frameHeight*(1/verticalCount);
-        var albumFullWidth = albumFullHeight*aspectRatio;
+        var albumFullWidth = frameWidth*(1/horizontalCount);
         var albumHeight = albumFullHeight*.95;//根据竖向个数计算相册高度-除去边距
         var albumWidth = albumFullWidth*.95;
+
         var $innerAlbums = $this.find('.album');
         // 设置相册容器宽度和滚动
         $this.css({
@@ -207,21 +218,36 @@ $(document).ready(function () {
         // 设置相册的大小/位置/背景图
         $innerAlbums.each(function(index,ele){
             var $$this =$(ele);
+            // 每张相册的序号
             var position = {// x:0-n,y:0-3
                 y:index%verticalCount,
                 x:Math.ceil((index+1)/verticalCount)-1
             };
+
+            // 每张全尺寸相册的位置
+            var albumFullPosition = {
+                top:position.y*albumFullHeight,
+                left:position.x*albumFullWidth
+            };
+
+            // 每张净尺寸相册的位置
+            var albumPosition = {
+                top: albumFullPosition.top + (albumFullHeight-albumHeight)/2,
+                left: albumFullPosition.left + (albumFullWidth-albumWidth)/2
+            };
+
+            // 布局
             $$this.css({
                 position:"absolute",
                 opacity:1,
                 height:albumHeight,
                 width:albumWidth,
-                top:position.y*albumFullHeight,
-                left:position.x*albumFullWidth,
+                top:albumPosition.top,
+                left:albumPosition.left,
                 backgroundImage:"url("+$$this.attr('data-cover')+")"
             });
 
-            // 延迟加载动画
+            // 注册图片加载动画
             var _img = document.createElement("img");
             _img.src = $$this.attr('data-cover');
             $(_img).load(function(){

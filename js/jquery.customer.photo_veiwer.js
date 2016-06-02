@@ -284,7 +284,7 @@
             self.hidden();
         });
 
-        // 注册加载事件
+        // 临时图片注册加载事件
         $_image.load(function () {
             // 放入临时图片算出宽高比再移走
             imageBox.appendChild(_image);
@@ -316,6 +316,7 @@
             });
         });
 
+
         $_image.error(function () {
             $image.css({
                 backgroundImage:"url('img/ui/logo.png')",
@@ -329,7 +330,7 @@
         this.show = function(photos,index){
             nowIndex = index;
             photoObjs = photos;
-            // 展示框架
+            // 展示
             self.visable();
 
             // 初始图片框大小
@@ -345,7 +346,6 @@
                 left:$imageBox.width()/2-$image.width()/2,
                 top:$imageBox.height()/2-$image.height()/2
             });
-
             image.appendChild(number_index);
 
 

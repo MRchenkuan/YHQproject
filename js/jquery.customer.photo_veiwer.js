@@ -115,26 +115,37 @@
 
         // 顶部切换为相册组模式
         this.switchToGroupNav = function(){
-            backBtn.remove();
-            albumInfoBar.remove();
-            $navFrame.append($groupNav); // 加入导航条
+            /**
+             * 先产生退出动画并结束,在执行界面重制
+             */
+            $navFrame.fadeOut(200,function () {// 淡出动画
+                $backBtn.remove();
+                $albumInfoBar.remove();
+                $navFrame.append($groupNav); // 加入导航条
+                $groupNav.hide().fadeIn(200);// 导航条动画
+            })
         };
 
-        // 顶部切换为相册组模式
+        // 顶部切换为相册信息模式
         this.switchToAlbumInfo = function(){
-            $groupNav.remove(); // 移开导航条
-            $navFrame.append($backBtn);
-            $navFrame.append($albumInfoBar);
-            // 定义返回按钮样式
-            $backBtn.html("返回");
-            $backBtn.addClass("backOff");
-            $backBtn.click(self.out);
-            // 定义相册信息样式
-            $albumInfoBar.addClass("albumInfoBar");
-            // 更新相册顶部信息
-            $albumInfoBar.children(":first").html(self.albumName);
-            $albumInfoBar.children(":last").html(self.albumDesc);
-
+            /**
+             * 先产生退出动画并结束,在执行界面重制
+             */
+            $groupNav.fadeOut(200,function () {// 淡出动画
+                $groupNav.remove(); // 移开导航条
+                $navFrame.append($backBtn);
+                $navFrame.append($albumInfoBar);
+                $navFrame.hide().fadeIn(200);
+                // 定义返回按钮样式
+                $backBtn.html("返回");
+                $backBtn.addClass("backOff");
+                $backBtn.click(self.out);
+                // 定义相册信息样式
+                $albumInfoBar.addClass("albumInfoBar");
+                // 更新相册顶部信息
+                $albumInfoBar.children(":first").html(self.albumName);
+                $albumInfoBar.children(":last").html(self.albumDesc);
+            });
         };
 
         // 相册浏览器初始化方法

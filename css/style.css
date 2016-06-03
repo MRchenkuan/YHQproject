@@ -167,18 +167,21 @@ a {
 
 .albumInfoBar{
     float: right;
+    transition: all .1s ease;
 }
 
 .albumInfoBar span{
     margin:0 0 0 20px;
     color: grey;
+    transition: all .1s ease;
 }
 
 .backOff{
     color: grey;
-    padding: 3px;
     text-decoration: underline;
     float: left;
+    margin-right: 20px;
+    transition: all .1s ease;
 }
 
 .backOff:hover{
@@ -187,5 +190,25 @@ a {
     border-radius: 3px;
     text-shadow: 0 1px 0 #fcfcfc
 }
+
+.album .albumRemark{
+    transition:height .3s ease;
+    background: #2d2d2d;
+    opacity: .7;
+    position:absolute;
+    height: 0;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    color:#fff;
+    overflow: hidden;
+}
+
+.album:hover .albumRemark{
+    transition:height .1s ease;
+    height: 20%;
+}
+
+
 
 

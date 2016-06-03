@@ -90,7 +90,7 @@ include_once "functions.php";
                     echo "<div class=\"album\" data-id=\"".$item['id']
                         ."\" data-cover='".$item['COVER']
                         ."' data-name='".$item['NAME']
-                        ."' data-desc='".$item['DESC']."' ><div class='cover'></div></div>";
+                        ."' data-desc='".$item['DESC']."' ><div class='cover'></div><div class='albumRemark'>".$item['NAME']."</div></div>";
                 }
             }catch(Exception $e){
                 var_dump($e->getTrace());
@@ -164,7 +164,7 @@ $(document).ready(function () {
             innerHtml += ("<div class='album' data-id='"+albumList[i]['id']
                 +"' data-cover='"+albumList[i]['COVER']
                 +"' data-name='"+albumList[i]['NAME']
-                +"' data-desc='"+albumList[i]['DESC']+"'><div class='cover'></div></div>")
+                +"' data-desc='"+albumList[i]['DESC']+"'><div class='cover'></div><div class='albumRemark'>"+albumList[i]['NAME']+"</div></div>")
         }
         $("#albums").html(innerHtml);
         $("#albums").resizeAlbumsSize();

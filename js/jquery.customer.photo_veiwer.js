@@ -6,7 +6,6 @@
     // 顶部导航条
     var $navFrame = $("#photos_nav");
     var $groupNav = $navFrame.find(">ul");
-
     var cached = {};
     // 创建图片浏览器
     var photoViewer = new PhotoViewer();
@@ -53,7 +52,7 @@
             width:"100%",
             height:"100%",
             position:"absolute",
-            backgroundColor:"#ccc",
+            backgroundColor:"#fff",
             backgroundImage:"url(img/ui/loading.gif)",
             backgroundRepeat:"no-repeat",
             backgroundPosition:"center"
@@ -124,7 +123,7 @@
                 $navFrame.append($groupNav); // 加入导航条
                 $navFrame.show(); // 由于外部退出,所以需要重新进入
                 $groupNav.fadeIn(200);
-            })
+            });
         };
 
         // 顶部切换为相册信息模式
@@ -168,6 +167,11 @@
                         // 触发相册展示
                         photoWin.show(photos,id);
                     });
+                    // 遮罩
+                    var eleCover = document.createElement("div");
+                    var $eleCover = $(eleCover);
+                    $eleCover.addClass("eleCover");
+                    $thumbBox.append($eleCover);
                 });
                 $displayBox.append(frame);
                 resizePhotos($frame);
@@ -189,7 +193,7 @@
         var frameHeight =$frame.height();
         var frameWidth = $frame.width();
         var aspectRatio = frameWidth/frameHeight;
-        var margin = 5;
+        var margin = 2;
         var albumHeight,albumWidth;
 
         // 屏幕宽高比
@@ -202,6 +206,7 @@
         // 批量设置样式
         $thumbBoxex.each(function(index,ele){
             var $ele = $(ele);
+            var $eleCover = $ele.find(".eleCover");
             // 相片缩略图横纵序号
             var position ;
             if(aspectRatio>1){
@@ -216,25 +221,19 @@
                 };
             }
 
-            // 遮罩
-            var eleCover = document.createElement("div");
-            var $eleCover = $(eleCover);
-            $eleCover.addClass("eleCover");
-            $ele.append($eleCover);
+
 
 
             // 缩略图位置
-            var frameTop = position.y*albumHeight+margin;
-            var frameLeft = position.x*albumWidth+margin;
+            var frameTop = position.y*albumHeight;
+            var frameLeft = position.x*albumWidth;
 
             // 缩略图样式
             $ele.css({
-                opacity:1,
-                top:frameTop,
-                left:frameLeft,
+                top:frameTop+margin,
+                left:frameLeft+margin,
                 width:albumWidth,
-                height:albumHeight,
-                border: margin+"px solid #fff"
+                height:albumHeight
             });
 
             // 加载
@@ -248,8 +247,8 @@
                 });
 
                 // 遮罩归零
-                $eleCover.fadeOut(500,function () {
-                    $eleCover.remove();
+                $eleCover.css({
+                    width:0
                 })
 
             });
@@ -470,6 +469,5 @@
         };
 
     }
-
 
 })($);

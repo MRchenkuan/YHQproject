@@ -21,6 +21,8 @@ include_once "functions.php";
 <body>
 <!--音乐部分-->
 <audio src="media/Laura_Story_Grace.mp3" hidden="true" autoplay="true" loop="true"></audio>
+<audio src="media/783.wav" hidden="true"></audio>
+<audio src="media/1374.wav" hidden="true"></audio>
 <!--导航部分-->
 <img src="img/ui/logo.png" style="height:10%;position:absolute;margin:20px 0 0 40px;opacity:.65;z-index: 9999">
 <div id="nav" style="overflow: visible">
@@ -123,8 +125,9 @@ include_once "functions.php";
 $(document).ready(function () {
     // 相册组容器
     var $albumGroupFrame = $("#albums");
+    var $photosNav = $('#photos_nav');
 
-    //    首页出现
+    // 首页出现
     $('.contentBoard').eq(0).moveDownIn(1000).queue(function(){
         var $slider = $('#slider');
         $slider.height("100%");
@@ -134,6 +137,7 @@ $(document).ready(function () {
         }, 2000);
     });
 
+    // 主菜单出现
     boxjumping(document.getElementById('menu_home'), '20px', function () {
         boxjumping(document.getElementById('menu_photos'), '20px', function () {
             boxjumping(document.getElementById('menu_contact'), '20px', function () {
@@ -144,7 +148,7 @@ $(document).ready(function () {
     });
 
     // 注册各个分组按钮点击事件
-    $('#photos_nav').delegate(".groups","click",function () {
+    $photosNav.delegate(".groups","click",function () {
         var group_id = this.getAttribute("data-groupid");
         var albumList = albumPool[group_id]['list'];
         var innerHtml = "";
@@ -265,10 +269,25 @@ $(document).ready(function () {
     // 相册的点击事件
     $albumGroupFrame.delegate(".album","click",function(){
         $(this).createPhotoViewer();
+        soundPlay("media/1374.wav")
     });
 
-});
+    // 相册鼠标移入的声音
+    $albumGroupFrame.delegate(".album","mouseover",function(){
+        soundPlay("media/783.wav")
+    });
 
+    // 相片鼠标移入的声音
+    $albumGroupFrame.delegate(".thumbBox","mouseover",function(){
+        soundPlay("media/783.wav")
+    });
+
+    // 二级菜单鼠标移入的声音
+    $photosNav.delegate(".groups,.backOff","mouseover,click",function(){
+        soundPlay("media/783.wav")
+    })
+
+});
 
 //  定义各个板块出现的方法
 var timer;//定时器
@@ -284,6 +303,14 @@ function boxjumping(elem, distance, callback) {
     }).animate({
         top: "+=" + distance
     }, 600, 'easeInOutQuad');
+}
+
+// 声音播放
+function soundPlay(src) {
+    var sound = document.createElement("audio");
+    sound.src = src;
+    sound.play();
+    sound.remove();
 }
 
 

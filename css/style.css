@@ -1,3 +1,21 @@
+@keyframes leftIn {
+    0% {
+        left: -20px;
+    }
+    100% {
+        left: 0;
+    }
+}
+
+@keyframes rightIn {
+    0% {
+        right: -20px;
+    }
+    100% {
+        right: 0;
+    }
+}
+
 html {
     overflow: hidden;
 }
@@ -168,6 +186,8 @@ a {
 .albumInfoBar{
     float: right;
     transition: all .1s ease;
+    animation: rightIn .5s ease;
+    position:relative;
 }
 
 .albumInfoBar span{
@@ -180,9 +200,12 @@ a {
     color: grey;
     text-decoration: underline;
     float: left;
-    margin-right: 20px;
     transition: all .1s ease;
+    margin: 0 3px;
+    animation: leftIn .5s ease;
+    position:relative;
 }
+
 
 .backOff:hover{
     color: #202020;

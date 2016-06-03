@@ -23,6 +23,7 @@
         select
         id,
         (select p.PATH from T_PHOTO p where p.id=a.COVER) COVER,
+        (select p.THUMB from T_PHOTO p where p.id=a.COVER) THUMB,
         a.NAME,
         a.DESC,
         a.ORDER
@@ -32,7 +33,7 @@
     <!--获取图片列表-->
     <select id="getPhotosByAlbumId" >
         select
-        id,`NAME`,`DESC`,`PATH`
+        id,`NAME`,`DESC`,`PATH`,`THUMB`
         from T_PHOTO where albumid = #{albumId}
     </select>
 

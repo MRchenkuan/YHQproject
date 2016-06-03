@@ -81,21 +81,6 @@ include_once "functions.php";
             </ul>
         </div>
         <div id="albums" style="border:1px solid grey">
-            <!--相册-->
-            <?php
-            try{
-                $groupId = $groupList[0]['id'];
-                $albumList = getAlbumList($groupId);
-                foreach($albumList as $item){
-                    echo "<div class=\"album\" data-id=\"".$item['id']
-                        ."\" data-cover='".$item['COVER']
-                        ."' data-name='".$item['NAME']
-                        ."' data-desc='".$item['DESC']."' ><div class='cover'></div><div class='albumRemark'>".$item['NAME']."</div></div>";
-                }
-            }catch(Exception $e){
-                var_dump($e->getTrace());
-            }
-             ?>
         </div>
     </div>
 
@@ -103,7 +88,6 @@ include_once "functions.php";
     <!--面板 contact-->
     <div id="contact" class="contentBoard" style="border: 1px dashed grey;">
         fdsafdsafdsafdsafdsfds
-
     </div>
 
 </div>
@@ -136,6 +120,9 @@ include_once "functions.php";
 
 //文档加载入口
 $(document).ready(function () {
+    // 相册组容器
+    var $albumGroupFrame = $("#albums");
+
     //    首页出现
     $('.contentBoard').eq(0).moveDownIn(1000).queue(function(){
         var $slider = $('#slider');
@@ -161,19 +148,21 @@ $(document).ready(function () {
         var albumList = albumPool[group_id]['list'];
         var innerHtml = "";
         for(var i=0;i<albumList.length;i++){
-            innerHtml += ("<div class='album' data-id='"+albumList[i]['id']
-                +"' data-cover='"+albumList[i]['COVER']
-                +"' data-name='"+albumList[i]['NAME']
-                +"' data-desc='"+albumList[i]['DESC']+"'><div class='cover'></div><div class='albumRemark'>"+albumList[i]['NAME']+"</div></div>")
+            var albumId = albumList[i]['id'];
+            var coverSrc = albumList[i]['THUMB']?albumList[i]['THUMB']:albumList[i]['COVER'];
+            var albumName = albumList[i]['NAME'];
+            var albumDesc = albumList[i]['DESC'];
+            innerHtml += ("<div class='album' data-id='"+albumId
+                +"' data-cover='"+coverSrc
+                +"' data-name='"+albumName
+                +"' data-desc='"+albumDesc+"'><div class='cover'></div><div class='albumRemark'>"+albumName+"</div></div>")
         }
-        $("#albums").html(innerHtml);
-        $("#albums").resizeAlbumsSize();
+        $albumGroupFrame.html(innerHtml);
+        $albumGroupFrame.resizeAlbumsSize();
     });
 
-
-
     //  注册主菜单点击事件
-    $("#index_nav>ul>li").click(function(){
+    $("#index_nav").find(">ul>li").click(function(){
         var id = $(this).attr('data-tar');
         //  滑下当前board
         if (!id || id === '')return;
@@ -185,7 +174,12 @@ $(document).ready(function () {
             currentElem.removeClass("currentboard");
             targetElem.moveDownIn(1000);
             targetElem.addClass("currentboard");
-            $("#albums").resizeAlbumsSize();
+            // 展开相册组时,默认点击第一个相册
+            if(id =='photos'){
+                if($albumGroupFrame.children().length<=0){
+                    $('.groups').eq(0).click();
+                }
+            }
         }).dequeue();
     });
 
@@ -267,9 +261,10 @@ $(document).ready(function () {
     };
 
     // 相册的点击事件
-    $("#albums").delegate(".album","click",function(){
+    $albumGroupFrame.delegate(".album","click",function(){
         $(this).createPhotoViewer();
-    })
+    });
+
 });
 
 

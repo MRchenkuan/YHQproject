@@ -113,7 +113,7 @@
             })
         };
 
-        // 顶部切换为相册组模式
+        // 顶部切换回相册组模式
         this.switchToGroupNav = function(){
             /**
              * 先产生退出动画并结束,在执行界面重制
@@ -122,7 +122,8 @@
                 $backBtn.remove();
                 $albumInfoBar.remove();
                 $navFrame.append($groupNav); // 加入导航条
-                $groupNav.hide().fadeIn(200);// 导航条动画
+                $navFrame.show(); // 由于外部退出,所以需要重新进入
+                $groupNav.fadeIn(200)
             })
         };
 

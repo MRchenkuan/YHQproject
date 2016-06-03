@@ -232,8 +232,8 @@
             $ele.css({
                 top:frameTop+margin,
                 left:frameLeft+margin,
-                width:albumWidth,
-                height:albumHeight
+                width:albumWidth-margin,
+                height:albumHeight-margin
             });
 
             // 加载

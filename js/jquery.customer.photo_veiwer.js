@@ -123,7 +123,7 @@
                 $albumInfoBar.remove();
                 $navFrame.append($groupNav); // 加入导航条
                 $navFrame.show(); // 由于外部退出,所以需要重新进入
-                $groupNav.fadeIn(200)
+                $groupNav.fadeIn(200);
             })
         };
 
@@ -154,14 +154,14 @@
             if(photos&&photos.length>0){
                 photos.some(function(it,id,ar){
                     // 组合相片到相册
-                    // var thumbBox = document.createElement("div");
-                    var thumbBox = document.createElement("img");
+                    var thumbBox = document.createElement("div");
                     var $thumbBox = $(thumbBox);
                     $thumbBox.addClass("thumbBox");
                     $thumbBox.attr("data-id",it["id"]);
-                    $thumbBox.attr("data-path",it["PATH"]);
+                    $thumbBox.attr("data-path",it["THUMB"]||it["PATH"]);
                     $thumbBox.attr("data-desc",it["DESC"]);
                     $thumbBox.attr("data-name",it["NAME"]);
+                    $thumbBox.attr("data-index",id+1);
                     $frame.append(thumbBox);
                     $thumbBox.click(function(e){
                         e.stopPropagation();
@@ -182,71 +182,74 @@
 
     }
 
-    // 相册重排器
+    // 相片重排器
     function resizePhotos($frame){
         var $thumbBoxex = $frame.find(".thumbBox");
-        var verticalCount=3;
-        var aspectRatio = 5/4;
+        var verticalCount=4;
         var frameHeight =$frame.height();
         var frameWidth = $frame.width();
-        var framePadding = frameHeight*.05;
-        var albumFullHeight =(frameHeight-framePadding*2)*(1/verticalCount);
-        var albumFullWidth = albumFullHeight*aspectRatio;
-        var albumHeight = albumFullHeight-20;//根据竖向个数计算相册高度-除去边距
-        var albumWidth = albumFullWidth-20;
+        var aspectRatio = frameWidth/frameHeight;
+        var margin = 5;
+        var albumHeight,albumWidth;
 
+        // 屏幕宽高比
+        if(aspectRatio>1){
+            albumHeight = albumWidth = frameHeight / verticalCount - margin;
+        }else{
+            albumHeight = albumWidth = frameWidth / verticalCount - margin;
+        }
+
+        // 批量设置样式
         $thumbBoxex.each(function(index,ele){
             var $ele = $(ele);
-            var position = { // x:0-n,y:0-3
-                y:index%verticalCount,
-                x:Math.ceil((index+1)/verticalCount)-1
-            };
-            var frameTop = position.y*albumFullHeight+framePadding;
-            var frameLeft = position.x*albumFullWidth+framePadding;
+            // 相片缩略图横纵序号
+            var position ;
+            if(aspectRatio>1){
+                position= { // x:0-n,y:0-3
+                    y:index%verticalCount,
+                    x:Math.ceil((index+1)/verticalCount)-1
+                };
+            }else{
+                position= { // x:0-n,y:0-3
+                    x:index%verticalCount,
+                    y:Math.ceil((index+1)/verticalCount)-1
+                };
+            }
 
-            // 相片缩略图
-            $ele.attr("src",$ele.attr('data-path'));
-            $ele.attr("data-index",index);// 序号
+            // 遮罩
+            var eleCover = document.createElement("div");
+            var $eleCover = $(eleCover);
+            $eleCover.addClass("eleCover");
+            $ele.append($eleCover);
+
+
+            // 缩略图位置
+            var frameTop = position.y*albumHeight+margin;
+            var frameLeft = position.x*albumWidth+margin;
+
+            // 缩略图样式
             $ele.css({
-                position:"absolute",
                 opacity:1,
                 top:frameTop,
                 left:frameLeft,
-                border:"5px solid #fff"
+                width:albumWidth,
+                height:albumHeight,
+                border: margin+"px solid #fff"
             });
-            $ele.load(function () {
-                // 判断横竖
-                var isImageVertical = $ele.height()>$ele.width();
-                var width,height,top,left;
 
-
-                if(isImageVertical){
-                    width = "auto";
-                    height = albumHeight;
-                }else{
-                    width = albumWidth;
-                    height = "auto";
-                }
-
-                // 设置尺寸
+            // 加载
+            var _thumbImg = document.createElement("img");
+            var $_thumbImg = $(_thumbImg);
+            _thumbImg.src = $ele.attr('data-path');
+            $_thumbImg.load(function () {
+                // 设置缩略图
                 $ele.css({
-                    width:width,
-                    height:height
+                    backgroundImage:"url('"+$ele.attr('data-path')+"')"
                 });
 
-                if(isImageVertical){
-                    top= frameTop;
-                    left = frameLeft+albumWidth/2-$ele.width()/2;
-                }else{
-                    top = frameTop+albumHeight/2-$ele.height()/2;
-                    left = frameLeft;
-                }
-
-                console.log($ele.width());
-                // 设置位置
-                $ele.css({
-                    top:top,
-                    left:left
+                // 遮罩归零
+                $eleCover.fadeOut(500,function () {
+                    $eleCover.remove();
                 })
 
             });

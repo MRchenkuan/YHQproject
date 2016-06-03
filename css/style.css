@@ -162,6 +162,7 @@ a {
     background-size: cover;
     transition: all .5s ease;
     opacity: 0;
+    overflow: hidden;
 }
 
 .album .cover{
@@ -175,9 +176,25 @@ a {
     background-size: 20%;
 }
 
-.thumbBox{transition:all .5s ease }
-.thumbBox:hover{transition:all .1s ease;transform: scale(1.15)}
+.thumbBox{
+    position:absolute;
+    transition:all .5s ease ;
+    background-size:cover;
+    background: no-repeat center;
+    opacity: 1;
+}
 
+.thumbBox:hover{transition:all .1s ease;opacity: .5}
+
+.thumbBox .eleCover{
+    position:absolute;
+    top:0;
+    right:0;
+    width:100%;
+    height:100%;
+    background-size:cover;
+    background: #161616 url('../img/ui/loading.gif') no-repeat center;
+}
 .innerShadWhite {
     color: rgba(128, 128, 128, 0.5);
     text-shadow: 1px 1px 1px #FFF, 0 0 0 #000;
@@ -215,22 +232,25 @@ a {
 }
 
 .album .albumRemark{
-    transition:height .3s ease;
+    transition:all .3s ease;
     background: #2d2d2d;
     opacity: .7;
     position:absolute;
     height: 0;
-    width: 98%;
-    padding: 1%;
+    width: 100%;
     bottom: 0;
     left: 0;
     color:#fff;
     overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    line-height: 1.5;
+
 }
 
 .album:hover .albumRemark{
     transition:all .1s ease;
-    height: 20%;
+    height:20% ;
 }
 
 

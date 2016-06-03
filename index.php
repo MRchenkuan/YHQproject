@@ -81,6 +81,7 @@ include_once "functions.php";
             </ul>
         </div>
         <div id="albums" style="border:1px solid grey">
+
         </div>
     </div>
 
@@ -155,7 +156,8 @@ $(document).ready(function () {
             innerHtml += ("<div class='album' data-id='"+albumId
                 +"' data-cover='"+coverSrc
                 +"' data-name='"+albumName
-                +"' data-desc='"+albumDesc+"'><div class='cover'></div><div class='albumRemark'>"+albumName+"</div></div>")
+                +"' data-desc='"+albumDesc+"'>"
+                + "<div class='cover'></div><div class='albumRemark'>"+albumName+"</div></div>")
         }
         $albumGroupFrame.html(innerHtml);
         $albumGroupFrame.resizeAlbumsSize();

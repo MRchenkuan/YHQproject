@@ -52,7 +52,7 @@ include_once "functions.php";
 <div id="boards">
     <!--面板 home-->
     <div id="home" class="contentBoard currentboard">
-        <div id="slider" style="border: 1px solid grey ;position:relative;width: 100%;height: 100%">
+        <div id="slider" style="position:relative;width: 100%;height: 100%">
             <!--封面-->
             <?php
             $coverList = getCoverList();
@@ -67,7 +67,7 @@ include_once "functions.php";
     </div>
 
     <!--面板 相册-->
-    <div id="photos" class="contentBoard"  style="border: 1px dashed grey;">
+    <div id="photos" class="contentBoard">
         <div id="photos_nav">
             <ul>
                 <!--导航条-->
@@ -89,7 +89,7 @@ include_once "functions.php";
 
 
     <!--面板 contact-->
-    <div id="contact" class="contentBoard" style="border: 1px dashed grey;">
+    <div id="contact" class="contentBoard">
         fdsafdsafdsafdsafdsfds
     </div>
 

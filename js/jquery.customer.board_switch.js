@@ -1,14 +1,11 @@
 //<!--板块滑动插件-->
 ;(function ($, w) {
     $.fn.moveDownOut = function (speed) {
-        console.log("a");
 
         var target = $(this);
         target.css('position', 'absolute');
-        console.log("b");
 
         target.stop().animate({top: w.innerHeight - target.height() / 2}, speed, 'swing').dequeue().fadeOut(speed/2);
-        console.log("c");
 
         return target
     };

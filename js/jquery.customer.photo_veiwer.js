@@ -14,11 +14,12 @@
         var albumId = $this.attr("data-id");
         var albumName = $this.attr("data-name");
         var albumDesc = $this.attr("data-desc");
-
         photoViewer.show(albumName,albumDesc);
         if(cached[albumId]){
+            console.log(albumId+" is cached");
             photoViewer.init(cached[albumId]);
         }else{
+            console.log(albumId+" is not cached");
             photoViewer.showLoading(true);
             $.ajax({
                 url:"./backstage/pages/Data.php?id=getPhotosByAlbumId&albumId="+albumId,
@@ -149,7 +150,8 @@
         };
 
         // 相册浏览器初始化方法
-        this.init = function(photos,albumName,albumDesc){
+        this.init = function(photos){
+            $frame.html("");
             if(photos&&photos.length>0){
                 photos.some(function(it,id,ar){
                     // 组合相片到相册
@@ -198,8 +200,18 @@
 
         // 屏幕宽高比
         if(aspectRatio>1){
+            // 宽屏重设滚动
+            $frame.css({
+                overflowY:"hidden",
+                overflowX:"auto"
+            });
             albumHeight = albumWidth = frameHeight / verticalCount - margin;
         }else{
+            // 高屏重设滚动
+            $frame.css({
+                overflowY:"auto",
+                overflowX:"hidden"
+            });
             albumHeight = albumWidth = frameWidth / verticalCount - margin;
         }
 

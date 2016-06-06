@@ -369,7 +369,7 @@ function getNewsContent(){
 function uploadImgAjax()
 {
 
-    $imgdatastring = $_POST['imgDataString'] or null;
+    $imgdatastring = $_REQUEST['imgDataString'] or null;
     $uploaddir = IMAGE_BED_DIR . date('Ymd') . '/';
     if (!file_exists($uploaddir)) {
         if (mkdir($uploaddir)) {
@@ -379,6 +379,7 @@ function uploadImgAjax()
         };
     }
 
+    var_dump($_REQUEST);
     /*base64保存为图片，并写入数据库*/
     if($imgdatastring){
         //do someting for 保存图片

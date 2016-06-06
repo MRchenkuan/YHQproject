@@ -65,7 +65,7 @@
 
     <!-- 得相册的所有照片 -->
     <select id="getPhotoInfoByAlbumId" >
-        select * from T_PHOTO a where a.`ALBUMID`= #{id}
+        select * from T_PHOTO a where a.`ALBUMID`= #{id} order by a.id desc
     </select>
 
     <!-- 根据id更新相册信息 -->

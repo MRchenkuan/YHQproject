@@ -441,6 +441,11 @@
             var name = photoObj["name"];
             var url = photoObj["PATH"];
             $number_index.text(nowIndex);
+            // 清空当前图
+            $image.css({
+                backgroundImage:"none"
+            });
+            image.src = "";
             _image.src = url;
         };
 
@@ -454,8 +459,13 @@
             var desc = photoObj["DESC"];
             var name = photoObj["name"];
             var url = photoObj["PATH"];
-            _image.src = url;
             $number_index.text(nowIndex);
+            // 清空当前图
+            $image.css({
+                backgroundImage:"none"
+            });
+            _image.src = url;
+
         };
 
         // 移开大图

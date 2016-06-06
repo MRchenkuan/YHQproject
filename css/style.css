@@ -44,7 +44,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: #f6f6f6;
+    background: #fff;
     font-family: Consolas,"Liberation Mono",Menlo,Courier,monospace;;
 }
 a {
@@ -54,7 +54,7 @@ a {
 #nav {
     width: 100%;
     height: 10%;
-    background-color: #f6f6f6;
+    background-color: #fff;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -62,7 +62,7 @@ a {
 #boards{
     width: 100%;
     height: 90%;
-    background: #f6f6f6;
+    background: #fff;
     position: absolute;
     top: 10%;
     bottom: 0;
@@ -71,7 +71,7 @@ a {
 #index_nav {
     position: absolute;
     right: 115px;
-    top: 20px;
+    bottom:0;
 }
 
 #index_nav ul {
@@ -79,18 +79,20 @@ a {
     margin: 0;
 }
 
-#index_nav ul li {
+.home_menu {
     position: relative;
-    height: 30px;
     float: left;
     list-style: none;
     margin: 0 10px;
-    background-repeat: no-repeat;
-    background-size:contain ;
+    transition: all .3s ease;
+    top:0;
+    border: 1px solid #fff;
+
 }
 
-#index_nav ul li:hover {
-    border-bottom: 1px solid grey;
+.home_menu:hover {
+    top:-5px;
+    border: 1px solid grey;
 }
 
 .sliderImg {
@@ -184,7 +186,7 @@ a {
     width: 100%;
     height: 100%;
     transition: width 1s ease;
-    background: white url('../img/ui/logo.png') center no-repeat;
+    background: #eee url('../img/ui/logo.png') center no-repeat;
     background-size: 20%;
 }
 
@@ -206,7 +208,7 @@ a {
     right:0;
     width:100%;
     height:100%;
-    background: #fff url('../img/ui/logo.png') no-repeat center;
+    background: #eee url('../img/ui/logo.png') no-repeat center;
     background-size:50%;
     transition: all 1s ease;
 }
@@ -266,6 +268,11 @@ a {
 .album:hover .albumRemark{
     transition:all .1s ease;
     height:20% ;
+}
+
+.contact_blocks{
+    border:1px solid grey;
+    float: left;
 }
 
 

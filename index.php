@@ -28,22 +28,10 @@ include_once "functions.php";
 <div id="nav" style="overflow: visible">
     <div id="index_nav">
         <ul>
-            <li id="menu_home" style="background-image: url('img/ui/home.png') ;width: 65px" data-tar="home"></li>
-            <li id="menu_photos" style="background-image: url('img/ui/gallery.png');width: 70px" data-tar="photos"></li>
-            <li id="menu_contact" style="background-image: url('img/ui/contact.png');width: 95px" data-tar="contact"></li>
-            <a href="http://terryyhq.diandian.com/" target="_blank"><li id="menu_stories" style="background-image: url('img/ui/stories.png');width: 65px"></li></a>
-            <script>
-                $('#index_nav').find('li').each(function () {
-                    var t = $(this);
-                    t.mouseover(function () {
-                        if (t.is(':animated'))return;
-                        t.stop().css({top: 0}).animate({'margin-top': 5})
-                    });
-                    t.mouseout(function () {
-                        t.stop().css({top: 0}).animate({'margin-top': 0})
-                    });
-                })
-            </script>
+            <li class="home_menu" id="menu_home"  data-tar="home">HOME 主页</li>
+            <li class="home_menu" id="menu_photos" data-tar="photos">GALLERY 相册</li>
+            <li class="home_menu" id="menu_contact" data-tar="contact">CONTACT 联系</li>
+<!--            <a href="http://terryyhq.diandian.com/" target="_blank"><li id="menu_stories" style="background-image: url('img/ui/stories.png');width: 65px"></li></a>-->
         </ul>
     </div>
 </div>
@@ -90,7 +78,25 @@ include_once "functions.php";
 
     <!--面板 contact-->
     <div id="contact" class="contentBoard">
-        fdsafdsafdsafdsafdsfds
+        <img class="contact_blocks" src="./img/ui/avt.jpg">
+        <div class="contact_blocks">
+            我们是一群有爱的摄影师<br>
+            我们拍摄不同败材的照片<br>
+            我们的拍摄对象大多是普通人<br>
+            我们追求真实自然精致的画面<br>
+            我们认为照片承载的是一段记忆<br>
+            是一种情感的表达,更是意犹未尽的故事.<br>
+            我们期待遇见有故事的你。<br>
+
+            We are a team of photographers with love and pattence.<br>
+            We shoot different kinds of photos.<br>
+            Our customers are mostly ordinary people.<br>
+            We pursue the pictures which are true, natural and exquisite. <br>
+            We consider that a photo is 函ke a kind of memory,<br>
+            a kind of emotion and a boundless story<br>
+            We are tooking forward to meeting you and your story<br>
+        </div>
+        <div class="contact_blocks">fdsafdsa</div>
     </div>
 
 </div>
@@ -137,16 +143,6 @@ $(document).ready(function () {
         }, 2000);
     });
 
-    // 主菜单出现
-    boxjumping(document.getElementById('menu_home'), '20px', function () {
-        boxjumping(document.getElementById('menu_photos'), '20px', function () {
-            boxjumping(document.getElementById('menu_contact'), '20px', function () {
-                boxjumping(document.getElementById('menu_stories'), '20px', function () {
-                })
-            });
-        });
-    });
-
     // 注册各个分组按钮点击事件
     $photosNav.delegate(".groups","click",function () {
         var group_id = this.getAttribute("data-groupid");
@@ -185,6 +181,24 @@ $(document).ready(function () {
                 if($albumGroupFrame.children().length<=0){
                     $('.groups').eq(0).click();
                 }
+            }
+
+            // 展开联系人页面时,默认修改样式
+            if(id =='contact'){
+                var $this = $('#contact');
+                var frameHeight =$this.height();
+                var frameWidth =$this.width();
+                var aspectRatio = frameWidth/frameHeight;
+
+                // 修正宽度
+                $('.contact_blocks').css({
+                    width:aspectRatio>=1?"33%":"100%"
+                });
+
+                // 修正框架滚动
+                $this.css({
+                    overflow:aspectRatio>=1?"hidden":"auto"
+                })
             }
         }).dequeue();
     });
@@ -300,22 +314,6 @@ $(document).ready(function () {
     })
 
 });
-
-//  定义各个板块出现的方法
-var timer;//定时器
-
-//  定义图片跳跃方法
-function boxjumping(elem, distance, callback) {
-    var t = $(elem);
-    t.css({left: 0});
-    t.animate({
-        top: "-=" + distance
-    }, 150, 'swing', function () {
-        if (callback)callback();
-    }).animate({
-        top: "+=" + distance
-    }, 600, 'easeInOutQuad');
-}
 
 // 声音播放
 function soundPlay(src) {

@@ -13,6 +13,16 @@ class photoAlbumDAO extends DBC{
         return parent:: __construct(get_class($this));
     }
 
+
+    /**
+     * 获取所有相册组信息
+     */
+    public function getAllGroups(){
+        $rs = $this->getResult(__FUNCTION__);
+        $row = $rs->fetchAll(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
     /**
      * 根据相册ID获取相册照片
      * @param $albumId
@@ -101,7 +111,7 @@ class photoAlbumDAO extends DBC{
      * @param int $count
      * @return array
      */
-    public function getAllAlbums($count = 100)
+    public function getAllAlbums($count = 1000)
     {
         $rs = $this->getResult(__FUNCTION__,array("count"=>$count));
         $rows = $rs->fetchAll();

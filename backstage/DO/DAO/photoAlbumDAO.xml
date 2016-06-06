@@ -2,7 +2,13 @@
 <mapper>
     <!--根据相册分类ID查询相册 包括cover-->
     <select id="getAlbumsByGroupId" >
-        select *,(SELECT p.`PATH` FROM T_PHOTO p WHERE p.`id` = a.cover) COVER from T_ALBUM a where a.GROUP = 1 order by a.order;
+        select
+            *,
+            (SELECT p.`PATH` FROM T_PHOTO p WHERE p.`id` = a.cover) COVER ,
+            (select p.THUMB from T_PHOTO p where p.id=a.COVER) THUMB,
+            (select count(*) from T_PHOTO p where p.`ALBUMID`=a.`id` )count
+        from
+            T_ALBUM a where a.GROUP = #{id} order by a.order;
     </select>
 
     <!--获取相册groupId-->
@@ -30,7 +36,7 @@
         from T_ALBUM a where a.group=#{groupId} order by a.ORDER;
     </select>
 
-    <!--获取图片列表-->
+    <!--根据albumid获取图片列表-->
     <select id="getPhotosByAlbumId" >
         select
         id,`NAME`,`DESC`,`PATH`,`THUMB`
@@ -38,26 +44,33 @@
     </select>
 
 
-
-
     <!--根据ID查询相册信息-->
     <select id="getAlbumInfoById" >
-        select * from T_TABLE_PHOTO_ALBUM a where a.id = #{id};
+        select * from T_ALBUM a where a.id = #{id};
     </select>
 
-    <!--根据ID查询所有照片-->
-    <select id="getPhotoInfoByAlbumId" >
-        select * from T_TABLE_PHOTOS a where a.albumid = #{id};
-    </select>
 
     <!-- 得到所有相册 -->
     <select id="getAllAlbums" >
-        select * from T_TABLE_PHOTO_ALBUM limit #{count};
+        select
+        *,
+        (select count(*) from T_PHOTO a where a.`ALBUMID`=b.`id` )count
+        from T_ALBUM b limit #{count};
+    </select>
+
+    <!-- 得到所有相册组 -->
+    <select id="getAllGroups" >
+        select * from T_GROUP order by `ORDER`
+    </select>
+
+    <!-- 得相册的所有照片 -->
+    <select id="getPhotoInfoByAlbumId" >
+        select * from T_PHOTO a where a.`ALBUMID`= #{id}
     </select>
 
     <!-- 根据id更新相册信息 -->
     <update id="updateAlbumById" >
-        replace into T_TABLE_PHOTO_ALBUM(#{colname}) VALUES(#{value});
+        replace into T_ALBUM(#{colname}) VALUES(#{value});
     </update>
 
 </mapper>

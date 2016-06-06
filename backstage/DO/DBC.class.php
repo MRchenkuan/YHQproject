@@ -18,6 +18,8 @@ class DBC{
             $this->pdo = new PDO($dsn, $USERNAME, $PASSWORD);
         }catch (Exception $e){
             var_dump($e);
+            echo $e->getTrace();
+
         }
 
 

@@ -7,34 +7,23 @@
  */
 $pageID = 'photoLib';
 require_once('../definitions.php');
-include(WIDGETS_DIR.'/head.php');
+include_once(WIDGETS_DIR.'/head.php');
 $id = $_GET['id'];
+require_once(DATABASE_DAO_DIR."/photoAlbumDAO.php");
 
+$data = new photoAlbumDAO();
+$thisalbum = $data->getAlbumInfoById($id);
+$photos = $data->getPhotoInfoByAlbumId($id);
+$albums = $data->getAllAlbums();
 
-if(strtoupper(DB_TYPE)=='FILE'){
-    include KODBC_PATH;
-    $photobase = new Kodbc('T_TABLE_PHOTOBASE');
-    $photoalbum = new Kodbc('T_TABLE_PHOTO_ALBUM');
-
-    $thisalbum = $photoalbum->getById($id) or null;
-    $photos = $photobase->getByAttr('albumid',$id) or null;
-    $albums = $photoalbum->getAllItems();
-}else{
-    require_once(DATABASE_DAO_DIR."/photoAlbumDAO.php");
-    $data = new photoAlbumDAO();
-    $thisalbum = $data->getAlbumInfoById($id) or null;
-    $photos = $data->getPhotoInfoByAlbumId($id) or null;
-    $albums = $data->getAllAlbums();
-}
-
-
+if($id=="0")$thisalbum['NAME']="未绑定相册";
 
 ?>
 <!--album-->
 <div class="panel panel-default"  style="width: 960px;margin: 60px auto 0 auto">
 
     <div class="panel-heading">
-        <h3 class="panel-title">相册《<?php echo $thisalbum['remark'] ?>》下的图片</h3>
+        <h3 class="panel-title">相册《<?php echo $thisalbum['NAME'] ?>》下的图片</h3>
     </div>
 
     <!-- 文件上传控制按钮 -->
@@ -44,10 +33,6 @@ if(strtoupper(DB_TYPE)=='FILE'){
 
     <div class="panel-body">
     <?php
-    /*首先检查是否维护相册统计数*/
-    if($thisalbum['count']!=count($photos)){
-        $photoalbum->updateItem($id,array('count'=>count($photos)));
-    }
 
     /*****************
      * 查看未绑定的图片
@@ -56,15 +41,13 @@ if(strtoupper(DB_TYPE)=='FILE'){
         require_once(WIDGETS_DIR.'getUnbindedImg.php');
         $unbindedimgs = getUnbindedImg(STATIC_DIR.'images/');
         foreach($unbindedimgs as $key=>$unbindeimg){
-            if($photobase->getByAttr('imgsrc',$unbindeimg)){
+            if('在数据库中找到图片地址'){
                 unset($unbindedimgs[$key]);
             }
         }
-        /**更新未分类的图片数*/
-        if($thisalbum['count']!=count($unbindedimgs)){
-            $photoalbum->updateItem($id,array('count'=>(count($unbindedimgs)+count($photos))));
-        }
+        // 对于没找到的图片
         foreach($unbindedimgs as $photo){
+            if($photo['THUMB'])$photo['PATH'] = $photo['THUMB'];
             ?>
             <div class="col-xs-6 col-md-3">
                 <span onclick="if(confirm('继续操作将删除此图片！'))delImg(this);" data-imgsrc="<?php echo $photo?>" class="glyphicon glyphicon-remove-sign" data-toggle="tooltip" data-placement="top" title="删除图片" style="float: right;margin: 5px;color: #e94513"></span>
@@ -74,7 +57,7 @@ if(strtoupper(DB_TYPE)=='FILE'){
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         <li class="dropdown-header">绑定图片到相册</li>
                         <?php foreach($albums as $album){ ?>
-                            <li><a onclick="moveImgToAlbum(this)" data-imgsrc="<?php echo $photo?>" data-albumid="<?php echo $album['id']?>" href="javascript:void(0)"><?php echo $album['remark']?></a></li>
+                            <li><a onclick="moveImgToAlbum(this)" data-imgsrc="<?php echo $photo?>" data-albumid="<?php echo $album['id']?>" href="javascript:void(0)"><?php echo $album['NAME']?></a></li>
                         <?php } ?>
                     </ul>
                 </div>
@@ -91,9 +74,11 @@ if(strtoupper(DB_TYPE)=='FILE'){
     if(!$photos||count($photos)==0){
         echo '相册中没有图片';
     }else{
-        foreach($photos as $photo){?>
+        foreach($photos as $photo){
+            if($photo['THUMB'])$photo['PATH'] = $photo['THUMB'];
+            ?>
             <div class="col-xs-6 col-md-3">
-                <span onclick="if(confirm('继续操作将删除此图片！'))delImg(this);" data-imgsrc="<?php echo $photo['imgsrc']?>" data-imgid="<?php echo $photo['id']?>" class="glyphicon glyphicon-remove-sign" data-toggle="tooltip" data-placement="top" title="删除图片" style="float: right;margin: 5px;color: #e94513"></span>
+                <span onclick="if(confirm('继续操作将删除此图片！'))delImg(this);" data-imgsrc="<?php echo $photo['PATH']?>" data-imgid="<?php echo $photo['id']?>" class="glyphicon glyphicon-remove-sign" data-toggle="tooltip" data-placement="top" title="删除图片" style="float: right;margin: 5px;color: #e94513"></span>
                 <span style="float: right;margin: 5px;color: #05c133" class="glyphicon glyphicon-info-sign" data-toggle="modal" data-placement="top" title="编辑图片" data-target="#imageEditor"></span>
                 <div class="dropdown" style="float: right;margin: 4px;color: #5f6297">
                     <span class="glyphicon glyphicon-circle-arrow-right dropdown-toggle" data-toggle="dropdown" id="dropdownMenu2" aria-haspopup="true" aria-expanded="false" data-placement="top" title="移动图片"></span>
@@ -101,12 +86,12 @@ if(strtoupper(DB_TYPE)=='FILE'){
                         <li class="dropdown-header">移动图片到相册</li>
                         <?php
                         foreach($albums as $album) { ?>
-                            <li><a onclick="moveImgToAlbum(this)" data-imgid="<?php echo $photo['id']?>" data-albumid="<?php echo $album['id']?>" href="javascript:void(0)"><?php echo $album['remark']?></a></li>
+                            <li><a onclick="moveImgToAlbum(this)" data-imgid="<?php echo $photo['id']?>" data-albumid="<?php echo $album['id']?>" href="javascript:void(0)"><?php echo $album['NAME']?></a></li>
                         <?php } ?>
                     </ul>
                 </div>
-                <a href="<?php echo $photo['imgsrc']?>" class="thumbnail">
-                    <img src="<?php echo $photo['imgsrc']?>" alt="<?php echo $photo['remark']?>">
+                <a href="<?php echo $photo['PATH']?>" class="thumbnail">
+                    <img src="<?php echo $photo['PATH']?>" alt="<?php echo $photo['NAME']?>">
                 </a>
             </div>
         <?php }

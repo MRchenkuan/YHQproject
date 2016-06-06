@@ -91,7 +91,7 @@ function userLogin()
         ));
         return;
     }
-    if ($username == 'as' && $password == 'as') {
+    if ($username == "ss" && $password == "ss") {
         /*记录session值并写入cookie*/
         setcookie('SSID', session_id(),time()+43200);
         $_SESSION['stat'] = 'login';
@@ -140,11 +140,7 @@ function createAdvt()
 {
     $id = $_GET['adid'];
     $order = $_GET['order'];
-    $title = $_GET['title'];
     $imgsrc = $_GET['imgsrc'];
-    $update = $_GET['update'];
-    $dndate = $_GET['dndate'];
-    $remark = $_GET['remark'];
 
     if (!userVerify()) {
         /*验证用户登陆*/
@@ -155,15 +151,12 @@ function createAdvt()
         echo false;
     }
 
-    $Kodbc = new Kodbc('T_TABLE_ADVTS');
+    $Kodbc = new photoAlbumDAO();
     $dataitem = array(
-        'order' => $order,
+        'ORDER' => $order,
         'stat' => 'disable',
-        'title' => $title,
-        'imgsrc' => $imgsrc,
-        'update' => $update,
-        'dndate' => $dndate,
-        'remark' => $remark
+        'PATH' => $imgsrc,
+        'THUMB'=> $imgsrc
     );
 
     /*更新或者新增取决于ID是否存在*/
@@ -529,30 +522,15 @@ function createAlbum(){
         $albumname = $_GET['albumname'];
         $stat = $_GET['stat'];
 
-        $Kodbc = new Kodbc(DATA_TABLE_DIR.'T_TABLE_PHOTO_ALBUM.xml');
-        if($_GET['albumid']&&$_GET['albumid']!==''){
-            $Kodbc->updateItem($_GET['albumid'],array(
-                'stat'=>$stat,
-                'remark'=>$albumname,
-                'pubdata'=>date('Y-m-d\TH:i')
-            ));
-            echo json_encode(array(
-                'stat'=>200,
-                'msg'=>"《{$albumname}》修改成功",
-            ));
-        }else{
-            $Kodbc->insertItem(array(
-                'stat'=>$stat,
-                'remark'=>$albumname,
-                'editable'=>1,
-                'count'=>0,
-                'pubdata'=>date('Y-m-d\TH:i')
-            ));
-            echo json_encode(array(
-                'stat'=>200,
-                'msg'=>"《{$albumname}》创建成功",
-            ));
-        }
+        $Kodbc = new photoAlbumDAO();
+        $Kodbc->updateItem($_GET['albumid'],array(
+            'stat'=>$stat,
+            'NAME'=>$albumname,
+        ));
+        echo json_encode(array(
+            'stat'=>200,
+            'msg'=>"《{$albumname}》修改成功",
+        ));
     }catch (Exception $e){
         echo json_encode(array(
             'stat'=>202,

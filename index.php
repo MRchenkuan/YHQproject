@@ -196,17 +196,22 @@ $(document).ready(function () {
 
                 // 修正宽高
                 if(aspectRatio>1){
+                    // 外围框架
                     $this.css({
                         height  :   $this.parent().height() *.6,
                         top     :   $this.parent().height() * .2,
                         overflow:   "hidden"
                     });
+
+                    // 三区块
                     var $all_blocks = $('.contact_blocks');
                     $all_blocks.css({
                         width:"33%",
                         height:"100%",
                         float:"left"
                     });
+
+                    // 中间区块行高
                     $(".contact_blocks .lines").each(function(){
                         var $this = $(this);
                         $this.css({
@@ -214,6 +219,7 @@ $(document).ready(function () {
                         })
                     })
                 }else{
+                    // 竖向样式
                     $('.contact_blocks').css({
                         width:"100%"
                     });

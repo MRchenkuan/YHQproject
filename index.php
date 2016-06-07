@@ -78,25 +78,29 @@ include_once "functions.php";
 
     <!--面板 contact-->
     <div id="contact" class="contentBoard">
-        <img class="contact_blocks" src="./img/ui/avt.jpg">
-        <div class="contact_blocks">
-            我们是一群有爱的摄影师<br>
-            我们拍摄不同败材的照片<br>
-            我们的拍摄对象大多是普通人<br>
-            我们追求真实自然精致的画面<br>
-            我们认为照片承载的是一段记忆<br>
-            是一种情感的表达,更是意犹未尽的故事.<br>
-            我们期待遇见有故事的你。<br>
-
-            We are a team of photographers with love and pattence.<br>
-            We shoot different kinds of photos.<br>
-            Our customers are mostly ordinary people.<br>
-            We pursue the pictures which are true, natural and exquisite. <br>
-            We consider that a photo is 函ke a kind of memory,<br>
-            a kind of emotion and a boundless story<br>
-            We are tooking forward to meeting you and your story<br>
+        <div class="frame">
+            <img class="contact_blocks" src="./img/ui/avt.jpg">
+            <div class="contact_blocks">
+                <span class="lines">我们是一群有爱的摄影师</span>
+                <span class="lines">我们拍摄不同败材的照片</span>
+                <span class="lines">我们的拍摄对象大多是普通人</span>
+                <span class="lines">我们追求真实自然精致的画面</span>
+                <span class="lines">我们认为照片承载的是一段记忆</span>
+                <span class="lines">是一种情感的表达,更是意犹未尽的故事.</span>
+                <span class="lines">我们期待遇见有故事的你。</span>
+                <span class="lines"></span>
+                <span class="lines">We are a team of photographers with love and pattence.</span>
+                <span class="lines">We shoot different kinds of photos.</span>
+                <span class="lines">Our customers are mostly ordinary people.</span>
+                <span class="lines">We pursue the pictures which are true, natural and exquisite. </span>
+                <span class="lines">We consider that a photo is like a kind of memory,</span>
+                <span class="lines">a kind of emotion and a boundless story</span>
+                <span class="lines">We are tooking forward to meeting you and your story</span>
+            </div>
+            <div class="contact_blocks">
+                fdsadfaf
+            </div>
         </div>
-        <div class="contact_blocks">fdsafdsa</div>
     </div>
 
 </div>
@@ -185,20 +189,36 @@ $(document).ready(function () {
 
             // 展开联系人页面时,默认修改样式
             if(id =='contact'){
-                var $this = $('#contact');
+                var $this = $('#contact').find('.frame');
                 var frameHeight =$this.height();
                 var frameWidth =$this.width();
                 var aspectRatio = frameWidth/frameHeight;
 
-                // 修正宽度
-                $('.contact_blocks').css({
-                    width:aspectRatio>=1?"33%":"100%"
-                });
+                // 修正宽高
+                if(aspectRatio>1){
+                    $this.css({
+                        height  :   $this.parent().height() *.6,
+                        top     :   $this.parent().height() * .2,
+                        overflow:   "hidden"
+                    });
+                    var $all_blocks = $('.contact_blocks');
+                    $all_blocks.css({
+                        width:"33%",
+                        height:"100%",
+                        float:"left"
+                    });
+                    $(".contact_blocks .lines").each(function(){
+                        var $this = $(this);
+                        $this.css({
+                            height:$all_blocks.height()/15
+                        })
+                    })
+                }else{
+                    $('.contact_blocks').css({
+                        width:"100%"
+                    });
+                }
 
-                // 修正框架滚动
-                $this.css({
-                    overflow:aspectRatio>=1?"hidden":"auto"
-                })
             }
         }).dequeue();
     });

@@ -274,7 +274,21 @@ a {
     border:1px solid grey;
     float: left;
 }
-
+.contact_blocks .lines{
+    display: block;
+    padding: 0 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 12px;
+}
+#contact .frame{
+    float: left;
+    height: 100%;
+    width:100%;
+    overflow: scroll;
+    position: relative;
+}
 
 
 

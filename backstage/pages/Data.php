@@ -379,24 +379,23 @@ function uploadImgAjax()
         };
     }
 
-    var_dump($_REQUEST);
     /*base64保存为图片，并写入数据库*/
     if($imgdatastring){
         //do someting for 保存图片
-        if (preg_match('/^(data:\s*images\/(\w+);base64,)/', $imgdatastring, $result)){
-            $type = $result[2];
+        if (preg_match('/^(data:(\w+)\/(\w+);base64,)/', $imgdatastring, $result)){
+            $type = $result[3];
             $uploadfileUrl = $uploaddir. time().'.'.$type;
             if (file_put_contents($uploadfileUrl, base64_decode(str_replace($result[1], '', $imgdatastring)))){
                 //写入数据库
-                $Kodbc = new Kodbc('T_TABLE_PHOTOBASE');
-                $Kodbc->insertItem(array(
-                        'albumid'=>$_POST['albumid'],
-                        'stat'=>'active',
-                        'remark'=>$_POST['remark'],
-                        'imgsrc'=>$uploadfileUrl,
-                        'pubdata'=> date('Y-m-d\TH:i')
-                    )
-                );
+//                $Kodbc = new Kodbc('T_TABLE_PHOTOBASE');
+//                $Kodbc->insertItem(array(
+//                        'albumid'=>$_POST['albumid'],
+//                        'stat'=>'active',
+//                        'remark'=>$_POST['remark'],
+//                        'imgsrc'=>$uploadfileUrl,
+//                        'pubdata'=> date('Y-m-d\TH:i')
+//                    )
+//                );
 
                 echo json_encode(array(
                     'stat'=>200,
@@ -425,6 +424,7 @@ function uploadImgAjax()
             echo json_encode(array(
                 'stat'=>202,
                 'imgurl'=>null,
+                'imgdata'=>$imgdatastring,
                 'msg'=>'图片字符串匹配失败！也未填写图片URL',
             ));
         }

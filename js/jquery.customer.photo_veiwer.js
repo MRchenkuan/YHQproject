@@ -391,7 +391,8 @@
         $_image.error(function () {
             $image.css({
                 backgroundImage:"url('img/ui/logo.png')",
-                backgroundColor:"#ccc",
+                backgroundColor:"#red",
+                opacity:".5",
                 color:"#000",
                 textAlign:"center"
             });

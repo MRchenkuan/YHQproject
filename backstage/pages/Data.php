@@ -2,6 +2,7 @@
 //error_reporting(0);
 session_start();
 require_once('../definitions.php');
+//require_once('../tools/Config.class.php');
 //require_once(KODBC_PATH);
 
 $APIID = $_GET['id'] ? $_GET['id'] : 'defaultMethod';
@@ -22,6 +23,7 @@ require_once(DATABASE_DAO_DIR."photosDAO.php");
  *****************************************************/
 
 $config = array(
+    'test'=>test,
     'defaultMethod' => defaultMethod,
     'getNews' => getNews,
     'uploadImg' => uploadImg,
@@ -41,6 +43,28 @@ $config = array(
     'getAlbumsByGroupId'=>getAlbumsByGroupId
 );
 $config[$APIID]();
+
+/*****************************************************
+ *
+ *                  test
+ *
+ *****************************************************/
+
+function test(){
+    $dao = new photosDAO();
+    $count = $dao->addImageInfo(array(
+        'ALBUMID'=>"12",
+        'PATH'=>"fdsafdsafsdafsaasf",
+        'THUMB'=>"fdsafdsafasfdf",
+    ));
+    echo 123131;
+    var_dump($count);
+    echo 123131;
+    var_dump($dao);
+    echo 123131;
+}
+
+
 
 /*****************************************************
  *
@@ -362,15 +386,24 @@ function getNewsContent(){
  *                  图库的处理函数
  *
  *****************************************************/
-
 /**
  * 异步上传图片
  */
 function uploadImgAjax()
 {
 
-    $imgdatastring = $_REQUEST['imgDataString'] or null;
-    $uploaddir = IMAGE_BED_DIR . date('Ymd') . '/';
+    $imgdatastring = $_POST['imgDataString'] or null;
+    $albumId = $_POST['albumid'];
+    $desc = $_POST['remark'];
+    $onlineurl = $_POST['onlineurl'];
+
+    $thumbPath = "";
+    $imgHostUrl = Config::getSection("PROPERTIES")["IMG_HOST_URL"];
+
+    $relative_path = date('Ymd') . '/';
+    $uploaddir = IMAGE_BED_DIR . $relative_path;
+
+    // 创建目录
     if (!file_exists($uploaddir)) {
         if (mkdir($uploaddir)) {
             chmod($uploaddir, 0777);
@@ -379,41 +412,46 @@ function uploadImgAjax()
         };
     }
 
-    /*base64保存为图片，并写入数据库*/
+    /*图片保存*/
     if($imgdatastring){
-        //do someting for 保存图片
+        $dao = new photosDAO();
         if (preg_match('/^(data:(\w+)\/(\w+);base64,)/', $imgdatastring, $result)){
             $type = $result[3];
-            $uploadfileUrl = $uploaddir. time().'.'.$type;
-            if (file_put_contents($uploadfileUrl, base64_decode(str_replace($result[1], '', $imgdatastring)))){
-                //写入数据库
-//                $Kodbc = new Kodbc('T_TABLE_PHOTOBASE');
-//                $Kodbc->insertItem(array(
-//                        'albumid'=>$_POST['albumid'],
-//                        'stat'=>'active',
-//                        'remark'=>$_POST['remark'],
-//                        'imgsrc'=>$uploadfileUrl,
-//                        'pubdata'=> date('Y-m-d\TH:i')
-//                    )
-//                );
-
-                echo json_encode(array(
-                    'stat'=>200,
-                    'imgurl'=>$uploadfileUrl,
-                    'msg'=>'图片上传成功',
+            $filename = time().'.'.$type;
+            $innerFileUrl = $uploaddir. $filename;
+            $outHostUrl = $imgHostUrl.$relative_path.$filename;
+            if (file_put_contents($innerFileUrl, base64_decode(str_replace($result[1], '', $imgdatastring)))){
+                // 入库
+                $count = $dao->addImageInfo(array(
+                    'ALBUMID'=>$albumId,
+                    'PATH'=>$outHostUrl,
+                    'THUMB'=>$thumbPath,
+                    "FS_PATH"=>$innerFileUrl
                 ));
+
+                if($count>0){
+                    echo json_encode(array(
+                        'stat'=>200,
+                        'imgurl'=>$outHostUrl,
+                        'msg'=>'图片上传成功',
+                    ));
+                }else{
+                    echo json_encode(array(
+                        'stat'=>203,
+                        'imgurl'=>$outHostUrl,
+                        'msg'=>'图片保存失败',
+                    ));
+                }
+
             }
         }else if($_POST['onlineurl']){
             /*如果没有图片但是有imgurl时*/
-            $Kodbc = new Kodbc('T_TABLE_PHOTOBASE');
-            $Kodbc->insertItem(array(
-                    'albumid'=>$_POST['albumid'],
-                    'stat'=>'active',
-                    'remark'=>$_POST['remark'],
-                    'imgsrc'=>$_POST['onlineurl'],
-                    'pubdata'=> date('Y-m-d\TH:i')
-                )
-            );
+            $dao->addImageInfo(array(
+                'ALBUMID'=>$albumId,
+                'PATH'=>$onlineurl,
+                'THUMB'=>$thumbPath,
+                "FS_PATH"=>""
+            ));
             echo json_encode(array(
                 'stat'=>200,
                 'imgurl'=>$_POST['onlineurl'],
@@ -479,6 +517,9 @@ function moveImage(){
  */
 function removeImage(){
     $imgsrc = $_GET['imgsrc'];
+    $imgId = $_GET['imgid']; // 相册id
+
+
     $filename=end(explode('/',$imgsrc));
     /*新建回收站*/
     $dashbindir = DUSTBIN_DIR.date('Ymd').'/';

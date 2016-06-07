@@ -12,7 +12,6 @@ if(!defined(APP_DIR))define('APP_DIR',__DIR__."/../");
 if(!defined(BACKSTAGE_DIR))define('BACKSTAGE_DIR',__DIR__ );
 // 数据库配置文件
 if(!defined(CONFIG_INI_DIR))define('CONFIG_INI_DIR',BACKSTAGE_DIR."/config.ini");
-
 if(!defined(DATA_TABLE_DIR))define('DATA_TABLE_DIR',BACKSTAGE_DIR."/DO/Data/");
 if(!defined(DATABASE_DIR))define('DATABASE_DIR',BACKSTAGE_DIR."/DO/");
 if(!defined(DATABASE_DAO_DIR))define('DATABASE_DAO_DIR',BACKSTAGE_DIR."/DO/DAO/");

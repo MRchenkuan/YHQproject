@@ -8,7 +8,7 @@
             (select p.THUMB from T_PHOTO p where p.id=a.COVER) THUMB,
             (select count(*) from T_PHOTO p where p.`ALBUMID`=a.`id` )count
         from
-            T_ALBUM a where a.GROUP = #{id} order by a.order;
+            T_ALBUM a where a.GROUP = #{id} order by a.id desc;
     </select>
 
     <!--获取相册groupId-->
@@ -33,14 +33,14 @@
         a.NAME,
         a.DESC,
         a.ORDER
-        from T_ALBUM a where a.group=#{groupId} order by a.ORDER;
+        from T_ALBUM a where a.group=#{groupId} order by a.id desc;
     </select>
 
     <!--根据albumid获取图片列表-->
     <select id="getPhotosByAlbumId" >
         select
         id,`NAME`,`DESC`,`PATH`,`THUMB`
-        from T_PHOTO where albumid = #{albumId}
+        from T_PHOTO where albumid = #{albumId} order by id desc
     </select>
 
 
@@ -55,7 +55,7 @@
         select
         *,
         (select count(*) from T_PHOTO a where a.`ALBUMID`=b.`id` )count
-        from T_ALBUM b limit #{count};
+        from T_ALBUM b order by b.id desc limit #{count} ;
     </select>
 
     <!-- 得到所有相册组 -->

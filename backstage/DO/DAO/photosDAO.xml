@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapper>
+    <!-- 根据id更新照片信息 -->
+    <update id="updateImageInfo" >
+        update into T_PHOTO(#{colname}) VALUES(#{value}) where id="#{id}";
+    </update>
 
-
+    <!-- 新增照片信息 -->
+    <update id="addImageInfo" >
+        insert into T_PHOTO set ALBUMID="#{ALBUMID}",PATH="#{PATH}",THUMB="#{THUMB}",FS_PATH="#{FS_PATH}";
+    </update>
 
 </mapper>

@@ -191,7 +191,7 @@
     // 相片重排器
     function resizePhotos($frame){
         var $thumbBoxex = $frame.find(".thumbBox");
-        var verticalCount=4;
+        var verticalCount=2;
         var frameHeight =$frame.height();
         var frameWidth = $frame.width();
         var aspectRatio = frameWidth/frameHeight;

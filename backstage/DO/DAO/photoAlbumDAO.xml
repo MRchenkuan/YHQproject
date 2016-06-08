@@ -70,7 +70,16 @@
 
     <!-- 根据id更新相册信息 -->
     <update id="updateAlbumById" >
-        replace into T_ALBUM(#{colname}) VALUES(#{value});
+        update
+            T_ALBUM
+        set
+            #{info}
+        where id=#{id};
+    </update>
+
+    <!-- 新增相册信息 -->
+    <update id="addAlbumById" >
+        insert into T_ALBUM(#{colname}) VALUES(#{value});
     </update>
 
 </mapper>

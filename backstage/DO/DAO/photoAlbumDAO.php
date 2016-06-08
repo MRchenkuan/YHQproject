@@ -120,15 +120,32 @@ class photoAlbumDAO extends DBC{
 
     /**
      * 更新相册
-     * @param $info
-     * @return mixed
+     * @param $id
+     * @param $information
+     * @return int|PDOStatement
      */
-    public function updateAlbumById($info){
+    public function updateAlbumById($id, $information)
+    {
+        $info = array();
+        foreach($information as $k=> $v ){
+            array_push($info,"`".$k."`"."="."'".$v."'");
+        }
+        $info = implode(",",$info);
+        $rs = $this->getResult(__FUNCTION__,array("id"=>$id,'info'=>$info));
+        return $rs;
+    }
 
+    /**
+     * 新增相册信息
+     * @param $album_info
+     * @return int|PDOStatement
+     */
+    public function addAlbumById($album_info)
+    {
         $colname = array();
         $value = array();
-        foreach($info as $k=>$v ){
-            array_push($colname,$k);
+        foreach($album_info as $k=>$v ){
+            array_push($colname,"`".$k."`");
             array_push($value,"'".$v."'");
         }
         $colname = implode(",",$colname);
@@ -136,12 +153,6 @@ class photoAlbumDAO extends DBC{
         $rs = $this->getResult(__FUNCTION__,array('colname'=>$colname,'value'=>$value));
         return $rs;
     }
-    
 
 
 }
-//
-//$a = new photoAlbumDAO();
-//var_dump($a);
-////var_dump($a->getAllAlbums());
-//$a->updateAlbumById(array("remark"=>"来自php","editable"=>"true","count"=>3));

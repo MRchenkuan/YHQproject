@@ -24,7 +24,7 @@ class coversDAO extends DBC{
         $colname = array();
         $value = array();
         foreach($info as $k=>$v ){
-            array_push($colname,$k);
+            array_push($colname,"`".$k."`");
             array_push($value,"'".$v."'");
         }
         $colname = implode(",",$colname);
@@ -42,7 +42,7 @@ class coversDAO extends DBC{
         $colname = array();
         $value = array();
         foreach($info as $k=>$v ){
-            array_push($colname,$k);
+            array_push($colname,"`".$k."`");
             array_push($value,"'".$v."'");
         }
         $colname = implode(",",$colname);

@@ -122,11 +122,6 @@ $groups = $dao->getAllGroups();
                 </div>
 
                 <div class="input-group">
-                    <span class="input-group-addon" id="albumcover">相册封面</span>
-                    <input id="album_cover" type="text" class="form-control" placeholder="请输入相册封面" aria-describedby="albumcover">
-                </div>
-
-                <div class="input-group">
                     <span class="input-group-addon" id="albumdesc">相册描述</span>
                     <input id="album_desc" type="text" class="form-control" placeholder="请输入相册描述" aria-describedby="albumdesc">
                 </div>
@@ -148,17 +143,18 @@ $groups = $dao->getAllGroups();
                 <script>
                     $("#saveAlbumBtn").click(function () {
                         if(!confirm('是否保存相册《'+document.getElementById('album_name').value+'》?'))return false;
+                        console.log(1);
                         $.ajax({
                             url:'Data.php?id=createAlbum',
+                            type:"POST",
                             data:{
                                 'albumid':document.getElementById('albumid').value||'',
                                 'albumname':document.getElementById('album_name').value||'未命名',
                                 'groupid':document.getElementById('group_id').value||"",
-                                'cover':document.getElementById('album_cover').value||"",
-                                'desc':document.getElementById('group_desc').value||"",
+                                'desc':document.getElementById('album_desc').value||"",
                                 'stat':document.getElementById('albumstat').getAttribute('albumstat')||'disable'},
                             success:function(data){
-                                data = eval('(' + data + ')');
+                                data = JSON.parse(data);
                                 console.log(data);
                                 if (data.stat == 200) {alert(data.msg);location.reload();}},
                             error:function(data){

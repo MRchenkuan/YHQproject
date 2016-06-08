@@ -560,19 +560,32 @@ function removeImage(){
  */
 function createAlbum(){
     try{
+        $album_id = $_POST['albumid'] or null;
+        $album_name = $_POST['albumname'] or null;
+        $group_id = $_POST['groupid'] or null;
+        $album_desc = $_POST['desc'] or null;
+        $album_stat = $_GET['stat'] or null;
 
-        $albumname = $_GET['albumname'];
-        $stat = $_GET['stat'];
-
-        $Kodbc = new photoAlbumDAO();
-        $Kodbc->updateItem($_GET['albumid'],array(
-            'stat'=>$stat,
-            'NAME'=>$albumname,
-        ));
-        echo json_encode(array(
-            'stat'=>200,
-            'msg'=>"《{$albumname}》修改成功",
-        ));
+        $album_info = array(
+            "NAME"=>$album_name,
+            "GROUP"=>$group_id,
+            "DESC"=>$album_desc,
+            "stat"=>$album_stat,
+            );
+        $dao = new photoAlbumDAO();
+        if($album_id){
+            $dao->updateAlbumById($album_id,$album_info);
+            echo json_encode(array(
+                'stat'=>200,
+                'msg'=>"《{$album_name}》修改成功",
+            ));
+        }else{
+            $dao->addAlbumById($album_info);
+            echo json_encode(array(
+                'stat'=>200,
+                'msg'=>"《{$album_name}》新增成功",
+            ));
+        }
     }catch (Exception $e){
         echo json_encode(array(
             'stat'=>202,

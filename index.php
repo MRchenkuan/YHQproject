@@ -24,7 +24,7 @@ include_once "functions.php";
 <audio src="media/783.wav" hidden="true"></audio>
 <audio src="media/1374.wav" hidden="true"></audio>
 <!--导航部分-->
-<img src="img/ui/logo.png" style="height:10%;position:absolute;margin:20px 0 0 40px;opacity:.65;z-index: 9999">
+<img src="img/ui/logo.png" id="logo">
 <div id="nav" style="overflow: visible">
     <div id="index_nav">
         <ul>

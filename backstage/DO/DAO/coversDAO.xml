@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper>
+    <!-- 根据id更新封面 -->
+    <update id="updateCover" >
+
+    </update>
+
+    <!-- 新增封面 -->
+    <update id="addCover" >
+
+    </update>
+</mapper>

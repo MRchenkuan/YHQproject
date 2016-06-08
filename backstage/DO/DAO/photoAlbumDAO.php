@@ -136,17 +136,7 @@ class photoAlbumDAO extends DBC{
         $rs = $this->getResult(__FUNCTION__,array('colname'=>$colname,'value'=>$value));
         return $rs;
     }
-
-    /**
-     * 更新相册 - 兼容文件数据库
-     * @param $id
-     * @param $info
-     */
-    public function updateItem($id, $info){
-        $info['id'] = $id;
-        $this->updateAlbumById($info);
-    }
-
+    
 
 
 }

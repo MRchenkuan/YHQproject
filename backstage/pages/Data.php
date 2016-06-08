@@ -163,8 +163,9 @@ function userVerify()
 function createAdvt()
 {
     $id = $_GET['adid'];
+    $link = $_GET['link'];
     $order = $_GET['order'];
-    $imgsrc = $_GET['imgsrc'];
+    $cover = $_GET['cover'];
 
     if (!userVerify()) {
         /*验证用户登陆*/
@@ -175,19 +176,18 @@ function createAdvt()
         echo false;
     }
 
-    $Kodbc = new photoAlbumDAO();
+    $dao = new coversDAO();
     $dataitem = array(
+        'COVER' => $cover,
         'ORDER' => $order,
-        'stat' => 'disable',
-        'PATH' => $imgsrc,
-        'THUMB'=> $imgsrc
+        'LINK'=> $link
     );
 
     /*更新或者新增取决于ID是否存在*/
     if ($id && $id != '') {
-        $Kodbc->updateItem($id, $dataitem);
+        $dao->updateCover($id, $dataitem);
     } else {
-        $Kodbc->insertItem($dataitem);
+        $dao->addCover($dataitem);
     }
     echo json_encode(array(
         'stat' => 200,

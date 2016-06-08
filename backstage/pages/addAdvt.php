@@ -35,7 +35,6 @@ include_once(WIDGETS_DIR.'head.php');
         <tr  style="text-align: left">
             <td><span class="glyphicon glyphicon-picture"></span>图片</td>
             <td><span class="glyphicon glyphicon-sort-by-attributes"></span>排序</td>
-            <td><span class="glyphicon glyphicon-flag"></span>ID</td>
             <td><span class="glyphicon glyphicon-cog"></span>操作</td>
         </tr>
         <?php
@@ -45,7 +44,6 @@ include_once(WIDGETS_DIR.'head.php');
             <tr>
                 <td><img height=100 style="max-width: 250px;height: auto;" src="<?php echo $items['THUMB']?>" alt="缩略图"></td>
                 <td><?php echo $items['ORDER']?></td>
-                <td><?php echo $items['id']?></td>
                 <td><div class="btn-group" role="group" aria-label="...">
                         <button type="button"
                                 class="btn btn-default"
@@ -166,11 +164,8 @@ include_once(WIDGETS_DIR.'head.php');
     function fillForMod(node){
         var ad_id  = document.getElementById('ad_id').value=node.getAttribute('data-id')||'';
         var ad_index  = document.getElementById('ad_index').value=node.getAttribute('data-index')||'';
-        var ad_title  = document.getElementById('ad_title').value=node.getAttribute('data-title')||'';
+        console.log(node.getAttribute('data-cover'));
         var imgsrcobj = document.getElementById('ad_img').contentWindow.document.getElementById('uploadCallBack-ImgSrc').src=node.getAttribute('data-cover')||'';
-        var ad_update = document.getElementById('ad_update').value=node.getAttribute('data-update')||'';
-        var ad_dndate = document.getElementById('ad_dndate').value=node.getAttribute('data-dndate')||'';
-        var ad_remark = document.getElementById('ad_remark').value=node.getAttribute('data-remark')||'';
     }
 </script>
 

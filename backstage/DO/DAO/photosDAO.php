@@ -44,4 +44,27 @@ class photosDAO extends DBC{
         $rs = $this->getResult(__FUNCTION__,$info);
         return $rs;
     }
+
+    /**
+     * 根据id删除照片
+     * @param $photoId
+     * @return int|PDOStatement
+     */
+    function delImageById($photoId)
+    {
+        $rs = $this->getResult(__FUNCTION__,array("photoId"=>$photoId));
+        return $rs;
+    }
+
+    /**
+     * 根据图片ID获取图片信息
+     * @param $photoId
+     * @return array
+     */
+    public function getPhotoInfoById($photoId)
+    {
+        $rs = $this->getResult(__FUNCTION__,array('photoId'=>$photoId));
+        $row = $rs->fetch();
+        return $row;
+    }
 }

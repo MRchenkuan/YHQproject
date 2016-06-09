@@ -8,7 +8,10 @@
             (select p.THUMB from T_PHOTO p where p.id=a.COVER) THUMB,
             (select count(*) from T_PHOTO p where p.`ALBUMID`=a.`id` )count
         from
-            T_ALBUM a where a.GROUP = #{id} order by a.id desc;
+            T_ALBUM a
+        where
+            a.GROUP = #{id} AND a.IS_VALID="Y"
+        order by a.id desc;
     </select>
 
     <!--获取相册groupId-->
@@ -27,13 +30,17 @@
     <!--获取相册列表-->
     <select id="getAlbumList" >
         select
-        id,
-        (select p.PATH from T_PHOTO p where p.id=a.COVER) COVER,
-        (select p.THUMB from T_PHOTO p where p.id=a.COVER) THUMB,
-        a.NAME,
-        a.DESC,
-        a.ORDER
-        from T_ALBUM a where a.group=#{groupId} order by a.id desc;
+            id,
+            (select p.PATH from T_PHOTO p where p.id=a.COVER) COVER,
+            (select p.THUMB from T_PHOTO p where p.id=a.COVER) THUMB,
+            a.NAME,
+            a.DESC,
+            a.ORDER
+        from
+            T_ALBUM a
+        where
+            a.group=#{groupId} AND a.IS_VALID="Y"
+        order by a.id desc;
     </select>
 
     <!--根据albumid获取图片列表-->

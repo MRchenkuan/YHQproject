@@ -32,7 +32,7 @@ $groups = $dao->getAllGroups();
                               title="删除相册"
                               style="float: right;margin: 5px;color: #e94513"></span>
                         <span onclick="fillAlertBoard(
-                            '<?php echo $album['id']; ?>',<?php echo $group['id']; ?>,'<?php echo $album['NAME']; ?>','修改相册: <?php echo $group['NAME']; ?>','<?php echo $album['stat']; ?>','')"
+                            '<?php echo $album['id']; ?>',<?php echo $group['id']; ?>,'<?php echo $album['NAME']; ?>','修改相册: <?php echo $group['NAME']; ?>','<?php echo $album['stat']; ?>','<?php echo $album['DESC']; ?>')"
                               style="float: right;margin: 5px;color: #05c133" class="glyphicon glyphicon-info-sign"
                               data-toggle="modal"
                               data-placement="top"
@@ -73,10 +73,11 @@ $groups = $dao->getAllGroups();
             fillAlertBoard('',$this.attr("data-group-id"),'','新建相册: '+$this.attr("data-group-name"),"","")
         });
 
-        function fillAlertBoard(albumid,groupid,albumname,groupname,stat,cover){
+        function fillAlertBoard(albumid,groupid,albumname,groupname,stat,desc){
             document.getElementById('albumid').value = albumid;
             document.getElementById('group_id').value = groupid;
             document.getElementById('album_name').value = albumname;
+            document.getElementById('album_desc').value = desc;
             document.getElementById('albumstat').setAttribute('albumstat',stat);
             document.getElementById('myModalLabel').innerHTML=groupname||'修改相册信息';
         }
@@ -84,11 +85,12 @@ $groups = $dao->getAllGroups();
         function delAlbum(id){
             $.ajax({
                 url:'Data.php?id=delAlbum',
+                type:"POST",
                 data:{
                     'albumid':id
                 },
                 success:function(data){
-                    data = eval('(' + data + ')');
+                    data = JSON.parse(data);
                     console.log(data);
                     if (data.stat == 200) {
                         alert(data.msg);location.reload();

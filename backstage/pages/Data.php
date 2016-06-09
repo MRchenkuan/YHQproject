@@ -266,124 +266,6 @@ function uploadImg()
 
 /*****************************************************
  *
- *                  新闻的处理函数
- *
- *****************************************************/
-
-function createNews(){
-
-    $newsid     =   $_POST['newsid'];
-    $title     =   $_POST['title'];
-    $auth       =   $_POST['auth'];
-    $origin     =   $_POST['origin'];
-    $pubdata    =   $_POST['pubdata'];
-    $stat    =   $_POST['stat'];
-    $cover    =   $_POST['cover'];
-    $text       =   htmlspecialchars($_POST['text']);
-    $db         = $_POST['target'];
-
-    $Kodbc = new Kodbc('T_TABLE_NEWS');
-
-    /*************
-     *
-     * 储存大文本
-     *
-     ************/
-    $newsDir = NEWS_FILE_DIR.date('Ymd').'/';
-    if (!file_exists($newsDir)) {
-        if (mkdir($newsDir)) {
-            chmod($newsDir, 0777);
-        } else {
-            echo 'faile to create ' . $newsDir . 'maybe the path you have no permit!<br>';
-        };
-    }
-
-    /*判断是修改文件还是新增文件*/
-    if ($newsid && $newsid != ''){
-        $item = $Kodbc->getById($newsid);
-        $newsFileUrl = $item['text'];
-    }else{
-        $newsFileUrl = $newsDir . time() . '.newsfiles';
-    }
-
-    $fp = fopen($newsFileUrl, "w+");
-    if(!fwrite($fp,$text)){
-        fclose($fp);
-        echo json_encode(array(
-            'stat' => 201,
-            'msg' => 'login failed!'
-        ));
-        throw new Exception("文件保存异常");
-    }
-    fclose($fp);
-    /**************
-     * 文件储存结束
-     **************/
-
-    if (!userVerify()) {
-        /*验证用户登陆*/
-        echo json_encode(array(
-            'stat' => 201,
-            'msg' => 'login failed!'
-        ));
-    }
-
-    $dataitem = array(
-        'stat' => $stat,
-        'title' => $title,
-        'auth' => $auth,
-        'origin' => $origin,
-        'pubdata' => $pubdata,
-        'text' =>$newsFileUrl,
-        'cover' => $cover
-    );
-
-    /*更新或者新增取决于ID是否存在*/
-    if ($newsid && $newsid != '') {
-        $Kodbc->updateItem($newsid, $dataitem);
-    } else {
-        $newsid = $Kodbc->insertItem($dataitem);
-    }
-    echo json_encode(array(
-        'stat' => 200,
-        'msg' => $newsid.' add sucess！',
-        'articId'=>$newsid[0],
-    ));
-}
-
-/**
- * 用户删除新闻方法
- * */
-function delNews()
-{
-    $id = $_GET['newsid'];
-    $Kodbc= new Kodbc(DATA_TABLE_DIR.'T_TABLE_NEWS.xml');
-    echo $Kodbc->delById($id);
-}
-
-/**
- * 获得新闻内容的方法
- * */
-function getNewsContent(){
-    $id=$_REQUEST['newsid'];
-
-    $Kodbc= new Kodbc(DATA_TABLE_DIR.'T_TABLE_NEWS.xml');
-
-    $item= $Kodbc->getById($id);
-    $contentsrc = $item['text'];
-    $newsfile = fopen($contentsrc,'r') or die('can not find newsfiles,because no newsfiles file found');
-    echo json_encode(array(
-        'stat' => 200,
-        'msg' => $id.' get sucess！',
-        'content'=>htmlspecialchars_decode(fread($newsfile,filesize($contentsrc)))
-    ));
-//    fclose($newsfile);
-
-}
-
-
-/*****************************************************
- *
  *                  图库的处理函数
  *
  *****************************************************/
@@ -427,7 +309,7 @@ function uploadImgAjax()
                     'ALBUMID'=>$albumId,
                     'PATH'=>$outHostUrl,
                     'THUMB'=>$thumbPath,
-                    "FS_PATH"=>$innerFileUrl
+                    "FS_PATH"=>$relative_path.$filename
                 ));
 
                 if($count>0){
@@ -537,39 +419,42 @@ function moveImage(){
  * 物理删除图片
  */
 function removeImage(){
-    $imgsrc = $_GET['imgsrc'];
-    $imgId = $_GET['imgid']; // 相册id
+    $imgId = $_POST['imgid']; // 相册id
+    $dao = new photosDAO();
+    $photoInfo = $dao->getPhotoInfoById($imgId);
 
+    $photo_path = $photoInfo['FS_PATH'];
+    $photo_src_org = $photoInfo['PATH'];
+    $photo_src_tmb = $photoInfo['THUMB'];
+    $fileName = basename($photo_path);
 
-    $filename=end(explode('/',$imgsrc));
     /*新建回收站*/
-    $dashbindir = DUSTBIN_DIR.date('Ymd').'/';
-    if (!file_exists($dashbindir)) {
-        if (mkdir($dashbindir)) {
-            chmod($dashbindir, 0777);
+    $dustbin_dir = DUSTBIN_DIR.date('Ymd').'/';
+    if (!file_exists($dustbin_dir)) {
+        if (mkdir($dustbin_dir)) {
+            chmod($dustbin_dir, 0777);
         } else {
-            echo 'faile to create ' . $dashbindir . 'maybe the path you have no permit!<br>';
+            echo 'faile to create ' . $dustbin_dir . 'maybe the path you have no permit!<br>';
         };
     }
 
-    $Kodbc = new Kodbc('T_TABLE_PHOTOBASE');
-    if($_GET['imgid']){
-        $imgid=$_GET['imgid'];
-        $Kodbc->delById($imgid);
-    }
 
-    if(rename($imgsrc,$dashbindir.$filename )){
+    // 删库
+    $dao->delImageById($imgId);
+
+    // 移图
+    if(rename(IMAGE_BED_DIR.$photo_path,$dustbin_dir.$fileName )){
         echo json_encode(array(
             'stat'=>200,
-            'msg'=>"{$_GET['imgid']}在数据库中删除，{$filename}移动到服务器回收站",
+            'msg'=>"{$imgId}在数据库中删除，{$fileName}移动到服务器回收站",
         ));
         return true;
     }else{
         echo json_encode(array(
             'stat'=>200,
             'msg'=>"数据库删除成功，但服务器无此文件",
-            '$imgsrc'=>$imgsrc,
-            '$dashbindir.$filename'=>$dashbindir.$filename,
+            '$imgsrc'=>$photo_src_org,
+            '$dustbin_dir.$filename'=>$dustbin_dir.$fileName,
         ));
         return true;
     }
@@ -620,22 +505,22 @@ function createAlbum(){
  * 删除相册
  * */
 function delAlbum(){
-    if($_GET['albumid']){
-        $albumid = $_GET['albumid'];
-        $Kodbc = new Kodbc(DATA_TABLE_DIR.'T_TABLE_PHOTO_ALBUM.xml');
-        $item = $Kodbc->getById($albumid);
-        if($item['count']>0){
+    if($_POST['albumid']){
+        $albumid = $_POST['albumid'];
+        $dao = new photoAlbumDAO();
+//        $photo_count = count($dao->getPhotosByAlbumId($albumid));
+//        if($photo_count>0){
+//            echo json_encode(array(
+//                'stat'=>200,
+//                'msg'=>"相册内有照片，需要先清空相册！",
+//            ));
+//        }else{
+            $dao->updateAlbumById($albumid,array("IS_VALID"=>"N"));
             echo json_encode(array(
                 'stat'=>200,
-                'msg'=>"相册内有照片，需要先清空相册！",
+                'msg'=>"相册删除成功",
             ));
-        }else{
-            $Kodbc->delById($albumid);
-            echo json_encode(array(
-                'stat'=>200,
-                'msg'=>"{$albumid}:成功删除",
-            ));
-        }
+//        }
     }else{
         echo json_encode(array(
             'stat'=>202,

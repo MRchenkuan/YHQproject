@@ -162,13 +162,12 @@ if($id=="0")$thisalbum['NAME']="未绑定相册";
     function delImg(node){
         $.ajax({
             url:'Data.php?id=removeImage',
-            type:'GET',
+            type:'POST',
             data:{
-                'imgid':node.getAttribute('data-imgid')||'',
-                'imgsrc':node.getAttribute('data-imgsrc')||''
+                'imgid':node.getAttribute('data-imgid')||''
             },
             success:function(data){
-                data = eval('(' + data + ')');
+                data = JSON.parse(data);
                 console.log(data);
                 if (data.stat == 200) {
                     alert(data.msg);

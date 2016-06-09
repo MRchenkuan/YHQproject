@@ -6,8 +6,18 @@
     </update>
 
     <!-- 新增照片信息 -->
-    <update id="addImageInfo" >
+    <insert id="addImageInfo" >
         insert into T_PHOTO set ALBUMID="#{ALBUMID}",PATH="#{PATH}",THUMB="#{THUMB}",FS_PATH="#{FS_PATH}";
-    </update>
+    </insert>
+
+    <!-- 新增照片信息 -->
+    <delete id="delImageById" >
+        delete from T_PHOTO where id = #{photoId}
+    </delete>
+
+    <!-- 获取照片信息 -->
+    <select id="getPhotoInfoById" >
+        select * from T_PHOTO where id = #{photoId}
+    </select>
 
 </mapper>

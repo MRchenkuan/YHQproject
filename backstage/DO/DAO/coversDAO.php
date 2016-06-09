@@ -20,17 +20,7 @@ class coversDAO extends DBC{
      * @return int|PDOStatement
      */
     public function updateCover($id, $info){
-        $info['id'] = $id;
-        $colname = array();
-        $value = array();
-        foreach($info as $k=>$v ){
-            array_push($colname,"`".$k."`");
-            array_push($value,"'".$v."'");
-        }
-        $colname = implode(",",$colname);
-        $value = implode(",",$value);
-        $rs = $this->getResult(__FUNCTION__,array('colname'=>$colname,'value'=>$value));
-        return $rs;
+
     }
 
     /**
@@ -39,16 +29,7 @@ class coversDAO extends DBC{
      * @return int|PDOStatement
      */
     public function addCover($info){
-        $colname = array();
-        $value = array();
-        foreach($info as $k=>$v ){
-            array_push($colname,"`".$k."`");
-            array_push($value,"'".$v."'");
-        }
-        $colname = implode(",",$colname);
-        $value = implode(",",$value);
-        $rs = $this->getResult(__FUNCTION__,array('colname'=>$colname,'value'=>$value));
-        return $rs;
+
     }
 
 

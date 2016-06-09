@@ -15,6 +15,7 @@ $DATABASEURL = DATA_TABLE_DIR.'T_TABLE_ADVTS.xml';
 require_once(DATABASE_DAO_DIR."photoAlbumDAO.php");
 require_once(DATABASE_DAO_DIR."newsDAO.php");
 require_once(DATABASE_DAO_DIR."photosDAO.php");
+require_once(DATABASE_DAO_DIR."coversDAO.php");
 
 /*****************************************************
  *
@@ -25,20 +26,16 @@ require_once(DATABASE_DAO_DIR."photosDAO.php");
 $config = array(
     'test'=>test,
     'defaultMethod' => defaultMethod,
-    'getNews' => getNews,
     'uploadImg' => uploadImg,
     'userLogin' => userLogin,
     'userVerify' => userVerify,
     'createAdvt' => createAdvt,
     'delAdvt' => delAdvt,
-    'createNews' => createNews,
-    'delNews' => delNews,
     'uploadImgAjax' => uploadImgAjax,
     'moveImage' => moveImage,
     'removeImage' => removeImage,
     'createAlbum' => createAlbum,
     'delAlbum' => delAlbum,
-    'getNewsContent' => getNewsContent,
     'getPhotosByAlbumId' => getPhotosByAlbumId,
     'getAlbumsByGroupId'=>getAlbumsByGroupId,
     'setCover'=>setCover
@@ -508,13 +505,6 @@ function delAlbum(){
     if($_POST['albumid']){
         $albumid = $_POST['albumid'];
         $dao = new photoAlbumDAO();
-//        $photo_count = count($dao->getPhotosByAlbumId($albumid));
-//        if($photo_count>0){
-//            echo json_encode(array(
-//                'stat'=>200,
-//                'msg'=>"相册内有照片，需要先清空相册！",
-//            ));
-//        }else{
             $dao->updateAlbumById($albumid,array("IS_VALID"=>"N"));
             echo json_encode(array(
                 'stat'=>200,

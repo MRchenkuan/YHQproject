@@ -154,5 +154,15 @@ class photoAlbumDAO extends DBC{
         return $rs;
     }
 
+    /**
+     * 设置图片为封面
+     * @param $photoId
+     * @return array
+     */
+    public function setCover($photoId)
+    {
+        $rs = $this->getResult(__FUNCTION__,array("photoId"=>$photoId));
+        return $rs;
+    }
 
 }

@@ -40,7 +40,8 @@ $config = array(
     'delAlbum' => delAlbum,
     'getNewsContent' => getNewsContent,
     'getPhotosByAlbumId' => getPhotosByAlbumId,
-    'getAlbumsByGroupId'=>getAlbumsByGroupId
+    'getAlbumsByGroupId'=>getAlbumsByGroupId,
+    'setCover'=>setCover
 );
 $config[$APIID]();
 
@@ -473,6 +474,26 @@ function uploadImgAjax()
             'msg'=>'后端未收到前端图片数据',
         ));
     }
+}
+
+/**
+ * 图片设为相册封面
+ */
+function setCover(){
+    $photoId = $_POST['photoId'];
+    if(!$photoId){
+        echo json_encode(array(
+            'stat'=>202,
+            'msg'=>'相册ID不存在',
+        ));
+        return;
+    }
+    $dao = new photoAlbumDAO();
+    $dao->setCover($photoId);
+    echo json_encode(array(
+        'stat'=>200,
+        'msg'=>'封面设置成功'
+    ));
 }
 
 /**

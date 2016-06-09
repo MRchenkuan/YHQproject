@@ -52,6 +52,7 @@ if($id=="0")$thisalbum['NAME']="未绑定相册";
             <div class="col-xs-6 col-md-3">
                 <span onclick="if(confirm('继续操作将删除此图片！'))delImg(this);" data-imgsrc="<?php echo $photo?>" class="glyphicon glyphicon-remove-sign" data-toggle="tooltip" data-placement="top" title="删除图片" style="float: right;margin: 5px;color: #e94513"></span>
                 <span style="float: right;margin: 5px;color: #05c133" class="glyphicon glyphicon-info-sign" data-toggle="modal" data-placement="top" title="编辑图片" data-target="#imageEditor"></span>
+                <span style="float: right;margin: 5px;color: #05c133" class="glyphicon glyphicon-picture" title="设为封面"></span>
                 <div class="dropdown" style="float: right;margin: 4px;color: #5f6297">
                     <span class="glyphicon glyphicon-globe dropdown-toggle" data-toggle="dropdown" id="dropdownMenu2" aria-haspopup="true" aria-expanded="false" data-placement="top" title="移动图片"></span>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
@@ -90,6 +91,7 @@ if($id=="0")$thisalbum['NAME']="未绑定相册";
                         <?php } ?>
                     </ul>
                 </div>
+                <span data-photoid="<?php echo $photo['id']?>" class="setCover glyphicon glyphicon-picture" data-toggle="tooltip" data-placement="top" title="设为封面" style="float: right;margin: 5px;color: #5f6297"></span>
                 <a href="<?php echo $photo['PATH']?>" class="thumbnail">
                     <img src="<?php echo $photo['PATH']?>" alt="<?php echo $photo['NAME']?>">
                 </a>
@@ -106,6 +108,33 @@ if($id=="0")$thisalbum['NAME']="未绑定相册";
         $('[data-toggle="tooltip"]').tooltip();
         $('[data-toggle="modal"]').tooltip();
     });
+
+    $(".setCover").click(function(){
+        if(confirm('确定设置为封面?！')){
+            var $this = $(this);
+            var photoid = $this.attr("data-photoid");
+            if(!photoid){alert("相册id不存在");return;}
+            $.ajax({
+                url:'Data.php?id=setCover',
+                type:'POST',
+                data:{
+                    'photoId':photoid
+                },
+                success:function(data){
+                    data = JSON.parse(data);
+                    if (data.stat == 200) {
+                        alert(data.msg);
+                        location.reload();
+                    }
+                },
+                error:function(data){
+                    data = eval('(' + data + ')');
+                    console.log(data);
+                }
+            })
+        }
+    });
+
     function moveImgToAlbum(node){
         $.ajax({
             url:'Data.php?id=moveImage',

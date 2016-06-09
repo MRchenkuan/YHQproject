@@ -82,4 +82,9 @@
         insert into T_ALBUM(#{colname}) VALUES(#{value});
     </update>
 
+    <!-- 新增照片为相册封面 -->
+    <update id="setCover" >
+        update T_ALBUM a SET a.cover = #{photoId} where a.id = (select p.ALBUMID from T_PHOTO p where p.id=#{photoId})
+    </update>
+
 </mapper>

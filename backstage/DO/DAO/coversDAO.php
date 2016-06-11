@@ -33,6 +33,21 @@ class coversDAO extends DBC{
     }
 
 
+    /**
+     * 新增封面
+     * @param $information
+     * @return int|PDOStatement|string
+     */
+    public function addToCover($information)
+    {
+        $info = array();
+        foreach($information as $k=> $v ){
+            array_push($info,"`".$k."`"."="."'".$v."'");
+        }
+        $info = implode(",",$info);
+        $rs = $this->getResult(__FUNCTION__,array('info'=>$info));
+        return $rs;
+    }
 
 
 }

@@ -2,8 +2,6 @@
 //error_reporting(0);
 session_start();
 require_once('../definitions.php');
-//require_once('../tools/Config.class.php');
-//require_once(KODBC_PATH);
 
 $APIID = $_GET['id'] ? $_GET['id'] : 'defaultMethod';
 
@@ -38,7 +36,8 @@ $config = array(
     'delAlbum' => delAlbum,
     'getPhotosByAlbumId' => getPhotosByAlbumId,
     'getAlbumsByGroupId'=>getAlbumsByGroupId,
-    'setCover'=>setCover
+    'setCover'=>setCover,
+    'uploadCover'=>uploadCover
 );
 $config[$APIID]();
 
@@ -198,9 +197,49 @@ function createAdvt()
  * */
 function delAdvt()
 {
-    $id = $_GET['adid'];
-    $Kodbc = new Kodbc('T_TABLE_ADVTS');
-    echo $Kodbc->delById($id);
+    $id = $_POST['adid'];
+    $coverDao = new coversDAO();
+    $dao = new photoAlbumDAO();
+
+    $imgId = $_POST['imgid']; // 相册id
+    $dao = new photosDAO();
+    $photoInfo = $dao->getPhotoInfoById($imgId);
+
+    $photo_path = $photoInfo['FS_PATH'];
+    $photo_src_org = $photoInfo['PATH'];
+    $photo_src_tmb = $photoInfo['THUMB'];
+    $fileName = basename($photo_path);
+
+    /*新建回收站*/
+    $dustbin_dir = DUSTBIN_DIR.date('Ymd').'/';
+    if (!file_exists($dustbin_dir)) {
+        if (mkdir($dustbin_dir)) {
+            chmod($dustbin_dir, 0777);
+        } else {
+            echo 'faile to create ' . $dustbin_dir . 'maybe the path you have no permit!<br>';
+        };
+    }
+
+
+    // 删库
+    $dao->delImageById($imgId);
+
+    // 移图
+    if(rename(IMAGE_BED_DIR.$photo_path,$dustbin_dir.$fileName )){
+        echo json_encode(array(
+            'stat'=>200,
+            'msg'=>"{$imgId}在数据库中删除，{$fileName}移动到服务器回收站",
+        ));
+        return true;
+    }else{
+        echo json_encode(array(
+            'stat'=>200,
+            'msg'=>"数据库删除成功，但服务器无此文件",
+            '$imgsrc'=>$photo_src_org,
+            '$dustbin_dir.$filename'=>$dustbin_dir.$fileName,
+        ));
+        return true;
+    }
 }
 
 /**
@@ -277,6 +316,7 @@ function uploadImgAjax()
     $desc = $_POST['remark'];
     $onlineurl = $_POST['onlineurl'];
 
+
     $thumbPath = "";
     $imgHostUrl = Config::getSection("PROPERTIES")["IMG_HOST_URL"];
 
@@ -302,22 +342,24 @@ function uploadImgAjax()
             $outHostUrl = $imgHostUrl.$relative_path.$filename;
             if (file_put_contents($innerFileUrl, base64_decode(str_replace($result[1], '', $imgdatastring)))){
                 // 入库
-                $count = $dao->addImageInfo(array(
+                $id = $dao->addImageInfo(array(
                     'ALBUMID'=>$albumId,
                     'PATH'=>$outHostUrl,
                     'THUMB'=>$thumbPath,
                     "FS_PATH"=>$relative_path.$filename
                 ));
 
-                if($count>0){
+                if($id>0){
                     echo json_encode(array(
                         'stat'=>200,
                         'imgurl'=>$outHostUrl,
+                        'pid'=>$id,
                         'msg'=>'图片上传成功',
                     ));
                 }else{
                     echo json_encode(array(
                         'stat'=>203,
+                        'pid'=>$id,
                         'imgurl'=>$outHostUrl,
                         'msg'=>'图片保存失败',
                     ));
@@ -373,6 +415,104 @@ function setCover(){
         'stat'=>200,
         'msg'=>'封面设置成功'
     ));
+}
+
+/**
+ * 上传封面照片
+ */
+function uploadCover()
+{
+    $imgdatastring = $_POST['imgDataString'] or null;
+    $albumId = $_POST['albumid'];
+    $order = $_POST['order'];
+    $link = $_POST['link'];
+    $onlineurl = $_POST['onlineurl'];
+
+    $thumbPath = "";
+    $imgHostUrl = Config::getSection("PROPERTIES")["IMG_HOST_URL"];
+
+    $relative_path = date('Ymd') . '/';
+    $uploaddir = IMAGE_BED_DIR . $relative_path;
+
+    // 创建目录
+    if (!file_exists($uploaddir)) {
+        if (mkdir($uploaddir)) {
+            chmod($uploaddir, 0777);
+        } else {
+            echo 'faile to create ' . $uploaddir . 'maybe the path you have no permit!<br>';
+        };
+    }
+
+    /*图片保存*/
+    if($imgdatastring){
+        $dao = new photosDAO();
+        $coverDao = new coversDAO();
+        if (preg_match('/^(data:(\w+)\/(\w+);base64,)/', $imgdatastring, $result)){
+            $type = $result[3];
+            $filename = time().'.'.$type;
+            $innerFileUrl = $uploaddir. $filename;
+            $outHostUrl = $imgHostUrl.$relative_path.$filename;
+            if (file_put_contents($innerFileUrl, base64_decode(str_replace($result[1], '', $imgdatastring)))){
+                // 入库
+                $id = $dao->addImageInfo(array(
+                    'ALBUMID'=>$albumId,
+                    'PATH'=>$outHostUrl,
+                    'THUMB'=>$thumbPath,
+                    "FS_PATH"=>$relative_path.$filename
+                ));
+
+                // 设为封面
+                $coverDao->addToCover(array(
+                    "COVER"=>$id,
+                    "ORDER"=>$order,
+                ));
+
+                if($id>0){
+                    echo json_encode(array(
+                        'stat'=>200,
+                        'imgurl'=>$outHostUrl,
+                        'pid'=>$id,
+                        'msg'=>'图片上传成功',
+                    ));
+                }else{
+                    echo json_encode(array(
+                        'stat'=>203,
+                        'pid'=>$id,
+                        'imgurl'=>$outHostUrl,
+                        'msg'=>'图片保存失败',
+                    ));
+                }
+
+            }
+        }else if($_POST['onlineurl']){
+            /*如果没有图片但是有imgurl时*/
+            $dao->addImageInfo(array(
+                'ALBUMID'=>$albumId,
+                'PATH'=>$onlineurl,
+                'THUMB'=>$thumbPath,
+                "FS_PATH"=>""
+            ));
+            echo json_encode(array(
+                'stat'=>200,
+                'imgurl'=>$_POST['onlineurl'],
+                'msg'=>'网络URL,图片添加成功',
+            ));
+
+        }else{
+            echo json_encode(array(
+                'stat'=>202,
+                'imgurl'=>null,
+                'imgdata'=>$imgdatastring,
+                'msg'=>'图片字符串匹配失败！也未填写图片URL',
+            ));
+        }
+
+    }else{
+        echo json_encode(array(
+            'stat'=>202,
+            'msg'=>'后端未收到前端图片数据',
+        ));
+    }
 }
 
 /**

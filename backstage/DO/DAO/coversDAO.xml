@@ -9,4 +9,12 @@
     <update id="addCover" >
 
     </update>
+
+    <!-- 添加到相册封面 -->
+    <update id="addToCover" >
+        insert into
+            T_COVER
+        set
+            #{info}
+    </update>
 </mapper>

@@ -38,7 +38,10 @@ class DBC{
         $this->pdo->query('set names utf8;');
         switch(strtolower($type)){
             case 'select':return $this->pdo->query($sql); break;
-            case 'insert':return $this->pdo->exec($sql); break;
+            case 'insert':
+                $this->pdo->exec($sql);
+                return $this->pdo->lastInsertId();
+                break;
             case 'delete':return $this->pdo->exec($sql); break;
             case 'update':return $this->pdo->exec($sql); break;
             default :return $this->pdo->query($sql);break;

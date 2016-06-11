@@ -658,3 +658,99 @@ function delAlbum(){
         ));
     }
 }
+
+/**
+ * 图片上传方法
+ * @param $arr
+ * @return array
+ */
+function uploadImage($arr){
+
+    $imgdatastring = $arr['imgDataString'] or null;
+    $albumId = $arr['albumid'] or null;
+    $onlineurl = $arr['onlineurl'] or null;
+
+
+    $thumbPath = "";
+    $imgHostUrl = Config::getSection("PROPERTIES")["IMG_HOST_URL"];
+
+    $relative_path = date('Ymd') . '/';
+    $uploaddir = IMAGE_BED_DIR . $relative_path;
+
+    // 创建目录
+    if (!file_exists($uploaddir)) {
+        if (mkdir($uploaddir)) {
+            chmod($uploaddir, 0777);
+        } else {
+            return  array(
+                "msg"=>'faile to create ' . $uploaddir . 'maybe the path you have no permit!<br>'
+            );
+        };
+    }
+
+    /*图片保存*/
+    if($imgdatastring){
+        $dao = new photosDAO();
+        if (preg_match('/^(data:(\w+)\/(\w+);base64,)/', $imgdatastring, $result)){
+            $type = $result[3];
+            $filename = time().'.'.$type;
+            $innerFileUrl = $uploaddir. $filename;
+            $outHostUrl = $imgHostUrl.$relative_path.$filename;
+            if (file_put_contents($innerFileUrl, base64_decode(str_replace($result[1], '', $imgdatastring)))){
+                // 入库
+                $id = $dao->addImageInfo(array(
+                    'ALBUMID'=>$albumId,
+                    'PATH'=>$outHostUrl,
+                    'THUMB'=>$thumbPath,
+                    "FS_PATH"=>$relative_path.$filename
+                ));
+
+                if($id>0){
+                    return array(
+                        'stat'=>200,
+                        'imgurl'=>$outHostUrl,
+                        'pid'=>$id,
+                        'msg'=>'图片上传成功',
+                    );
+                }else{
+                    return array(
+                        'stat'=>203,
+                        'pid'=>$id,
+                        'imgurl'=>$outHostUrl,
+                        'msg'=>'图片保存失败',
+                    );
+                }
+
+            }
+        }else if($_POST['onlineurl']){
+            /*如果没有图片但是有imgurl时*/
+            $dao->addImageInfo(array(
+                'ALBUMID'=>$albumId,
+                'PATH'=>$onlineurl,
+                'THUMB'=>$thumbPath,
+                "FS_PATH"=>""
+            ));
+            return array(
+                'stat'=>200,
+                'imgurl'=>$_POST['onlineurl'],
+                'msg'=>'网络URL,图片添加成功',
+            );
+
+        }else{
+            return array(
+                'stat'=>202,
+                'imgurl'=>null,
+                'imgdata'=>$imgdatastring,
+                'msg'=>'图片字符串匹配失败！也未填写图片URL',
+            );
+        }
+
+    }else{
+        return array(
+            'stat'=>202,
+            'msg'=>'后端未收到前端图片数据',
+        );
+    }
+
+    return array(""=>null);
+}

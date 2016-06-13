@@ -164,6 +164,7 @@ include_once(WIDGETS_DIR.'head.php');
 
 
     function delRecord(id){
+        var self = this;
         $.ajax({
             url: './Data.php?id=delAdvt',
             type:"POST",
@@ -171,20 +172,17 @@ include_once(WIDGETS_DIR.'head.php');
                 id: 'delAdvt',
                 adid:id
             },
-            complete: function (data) {
-                console.log(data.responseText);
-                var rep = eval("(" + data.responseText + ")");
-                if (rep.stat == 200) {
-                    alert(rep.msg);
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data.stat == 200) {
+                    alert(data.msg);
                     location.reload();
                 } else{
-                    self.innerHTML = '提交出错，请重试';
-                    self.removeAttribute('disabled');
+                    alert(data.msg);
                 }
             },
             error: function () {
                 alert('提交出错');
-                self.removeAttribute('disabled');
             }
         })
     }

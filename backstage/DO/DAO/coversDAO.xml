@@ -17,4 +17,14 @@
         set
             #{info}
     </update>
+
+    <!-- 添加到相册封面 -->
+    <delete id="deleteCoverById" >
+        DELETE FROM T_COVER WHERE id=#{id};
+    </delete>
+
+    <!-- 添加到相册封面 -->
+    <select id="getCoverInfoById" >
+        select * FROM T_COVER WHERE id=#{id};
+    </select>
 </mapper>

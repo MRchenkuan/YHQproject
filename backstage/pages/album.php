@@ -272,11 +272,9 @@ if($id=="0")$thisalbum['NAME']="未绑定相册";
                                     'onlineurl':onlineurl
                                 },
                                 success:function(data){
-                                    data = eval('(' + data + ')');
-                                    console.log(data);
-
+                                    data = JSON.parse(data);
+                                    alert(data.msg);
                                     if (data.stat == 200) {
-                                        alert(data.msg);
                                         location.reload();
                                     } else{
                                         savebtn.removeAttribute('disabled');
@@ -284,7 +282,7 @@ if($id=="0")$thisalbum['NAME']="未绑定相册";
                                     }
                                 },
                                 error:function(data){
-                                    data = eval('(' + data + ')');
+                                    data = JSON.parse(data);
                                     console.log(data);
                                     savebtn.removeAttribute('disabled');
                                     savebtn.innerHTML = 'data.msg';

@@ -130,44 +130,61 @@ function uploadImage($arr){
 /**
  * 物理删除图片
  */
-function removeImage($arr){
-    $imgId = $arr['imgid']; // 相册id
+function deleteImage($arr){
+    $imgId = $arr['pid']; // 相册id
     $dao = new photosDAO();
     $photoInfo = $dao->getPhotoInfoById($imgId);
 
     $photo_path = $photoInfo['FS_PATH'];
+
+
     $photo_src_org = $photoInfo['PATH'];
     $photo_src_tmb = $photoInfo['THUMB'];
     $fileName = basename($photo_path);
-
-    /*新建回收站*/
-    $dustbin_dir = DUSTBIN_DIR.date('Ymd').'/';
-    if (!file_exists($dustbin_dir)) {
-        if (mkdir($dustbin_dir)) {
-            chmod($dustbin_dir, 0777);
-        } else {
-            return array(
-                "msg" => 'faile to create ' . $dustbin_dir . 'maybe the path you have no permit!<br>'
-            );
-        };
-    }
-
+    $photo_tmb_path = dirname($photo_path)."/thumbs/".$fileName;
 
     // 删库
     $dao->delImageById($imgId);
+    // 删文件
+    if($photo_path){
+        /*新建回收站*/
+        $dustbin_dir = DUSTBIN_DIR.date('Ymd').'/';
+        $dustbin_thumb_dir = $dustbin_dir.'thumbs/';
+        if (!file_exists($dustbin_dir)) {
+            if (mkdir($dustbin_dir)) {
+                chmod($dustbin_dir, 0777);
+            } else {
+                return array(
+                    "msg" => 'faile to create ' . $dustbin_dir . 'maybe the path you have no permit!<br>'
+                );
+            };
+        }
 
-    // 移图
-    if(rename(IMAGE_BED_DIR.$photo_path,$dustbin_dir.$fileName )){
+        // 创建缩略图目录
+        if (!file_exists($dustbin_thumb_dir)) {
+            if (mkdir($dustbin_thumb_dir)) {
+                chmod($dustbin_thumb_dir, 0777);
+            } else {
+                return array(
+                    "msg" => 'faile to create ' . $dustbin_thumb_dir . 'maybe the path you have no permit!<br>'
+                );
+            };
+        }
+
+        rename(IMAGE_BED_DIR.$photo_path,$dustbin_dir.$fileName );
+        rename(IMAGE_BED_DIR.$photo_tmb_path,$dustbin_thumb_dir.$fileName );
+
         return array(
             'stat'=>200,
             'msg'=>"{$imgId}在数据库中删除，{$fileName}移动到服务器回收站",
         );
+
     }else{
         return array(
             'stat'=>200,
             'msg'=>"数据库删除成功，但服务器无此文件",
-            '$imgsrc'=>$photo_src_org,
-            '$dustbin_dir.$filename'=>$dustbin_dir.$fileName,
+            'imgsrc'=>$photo_src_org
         );
     }
+
 }

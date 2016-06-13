@@ -49,6 +49,29 @@ class coversDAO extends DBC{
         return $rs;
     }
 
+    /**
+     * 根据封面ID删除封面
+     * @param $id
+     * @return int|PDOStatement|string
+     */
+    public function deleteCoverById($id)
+    {
+        $rs = $this->getResult(__FUNCTION__,array("id"=>$id));
+        return $rs;
+    }
+
+    /**
+     * 根据封面ID获取封面信息
+     * @param $id
+     * @return mixed
+     */
+    public function getCoverInfoById($id)
+    {
+        $rs = $this->getResult(__FUNCTION__,array('id'=>$id));
+        $row = $rs->fetch();
+        return $row;
+    }
+
 
 }
 //

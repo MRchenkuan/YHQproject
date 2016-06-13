@@ -43,7 +43,8 @@ $config = array(
     'getPhotosByAlbumId' => getPhotosByAlbumId,
     'getAlbumsByGroupId'=>getAlbumsByGroupId,
     'setCover'=>setCover,
-    'uploadCover'=>uploadCover
+    'uploadCover'=>uploadCover,
+    'deleteCover'=>deleteCover
 );
 $config[$APIID]();
 
@@ -203,49 +204,31 @@ function createAdvt()
  * */
 function delAdvt()
 {
-    $id = $_POST['adid'];
-    $coverDao = new coversDAO();
-    $dao = new photoAlbumDAO();
+    try {
+        $id = $_POST['adid'];
+        $coverDao = new coversDAO();
+        $photoDao = new photosDAO();
 
-    $imgId = $_POST['imgid']; // 相册id
-    $dao = new photosDAO();
-    $photoInfo = $dao->getPhotoInfoById($imgId);
+        // 获取记录
+        $coverInfo = $coverDao->getCoverInfoById($id);
 
-    $photo_path = $photoInfo['FS_PATH'];
-    $photo_src_org = $photoInfo['PATH'];
-    $photo_src_tmb = $photoInfo['THUMB'];
-    $fileName = basename($photo_path);
+        // 删记录
+        $coverDao->deleteCoverById($id);
 
-    /*新建回收站*/
-    $dustbin_dir = DUSTBIN_DIR.date('Ymd').'/';
-    if (!file_exists($dustbin_dir)) {
-        if (mkdir($dustbin_dir)) {
-            chmod($dustbin_dir, 0777);
-        } else {
-            echo 'faile to create ' . $dustbin_dir . 'maybe the path you have no permit!<br>';
-        };
+        // 删图
+        $photoDao->delImageById($coverInfo['COVER']);
+
+        echo json_encode(array(
+            "stat" => 200,
+            "msg" => "封面删除成功"
+        ));
+    }catch (Exception $e){
+        echo json_encode(array(
+            "stat" => 202,
+            "msg"=>$e
+        ));
     }
 
-
-    // 删库
-    $dao->delImageById($imgId);
-
-    // 移图
-    if(rename(IMAGE_BED_DIR.$photo_path,$dustbin_dir.$fileName )){
-        echo json_encode(array(
-            'stat'=>200,
-            'msg'=>"{$imgId}在数据库中删除，{$fileName}移动到服务器回收站",
-        ));
-        return true;
-    }else{
-        echo json_encode(array(
-            'stat'=>200,
-            'msg'=>"数据库删除成功，但服务器无此文件",
-            '$imgsrc'=>$photo_src_org,
-            '$dustbin_dir.$filename'=>$dustbin_dir.$fileName,
-        ));
-        return true;
-    }
 }
 
 /**
@@ -395,35 +378,38 @@ function uploadCover()
  */
 function moveImage(){
     $albumid=$_GET['albumid'];
-    $Kodbc = new Kodbc('T_TABLE_PHOTOBASE');
-    if($_GET['imgid']){
-        $imgid=$_GET['imgid'];
-        $Kodbc->updateItem($imgid,array(
-            'albumid'=>$albumid
-        ));
-        echo json_encode(array(
-            'stat'=>200,
-            'msg'=>"{$imgid}移动到{$albumid}",
-        ));
-    }elseif($_GET['imgsrc']){
-        $imgsrc=$_GET['imgsrc'];
-        $Kodbc->insertItem(array(
-            'albumid'=>'0',
-           'imgsrc'=>$imgsrc,
-            'pubdata'=>date('Y-m-d\TH:i'),
-            'remark'=>'from images binding'
-        ));
-        echo json_encode(array(
-            'stat'=>200,
-            'msg'=>"{$imgsrc}绑定到{$albumid}",
-        ));
-    }else{
-        echo json_encode(array(
-            'stat'=>202,
-            'msg'=>"既没有图片ID也没有图片地址"
-        ));
-    }
+//    $Kodbc = new Kodbc('T_TABLE_PHOTOBASE');
+//    if($_GET['imgid']){
+//        $imgid=$_GET['imgid'];
+//        $Kodbc->updateItem($imgid,array(
+//            'albumid'=>$albumid
+//        ));
+//        echo json_encode(array(
+//            'stat'=>200,
+//            'msg'=>"{$imgid}移动到{$albumid}",
+//        ));
+//    }elseif($_GET['imgsrc']){
+//        $imgsrc=$_GET['imgsrc'];
+//        $Kodbc->insertItem(array(
+//            'albumid'=>'0',
+//           'imgsrc'=>$imgsrc,
+//            'pubdata'=>date('Y-m-d\TH:i'),
+//            'remark'=>'from images binding'
+//        ));
+//        echo json_encode(array(
+//            'stat'=>200,
+//            'msg'=>"{$imgsrc}绑定到{$albumid}",
+//        ));
+//    }else{
+//        echo json_encode(array(
+//            'stat'=>202,
+//            'msg'=>"既没有图片ID也没有图片地址"
+//        ));
+//    }
 
+    echo json_encode(array(
+        "msg"=>"moveImage方法重构中..."
+    ));
 }
 
 
@@ -432,44 +418,8 @@ function moveImage(){
  */
 function removeImage(){
     $imgId = $_POST['imgid']; // 相册id
-    $dao = new photosDAO();
-    $photoInfo = $dao->getPhotoInfoById($imgId);
-
-    $photo_path = $photoInfo['FS_PATH'];
-    $photo_src_org = $photoInfo['PATH'];
-    $photo_src_tmb = $photoInfo['THUMB'];
-    $fileName = basename($photo_path);
-
-    /*新建回收站*/
-    $dustbin_dir = DUSTBIN_DIR.date('Ymd').'/';
-    if (!file_exists($dustbin_dir)) {
-        if (mkdir($dustbin_dir)) {
-            chmod($dustbin_dir, 0777);
-        } else {
-            echo 'faile to create ' . $dustbin_dir . 'maybe the path you have no permit!<br>';
-        };
-    }
-
-
-    // 删库
-    $dao->delImageById($imgId);
-
-    // 移图
-    if(rename(IMAGE_BED_DIR.$photo_path,$dustbin_dir.$fileName )){
-        echo json_encode(array(
-            'stat'=>200,
-            'msg'=>"{$imgId}在数据库中删除，{$fileName}移动到服务器回收站",
-        ));
-        return true;
-    }else{
-        echo json_encode(array(
-            'stat'=>200,
-            'msg'=>"数据库删除成功，但服务器无此文件",
-            '$imgsrc'=>$photo_src_org,
-            '$dustbin_dir.$filename'=>$dustbin_dir.$fileName,
-        ));
-        return true;
-    }
+    $result = deleteImage(array("pid"=>$imgId));
+    return json_encode($result);
 }
 
 

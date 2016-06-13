@@ -128,7 +128,7 @@ if($id=="0")$thisalbum['NAME']="未绑定相册";
                     }
                 },
                 error:function(data){
-                    data = eval('(' + data + ')');
+                    data = JSON.parse(data);
                     console.log(data);
                 }
             })
@@ -145,7 +145,7 @@ if($id=="0")$thisalbum['NAME']="未绑定相册";
                 'imgsrc':node.getAttribute('data-imgsrc')||''
             },
             success:function(data){
-                data = eval('(' + data + ')');
+                data = JSON.parse(data);
                 console.log(data);
                 if (data.stat == 200) {
                     alert(data.msg);
@@ -153,7 +153,7 @@ if($id=="0")$thisalbum['NAME']="未绑定相册";
                 }
             },
             error:function(data){
-                data = eval('(' + data + ')');
+                data = JSON.parse(data);
                 console.log(data);
             }
         })
@@ -175,7 +175,7 @@ if($id=="0")$thisalbum['NAME']="未绑定相册";
                 }
             },
             error:function(data){
-                data = eval('(' + data + ')');
+                data = JSON.parse(data);
                 console.log(data);
             }
         })

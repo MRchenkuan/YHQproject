@@ -130,8 +130,8 @@ function uploadImage($arr){
 /**
  * 物理删除图片
  */
-function deleteImage($arr){
-    $imgId = $arr['pid']; // 相册id
+function deleteImage($pid){
+    $imgId = $pid; // 相册id
     $dao = new photosDAO();
     $photoInfo = $dao->getPhotoInfoById($imgId);
 

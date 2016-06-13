@@ -207,7 +207,6 @@ function delAdvt()
     try {
         $id = $_POST['adid'];
         $coverDao = new coversDAO();
-        $photoDao = new photosDAO();
 
         // 获取记录
         $coverInfo = $coverDao->getCoverInfoById($id);
@@ -215,8 +214,8 @@ function delAdvt()
         // 删记录
         $coverDao->deleteCoverById($id);
 
-        // 删图
-        $photoDao->delImageById($coverInfo['COVER']);
+        // 删图库
+        deleteImage($coverInfo['COVER']);
 
         echo json_encode(array(
             "stat" => 200,
@@ -418,8 +417,8 @@ function moveImage(){
  */
 function removeImage(){
     $imgId = $_POST['imgid']; // 相册id
-    $result = deleteImage(array("pid"=>$imgId));
-    return json_encode($result);
+    $result = deleteImage($imgId);
+    echo json_encode($result);
 }
 
 

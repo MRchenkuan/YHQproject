@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper>
+    <!-- 根据id更新封面 -->
+    <update id="updateCover" >
+
+    </update>
+
+    <!-- 新增封面 -->
+    <update id="addCover" >
+
+    </update>
+
+    <!-- 添加到相册封面 -->
+    <update id="addToCover" >
+        insert into
+            T_COVER
+        set
+            #{info}
+    </update>
+
+    <!-- 添加到相册封面 -->
+    <delete id="deleteCoverById" >
+        DELETE FROM T_COVER WHERE id=#{id};
+    </delete>
+
+    <!-- 添加到相册封面 -->
+    <select id="getCoverInfoById" >
+        select * FROM T_COVER WHERE id=#{id};
+    </select>
+</mapper>

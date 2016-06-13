@@ -1,13 +1,50 @@
+@keyframes leftIn {
+    0% {
+        left: -20px;
+    }
+    100% {
+        left: 0;
+    }
+}
+
+@keyframes rightIn {
+    0% {
+        right: -20px;
+    }
+    100% {
+        right: 0;
+    }
+}
+
+@keyframes shine {
+    0% {
+        opacity: 1;
+    }
+    20%{
+        opacity: .1;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 html {
     overflow: hidden;
+}
+embed{
+    height: 0;
+    display: none;
 }
 
 body {
     margin: 0;
     padding: 0;
-    width: 100%;
-    height: 100%;
-    background: #f6f6f6;
+    position: absolute;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
     font-family: Consolas,"Liberation Mono",Menlo,Courier,monospace;;
 }
 a {
@@ -16,13 +53,32 @@ a {
 
 #nav {
     width: 100%;
-    height: 40px;
+    height: 10%;
+    background-color: #fff;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+}
+#boards{
+    width: 100%;
+    height: 90%;
+    background: #fff;
+    position: absolute;
+    top: 10%;
+    bottom: 0;
 }
 
 #index_nav {
     position: absolute;
-    right: 115px;
-    top: 20px;
+    right: 80px;
+    bottom:0;
+}
+#logo{
+    height:10%;
+    position:absolute;
+    margin:20px 0 0 80px;
+    opacity:.65;
+    z-index: 9999
 }
 
 #index_nav ul {
@@ -30,24 +86,29 @@ a {
     margin: 0;
 }
 
-#index_nav ul li {
+.home_menu {
     position: relative;
-    height: 30px;
     float: left;
     list-style: none;
-    margin: 0 10px;
+    margin-left: 20px;
+    padding: 0 5px;
+    transition: all .3s ease;
+    top:0;
+    border: 1px solid #fff;
+
 }
 
-#index_nav ul li:hover {
-    border-bottom: 1px solid grey;
+.home_menu:hover {
+    top:-5px;
+    border: 1px solid grey;
 }
 
 .sliderImg {
     box-shadow: 0 0 15px #808080;
     border-radius: 3px;
     transition:all 1s ease;
-    -webkit-background-size:cover;
     background-size:cover;
+    background-position: center;
 }
 
 #fot {
@@ -59,10 +120,9 @@ a {
 }
 
 #fot span {
-    margin: 0 auto;
     color: rgba(128, 128, 128, 0.5);
     font-size: 14px;
-    margin-right: 20px;
+    margin: 0 20px 0 auto;
     text-shadow: 1px 1px 1px #FFF, 0 0 0 #000;
 }
 #fot span a{
@@ -74,18 +134,21 @@ a {
 }
 
 .contentBoard, .currentboard {
-    width: 100%;
-    height: auto;
-    margin: auto 0;
+    padding: 40px 80px;
+    position: absolute;
     display: none;
     overflow:hidden;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right:0;
 }
 
 #photos_nav ul {
-    height: 30px;
+    height: 100%;
     width: 100%;
     padding: 0;
-    margin-bottom: 0
+    margin: 0
 }
 
 #photos_nav ul li {
@@ -97,7 +160,7 @@ a {
 }
 
 #photos_nav ul li a {
-    color: grey;
+    color: #202020;
     padding: 3px;
 }
 
@@ -107,99 +170,132 @@ a {
     border-radius: 3px;
     text-shadow: 0 1px 0 #fcfcfc
 }
-
-#photos_frame {
-    overflow: visible;
-    margin: 0 auto;
+#photos_nav{
+    height:8%;}
+#albums{
+    height: 92%;
     position: relative;
 }
 
-#leftward, #rightward {;
-    background-size: contain;
-    height: 100px;
-    width: 28px;
+.album{
+    float: left;
+    border: 1px solid grey;
+    background: no-repeat center;
+    background-size: cover;
+    transition: all .5s ease;
+    opacity: 0;
+    overflow: hidden;
+}
+
+.album .cover{
     position: absolute;
-    z-index: 2;
-    top: 43%;
-    display: block
-}
-
-#photos_content {
+    top: 0;
+    right:0;
     width: 100%;
-    height: 100%; /*border: green solid 1px;*/
-    position: relative
+    height: 100%;
+    transition: width 1s ease;
+    background: #eee url('../img/ui/logo.png') center no-repeat;
+    background-size: 20%;
 }
 
-.imgBoxLine {
-    float: left;
+.thumbBox{
+    position:absolute;
+    background-size:cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 1;
 }
 
-.imgbox {;
-    background: grey;
-    float: left;
-    position: relative
+.thumbBox:hover{
+    animation:shine .5s ease
 }
 
+.thumbBox .eleCover{
+    position:absolute;
+    top:0;
+    right:0;
+    width:100%;
+    height:100%;
+    background: #eee url('../img/ui/logo.png') no-repeat center;
+    background-size:50%;
+    transition: all 1s ease;
+}
 .innerShadWhite {
     color: rgba(128, 128, 128, 0.5);
     text-shadow: 1px 1px 1px #FFF, 0 0 0 #000;
 }
 
-.coverImgBox {
+.albumInfoBar{
+    float: right;
+    transition: all .1s ease;
+    animation: rightIn .5s ease;
+    position:relative;
+}
+
+.albumInfoBar span{
+    margin:0 0 0 20px;
+    color: grey;
+    transition: all .1s ease;
+}
+
+.backOff{
+    color: grey;
+    text-decoration: underline;
     float: left;
-    width: 230px;
-    margin: 0 5px;
-    position: relative
+    transition: all .1s ease;
+    margin: 0 3px;
+    animation: leftIn .5s ease;
+    position:relative;
 }
 
-.coverImgBox:hover {;
-    box-shadow: 0 0 5px #595959;
-    background: #d1d1d1;
-    text-shadow: 0 1px 0 #f6f6f6;
+
+.backOff:hover{
+    color: #202020;
+    background: #ddd;
+    border-radius: 3px;
+    text-shadow: 0 1px 0 #fcfcfc
 }
 
-.coverImgBox img {
-    float: left;
-    width: 229px;
-    height: 152px
-}
-
-.coverImgBox span {
-    text-align: center;
-    float: left;
-    width: 230px;
-    margin-top: 20px;
-}
-
-.coverImgBox a {
-    background: #14182E;
-    opacity: .5
-}
-
-.grayscale {
-}
-
-.abouttext {
-    height: 100%;
-    float: left;
-    font-size: 12px;
-    line-height: 1.75
-}
-
-.erweima {
-    width: 90px;
-    float: left;
-    margin-right: 35px;
-    line-height: 1.65;
-    font-size: 12px;
-}
-
-.erweima span {
-    display: block;
-    height: 30px;
-    line-height: 30px;
-}
-
-.erweima img {
+.album .albumRemark{
+    transition:all .3s ease;
+    background: #2d2d2d;
+    opacity: .7;
+    position:absolute;
+    height: 0;
     width: 100%;
+    bottom: 0;
+    left: 0;
+    color:#fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    line-height: 1.5;
+
 }
+
+.album:hover .albumRemark{
+    transition:all .1s ease;
+    height:20% ;
+}
+
+.contact_blocks{
+    float: left;
+}
+.contact_blocks .lines{
+    display: block;
+    padding: 0 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 12px;
+}
+#contact .frame{
+    float: left;
+    height: 100%;
+    width:100%;
+    overflow: scroll;
+    position: relative;
+}
+
+
+

@@ -13,17 +13,15 @@
     <title><?php
         switch($pageID){
             case 'home':echo '首页';break;
-            case 'addAdvt':echo '广告管理';break;
-            case 'addNews':echo '新闻管理';break;
+            case 'addAdvt':echo '封面管理';break;
             case 'photoLib':echo '图库管理';break;
-            case 'remarkManager':echo '评论管理';break;
             default:echo '首页';break;
         }
         ?></title>
 </head>
 <body>
 <?php
-error_reporting(0);
+//error_reporting(0);
 session_start();
 if(($_COOKIE['SSID']!==session_id())||!($_SESSION['stat']=='login')){
     /*未登录展示登录框*/

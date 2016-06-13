@@ -1,8 +1,7 @@
 <?php
 //error_reporting(0);
 session_start();
-require_once($_SERVER['DOCUMENT_ROOT'] . '/backstage/definitions.php');
-//require_once(KODBC_PATH);
+require_once('../definitions.php');
 
 $APIID = $_GET['id'] ? $_GET['id'] : 'defaultMethod';
 
@@ -14,6 +13,13 @@ $DATABASEURL = DATA_TABLE_DIR.'T_TABLE_ADVTS.xml';
 require_once(DATABASE_DAO_DIR."photoAlbumDAO.php");
 require_once(DATABASE_DAO_DIR."newsDAO.php");
 require_once(DATABASE_DAO_DIR."photosDAO.php");
+require_once(DATABASE_DAO_DIR."coversDAO.php");
+
+/**
+ * 引入工具
+ */
+require_once(TOOLS_PATH."imgUploader.php");
+
 
 /*****************************************************
  *
@@ -22,24 +28,47 @@ require_once(DATABASE_DAO_DIR."photosDAO.php");
  *****************************************************/
 
 $config = array(
+    'test'=>test,
     'defaultMethod' => defaultMethod,
-    'getNews' => getNews,
     'uploadImg' => uploadImg,
     'userLogin' => userLogin,
     'userVerify' => userVerify,
     'createAdvt' => createAdvt,
     'delAdvt' => delAdvt,
-    'createNews' => createNews,
-    'delNews' => delNews,
     'uploadImgAjax' => uploadImgAjax,
     'moveImage' => moveImage,
     'removeImage' => removeImage,
     'createAlbum' => createAlbum,
     'delAlbum' => delAlbum,
-    'getNewsContent' => getNewsContent,
-    'getAlbumsByGroupId'=>getAlbumsByGroupId
+    'getPhotosByAlbumId' => getPhotosByAlbumId,
+    'getAlbumsByGroupId'=>getAlbumsByGroupId,
+    'setCover'=>setCover,
+    'uploadCover'=>uploadCover,
+    'deleteCover'=>deleteCover
 );
 $config[$APIID]();
+
+/*****************************************************
+ *
+ *                  test
+ *
+ *****************************************************/
+
+function test(){
+    $dao = new photosDAO();
+    $count = $dao->addImageInfo(array(
+        'ALBUMID'=>"12",
+        'PATH'=>"fdsafdsafsdafsaasf",
+        'THUMB'=>"fdsafdsafasfdf",
+    ));
+    echo 123131;
+    var_dump($count);
+    echo 123131;
+    var_dump($dao);
+    echo 123131;
+}
+
+
 
 /*****************************************************
  *
@@ -54,6 +83,15 @@ function getAlbumsByGroupId(){
     $groupId = $_GET['groupId'];
     $db = new photoAlbumDAO();
     echo json_encode($db->getAlbumsByGroupId($groupId));
+}
+/**
+ * 根据相册ID获取所有照片
+ */
+function getPhotosByAlbumId(){
+
+    $albumId = $_GET['albumId'];
+    $db = new photoAlbumDAO();
+    echo json_encode($db->getPhotosByAlbumId($albumId));
 }
 
 /*****************************************************
@@ -81,7 +119,7 @@ function userLogin()
         ));
         return;
     }
-    if ($username == 'as' && $password == 'as') {
+    if ($username == "ss" && $password == "ss") {
         /*记录session值并写入cookie*/
         setcookie('SSID', session_id(),time()+43200);
         $_SESSION['stat'] = 'login';
@@ -129,12 +167,9 @@ function userVerify()
 function createAdvt()
 {
     $id = $_GET['adid'];
+    $link = $_GET['link'];
     $order = $_GET['order'];
-    $title = $_GET['title'];
-    $imgsrc = $_GET['imgsrc'];
-    $update = $_GET['update'];
-    $dndate = $_GET['dndate'];
-    $remark = $_GET['remark'];
+    $cover = $_GET['cover'];
 
     if (!userVerify()) {
         /*验证用户登陆*/
@@ -145,22 +180,18 @@ function createAdvt()
         echo false;
     }
 
-    $Kodbc = new Kodbc('T_TABLE_ADVTS');
+    $dao = new coversDAO();
     $dataitem = array(
-        'order' => $order,
-        'stat' => 'disable',
-        'title' => $title,
-        'imgsrc' => $imgsrc,
-        'update' => $update,
-        'dndate' => $dndate,
-        'remark' => $remark
+        'COVER' => $cover,
+        'ORDER' => $order,
+        'LINK'=> $link
     );
 
     /*更新或者新增取决于ID是否存在*/
     if ($id && $id != '') {
-        $Kodbc->updateItem($id, $dataitem);
+        $dao->updateCover($id, $dataitem);
     } else {
-        $Kodbc->insertItem($dataitem);
+        $dao->addCover($dataitem);
     }
     echo json_encode(array(
         'stat' => 200,
@@ -173,9 +204,30 @@ function createAdvt()
  * */
 function delAdvt()
 {
-    $id = $_GET['adid'];
-    $Kodbc = new Kodbc('T_TABLE_ADVTS');
-    echo $Kodbc->delById($id);
+    try {
+        $id = $_POST['adid'];
+        $coverDao = new coversDAO();
+
+        // 获取记录
+        $coverInfo = $coverDao->getCoverInfoById($id);
+
+        // 删记录
+        $coverDao->deleteCoverById($id);
+
+        // 删图库
+        deleteImage($coverInfo['COVER']);
+
+        echo json_encode(array(
+            "stat" => 200,
+            "msg" => "封面删除成功"
+        ));
+    }catch (Exception $e){
+        echo json_encode(array(
+            "stat" => 202,
+            "msg"=>$e
+        ));
+    }
+
 }
 
 /**
@@ -238,128 +290,9 @@ function uploadImg()
 
 /*****************************************************
  *
- *                  新闻的处理函数
- *
- *****************************************************/
-
-function createNews(){
-
-    $newsid     =   $_POST['newsid'];
-    $title     =   $_POST['title'];
-    $auth       =   $_POST['auth'];
-    $origin     =   $_POST['origin'];
-    $pubdata    =   $_POST['pubdata'];
-    $stat    =   $_POST['stat'];
-    $cover    =   $_POST['cover'];
-    $text       =   htmlspecialchars($_POST['text']);
-    $db         = $_POST['target'];
-
-    $Kodbc = new Kodbc('T_TABLE_NEWS');
-
-    /*************
-     *
-     * 储存大文本
-     *
-     ************/
-    $newsDir = NEWS_FILE_DIR.date('Ymd').'/';
-    if (!file_exists($newsDir)) {
-        if (mkdir($newsDir)) {
-            chmod($newsDir, 0777);
-        } else {
-            echo 'faile to create ' . $newsDir . 'maybe the path you have no permit!<br>';
-        };
-    }
-
-    /*判断是修改文件还是新增文件*/
-    if ($newsid && $newsid != ''){
-        $item = $Kodbc->getById($newsid);
-        $newsFileUrl = $item['text'];
-    }else{
-        $newsFileUrl = $newsDir . time() . '.newsfiles';
-    }
-
-    $fp = fopen($newsFileUrl, "w+");
-    if(!fwrite($fp,$text)){
-        fclose($fp);
-        echo json_encode(array(
-            'stat' => 201,
-            'msg' => 'login failed!'
-        ));
-        throw new Exception("文件保存异常");
-    }
-    fclose($fp);
-    /**************
-     * 文件储存结束
-     **************/
-
-    if (!userVerify()) {
-        /*验证用户登陆*/
-        echo json_encode(array(
-            'stat' => 201,
-            'msg' => 'login failed!'
-        ));
-    }
-
-    $dataitem = array(
-        'stat' => $stat,
-        'title' => $title,
-        'auth' => $auth,
-        'origin' => $origin,
-        'pubdata' => $pubdata,
-        'text' =>$newsFileUrl,
-        'cover' => $cover
-    );
-
-    /*更新或者新增取决于ID是否存在*/
-    if ($newsid && $newsid != '') {
-        $Kodbc->updateItem($newsid, $dataitem);
-    } else {
-        $newsid = $Kodbc->insertItem($dataitem);
-    }
-    echo json_encode(array(
-        'stat' => 200,
-        'msg' => $newsid.' add sucess！',
-        'articId'=>$newsid[0],
-    ));
-}
-
-/**
- * 用户删除新闻方法
- * */
-function delNews()
-{
-    $id = $_GET['newsid'];
-    $Kodbc= new Kodbc(DATA_TABLE_DIR.'T_TABLE_NEWS.xml');
-    echo $Kodbc->delById($id);
-}
-
-/**
- * 获得新闻内容的方法
- * */
-function getNewsContent(){
-    $id=$_REQUEST['newsid'];
-
-    $Kodbc= new Kodbc(DATA_TABLE_DIR.'T_TABLE_NEWS.xml');
-
-    $item= $Kodbc->getById($id);
-    $contentsrc = $item['text'];
-    $newsfile = fopen($contentsrc,'r') or die('can not find newsfiles,because no newsfiles file found');
-    echo json_encode(array(
-        'stat' => 200,
-        'msg' => $id.' get sucess！',
-        'content'=>htmlspecialchars_decode(fread($newsfile,filesize($contentsrc)))
-    ));
-//    fclose($newsfile);
-
-}
-
-
-/*****************************************************
- *
  *                  图库的处理函数
  *
  *****************************************************/
-
 /**
  * 异步上传图片
  */
@@ -367,70 +300,76 @@ function uploadImgAjax()
 {
 
     $imgdatastring = $_POST['imgDataString'] or null;
-    $uploaddir = IMAGE_BED_DIR . date('Ymd') . '/';
-    if (!file_exists($uploaddir)) {
-        if (mkdir($uploaddir)) {
-            chmod($uploaddir, 0777);
-        } else {
-            echo 'faile to create ' . $uploaddir . 'maybe the path you have no permit!<br>';
-        };
-    }
+    $albumId = $_POST['albumid'];
+    $onlineurl = $_POST['onlineurl'];
 
-    /*base64保存为图片，并写入数据库*/
-    if($imgdatastring){
-        //do someting for 保存图片
-        if (preg_match('/^(data:\s*images\/(\w+);base64,)/', $imgdatastring, $result)){
-            $type = $result[2];
-            $uploadfileUrl = $uploaddir. time().'.'.$type;
-            if (file_put_contents($uploadfileUrl, base64_decode(str_replace($result[1], '', $imgdatastring)))){
-                //写入数据库
-                $Kodbc = new Kodbc('T_TABLE_PHOTOBASE');
-                $Kodbc->insertItem(array(
-                        'albumid'=>$_POST['albumid'],
-                        'stat'=>'active',
-                        'remark'=>$_POST['remark'],
-                        'imgsrc'=>$uploadfileUrl,
-                        'pubdata'=> date('Y-m-d\TH:i')
-                    )
-                );
+    $resulte = uploadImage(array(
+        "imgDataString"=>$imgdatastring,
+        "albumid"=>$albumId,
+        "onlineurl"=>$onlineurl,
+    ));
 
-                echo json_encode(array(
-                    'stat'=>200,
-                    'imgurl'=>$uploadfileUrl,
-                    'msg'=>'图片上传成功',
-                ));
-            }
-        }else if($_POST['onlineurl']){
-            /*如果没有图片但是有imgurl时*/
-            $Kodbc = new Kodbc('T_TABLE_PHOTOBASE');
-            $Kodbc->insertItem(array(
-                    'albumid'=>$_POST['albumid'],
-                    'stat'=>'active',
-                    'remark'=>$_POST['remark'],
-                    'imgsrc'=>$_POST['onlineurl'],
-                    'pubdata'=> date('Y-m-d\TH:i')
-                )
-            );
-            echo json_encode(array(
-                'stat'=>200,
-                'imgurl'=>$_POST['onlineurl'],
-                'msg'=>'网络URL,图片添加成功',
-            ));
+    echo json_encode($resulte);
+}
 
-        }else{
-            echo json_encode(array(
-                'stat'=>202,
-                'imgurl'=>null,
-                'msg'=>'图片字符串匹配失败！也未填写图片URL',
-            ));
-        }
-
-    }else{
+/**
+ * 图片设为相册封面
+ */
+function setCover(){
+    $photoId = $_POST['photoId'];
+    if(!$photoId){
         echo json_encode(array(
             'stat'=>202,
-            'msg'=>'后端未收到前端图片数据',
+            'msg'=>'相册ID不存在',
+        ));
+        return;
+    }
+    $dao = new photoAlbumDAO();
+    $dao->setCover($photoId);
+    echo json_encode(array(
+        'stat'=>200,
+        'msg'=>'封面设置成功'
+    ));
+}
+
+/**
+ * 上传封面照片
+ */
+function uploadCover()
+{
+    $imgdatastring = $_POST['imgDataString'] or null;
+    $albumId = $_POST['albumid'];
+    $order = $_POST['order'];
+    $link = $_POST['link'];
+    $onlineurl = $_POST['onlineurl'];
+
+    // 上传图片
+    $resulte = uploadImage(array(
+        "imgDataString"=>$imgdatastring,
+        "albumid"=>$albumId,
+        "onlineurl"=>$onlineurl,
+    ));
+
+    // 设置封面
+    if($resulte["pid"]){
+        $coverDao = new coversDAO();
+        // 设为封面
+        $coverDao->addToCover(array(
+            "COVER"=>$resulte["pid"],
+            "ORDER"=>$order,
+        ));
+        echo json_encode(array(
+            "stat"=>200,
+            "msg"=>"封面上传成功!"
+        ));
+    }else{
+        echo json_encode(array(
+            "stat"=>200,
+            "msg"=>"图片上传失败!"
         ));
     }
+
+
 }
 
 /**
@@ -438,35 +377,38 @@ function uploadImgAjax()
  */
 function moveImage(){
     $albumid=$_GET['albumid'];
-    $Kodbc = new Kodbc('T_TABLE_PHOTOBASE');
-    if($_GET['imgid']){
-        $imgid=$_GET['imgid'];
-        $Kodbc->updateItem($imgid,array(
-            'albumid'=>$albumid
-        ));
-        echo json_encode(array(
-            'stat'=>200,
-            'msg'=>"{$imgid}移动到{$albumid}",
-        ));
-    }elseif($_GET['imgsrc']){
-        $imgsrc=$_GET['imgsrc'];
-        $Kodbc->insertItem(array(
-            'albumid'=>'0',
-           'imgsrc'=>$imgsrc,
-            'pubdata'=>date('Y-m-d\TH:i'),
-            'remark'=>'from images binding'
-        ));
-        echo json_encode(array(
-            'stat'=>200,
-            'msg'=>"{$imgsrc}绑定到{$albumid}",
-        ));
-    }else{
-        echo json_encode(array(
-            'stat'=>202,
-            'msg'=>"既没有图片ID也没有图片地址"
-        ));
-    }
+//    $Kodbc = new Kodbc('T_TABLE_PHOTOBASE');
+//    if($_GET['imgid']){
+//        $imgid=$_GET['imgid'];
+//        $Kodbc->updateItem($imgid,array(
+//            'albumid'=>$albumid
+//        ));
+//        echo json_encode(array(
+//            'stat'=>200,
+//            'msg'=>"{$imgid}移动到{$albumid}",
+//        ));
+//    }elseif($_GET['imgsrc']){
+//        $imgsrc=$_GET['imgsrc'];
+//        $Kodbc->insertItem(array(
+//            'albumid'=>'0',
+//           'imgsrc'=>$imgsrc,
+//            'pubdata'=>date('Y-m-d\TH:i'),
+//            'remark'=>'from images binding'
+//        ));
+//        echo json_encode(array(
+//            'stat'=>200,
+//            'msg'=>"{$imgsrc}绑定到{$albumid}",
+//        ));
+//    }else{
+//        echo json_encode(array(
+//            'stat'=>202,
+//            'msg'=>"既没有图片ID也没有图片地址"
+//        ));
+//    }
 
+    echo json_encode(array(
+        "msg"=>"moveImage方法重构中..."
+    ));
 }
 
 
@@ -474,39 +416,9 @@ function moveImage(){
  * 物理删除图片
  */
 function removeImage(){
-    $imgsrc = $_GET['imgsrc'];
-    $filename=end(explode('/',$imgsrc));
-    /*新建回收站*/
-    $dashbindir = DUSTBIN_DIR.date('Ymd').'/';
-    if (!file_exists($dashbindir)) {
-        if (mkdir($dashbindir)) {
-            chmod($dashbindir, 0777);
-        } else {
-            echo 'faile to create ' . $dashbindir . 'maybe the path you have no permit!<br>';
-        };
-    }
-
-    $Kodbc = new Kodbc('T_TABLE_PHOTOBASE');
-    if($_GET['imgid']){
-        $imgid=$_GET['imgid'];
-        $Kodbc->delById($imgid);
-    }
-
-    if(rename($imgsrc,$dashbindir.$filename )){
-        echo json_encode(array(
-            'stat'=>200,
-            'msg'=>"{$_GET['imgid']}在数据库中删除，{$filename}移动到服务器回收站",
-        ));
-        return true;
-    }else{
-        echo json_encode(array(
-            'stat'=>200,
-            'msg'=>"数据库删除成功，但服务器无此文件",
-            '$imgsrc'=>$imgsrc,
-            '$dashbindir.$filename'=>$dashbindir.$filename,
-        ));
-        return true;
-    }
+    $imgId = $_POST['imgid']; // 相册id
+    $result = deleteImage($imgId);
+    echo json_encode($result);
 }
 
 
@@ -515,32 +427,30 @@ function removeImage(){
  */
 function createAlbum(){
     try{
+        $album_id = $_POST['albumid'] or null;
+        $album_name = $_POST['albumname'] or null;
+        $group_id = $_POST['groupid'] or null;
+        $album_desc = $_POST['desc'] or null;
+        $album_stat = $_GET['stat'] or null;
 
-        $albumname = $_GET['albumname'];
-        $stat = $_GET['stat'];
-
-        $Kodbc = new Kodbc(DATA_TABLE_DIR.'T_TABLE_PHOTO_ALBUM.xml');
-        if($_GET['albumid']&&$_GET['albumid']!==''){
-            $Kodbc->updateItem($_GET['albumid'],array(
-                'stat'=>$stat,
-                'remark'=>$albumname,
-                'pubdata'=>date('Y-m-d\TH:i')
-            ));
+        $album_info = array(
+            "NAME"=>$album_name,
+            "GROUP"=>$group_id,
+            "DESC"=>$album_desc,
+            "stat"=>$album_stat,
+            );
+        $dao = new photoAlbumDAO();
+        if($album_id){
+            $dao->updateAlbumById($album_id,$album_info);
             echo json_encode(array(
                 'stat'=>200,
-                'msg'=>"《{$albumname}》修改成功",
+                'msg'=>"《{$album_name}》修改成功",
             ));
         }else{
-            $Kodbc->insertItem(array(
-                'stat'=>$stat,
-                'remark'=>$albumname,
-                'editable'=>1,
-                'count'=>0,
-                'pubdata'=>date('Y-m-d\TH:i')
-            ));
+            $dao->addAlbumById($album_info);
             echo json_encode(array(
                 'stat'=>200,
-                'msg'=>"《{$albumname}》创建成功",
+                'msg'=>"《{$album_name}》新增成功",
             ));
         }
     }catch (Exception $e){
@@ -556,22 +466,15 @@ function createAlbum(){
  * 删除相册
  * */
 function delAlbum(){
-    if($_GET['albumid']){
-        $albumid = $_GET['albumid'];
-        $Kodbc = new Kodbc(DATA_TABLE_DIR.'T_TABLE_PHOTO_ALBUM.xml');
-        $item = $Kodbc->getById($albumid);
-        if($item['count']>0){
+    if($_POST['albumid']){
+        $albumid = $_POST['albumid'];
+        $dao = new photoAlbumDAO();
+            $dao->updateAlbumById($albumid,array("IS_VALID"=>"N"));
             echo json_encode(array(
                 'stat'=>200,
-                'msg'=>"相册内有照片，需要先清空相册！",
+                'msg'=>"相册删除成功",
             ));
-        }else{
-            $Kodbc->delById($albumid);
-            echo json_encode(array(
-                'stat'=>200,
-                'msg'=>"{$albumid}:成功删除",
-            ));
-        }
+//        }
     }else{
         echo json_encode(array(
             'stat'=>202,

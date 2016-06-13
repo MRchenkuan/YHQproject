@@ -16,8 +16,9 @@
         'speed': 500,
         'duration': 1000,
         'layers': 2,
-        'decreaseX': 0.4,
-        'decreaseY': 0.4,
+        'decreaseX': 0.15,
+        'decreaseY': 0.15,
+        'offset':.5,
         'width': 0.6,
         'height': 0.85,
         'zindex': 9999,
@@ -52,14 +53,17 @@
                 var rightIndex = ((currentIndex + i + 1) < (divCount - 1)) ? (currentIndex + i) : (currentIndex + i - divCount);
                 var leftDiv = $contentDivs.eq(leftIndex);
                 var rightDiv = $contentDivs.eq(rightIndex);
+                var width = opt.width * frameWidth * (Math.pow(1 - opt.decreaseX, i));
+                var height = opt.height * frameHeight * (Math.pow(1 - opt.decreaseY, i));
+                var top = (1 - opt.height * (Math.pow(1 - opt.decreaseY, i))) * frameHeight / 2;
                 $([leftDiv,rightDiv]).each(function(){
                     this.css({
                         'z-index': opt.zindex - i*1000,// i*1000 是为了解决层差太小导致的闪烁现象
                         'opacity':i<opt.layers?1:0, // 如果当前层级小于最大层级,则隐藏
                         // 当前div的大小和高度
-                        'width': opt.width * frameWidth * (Math.pow(1 - opt.decreaseX, i)),
-                        'height': opt.height * frameHeight * (Math.pow(1 - opt.decreaseY, i)),
-                        'top': (1 - opt.height * (Math.pow(1 - opt.decreaseY, i))) * frameHeight / 2,
+                        'width': width,
+                        'height': height,
+                        'top': top,
                         // 当前div的灰度
                         '-webkit-filter': 'grayscale(100%)',
                         '-moz-filter': 'grayscale(100%)',
@@ -69,25 +73,32 @@
                     });
                 });
                 // 当前div的位置
-                // 按照0.2 的比率递减
-                leftDiv.css({'left': (opt.width/2 - opt.decreaseX * (1 - Math.pow(opt.decreaseX, i))) * frameWidth});
-                rightDiv.css({'left': frameWidth - (opt.width/2 - opt.decreaseX * (1 - Math.pow(opt.decreaseX, i))) * frameWidth - opt.width * frameWidth * (Math.pow(1 - opt.decreaseX, i))});
+                // 按照固定比率递减
+                // leftDiv.css({'left': (opt.width/2 - opt.decreaseX * (1 - Math.pow(opt.decreaseX, i))) * frameWidth});
+                // rightDiv.css({'left': frameWidth - (opt.width/2 - opt.decreaseX * (1 - Math.pow(opt.decreaseX, i))) * frameWidth - opt.width * frameWidth * (Math.pow(1 - opt.decreaseX, i))});
+
+                // 按照左右对齐
+                leftDiv.css({
+                    'left': 0
+                });
+                rightDiv.css({
+                    'left': frameWidth-width
+                });
             }
         }
 
     };
 
     $.fn.buildSlider = function () {
-        frameWidth = $(this).width();
-        frameHeight = $(this).height();
+        var $this =$(this);
+        frameWidth = $this.width();
+        frameHeight = $this.height();
         opt = $.extend(defaults, arguments[0] || '');
-        var frame = this;
-        var $frame = $(frame);
-        $contentDivs = $frame.find('div');
+        $contentDivs = $this.find('div');
         divCount = $contentDivs.length;
         // 框架设置为相对位置,容器为绝对位置
-        $frame.css({
-            'position': 'relative'
+        $this.css({
+            //'position': 'abso'
         });
         $contentDivs.css({
             'position': 'absolute'

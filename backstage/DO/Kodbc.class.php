@@ -11,7 +11,6 @@
  * - item (id必须，其余各式各样的属性都可以，表示字段，建议新增的属性在DTD中声明)
  */
 error_reporting(0);
-require_once($_SERVER['DOCUMENT_ROOT'] . '/backstage/definitions.php');
 class Kodbc{
     function __construct($tableName) {
         $xmlPath = DATA_TABLE_DIR.$tableName."xml";

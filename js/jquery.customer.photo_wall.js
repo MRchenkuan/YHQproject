@@ -1,3 +1,26 @@
+/**
+ * 展示相册的方法
+ */
+;(function($, w){
+    var defaults = {
+            frameSize: {x: 5, y: 3},
+            imgBoxMargin: 5,
+            lineMargin: 5,
+            imagboxbg: './img/ui/stories.png',
+            shieldbg: '#ddd',
+            Closespeed: 400,
+            Openspeed: 1000,
+            frameoverflow: 'visible',
+            loadingimg:'./img/ui/loading.gif',
+            bigimgsize:0.85
+    },method={};
+
+    $.fn.albumDisplay = function(albumId){
+
+    }
+})($, window)
+
+
 //---------实现横向瀑布流插件----------//
 ;(function ($, w) {
     var defaults = {
@@ -98,8 +121,6 @@
                 img.src = opt.imagboxbg; //图片的默认图
 
                 var url = urllist[i];
-                var urlnext = urllist[i + 1] || false;
-                var urlprev = urllist[i - 1] || false;
                 img.setAttribute('data-orgsrc', 'img/' + url); // 原图
                 img.setAttribute('data-src', 'img/thumbs/' + url); // 小图
                 img.style.position = 'absolute';

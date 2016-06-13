@@ -1,7 +1,6 @@
 <?php
 //error_reporting(0);
-require_once($_SERVER['DOCUMENT_ROOT'] . '/backstage/definitions.php');
-require_once($_SERVER['DOCUMENT_ROOT'].'/backstage/DO/DBC.class.php');
+require_once(BACKSTAGE_DIR.'/DO/DBC.class.php');
 /**
  * Created by PhpStorm.
  * User: chenkuan
@@ -13,6 +12,63 @@ class photoAlbumDAO extends DBC{
     public function __construct(){
         return parent:: __construct(get_class($this));
     }
+
+
+    /**
+     * 获取所有相册组信息
+     */
+    public function getAllGroups(){
+        $rs = $this->getResult(__FUNCTION__);
+        $row = $rs->fetchAll(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+    /**
+     * 根据相册ID获取相册照片
+     * @param $albumId
+     * @return array
+     */
+    public function getPhotosByAlbumId($albumId)
+    {
+        $rs = $this->getResult(__FUNCTION__,array('albumId'=>$albumId));
+        $row = $rs->fetchAll(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+    /**
+     * 获取网站封面
+     */
+    public function getCoverList()
+    {
+        $rs = $this->getResult(__FUNCTION__);
+        $row = $rs->fetchAll(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+    /**
+     * 获取groupList
+     */
+    public function getGroupList()
+    {
+        $rs = $this->getResult(__FUNCTION__);
+        $row = $rs->fetchAll(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+    /**
+     * 根据相册id获取相册列表
+     * @param $groupId
+     * @return array
+     */
+    public function getAlbumList($groupId)
+    {
+        $rs = $this->getResult(__FUNCTION__,array('groupId'=>$groupId));
+        $row = $rs->fetchAll(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+
+
 
     /**
      * 根据相册分类查找所有相册
@@ -55,7 +111,7 @@ class photoAlbumDAO extends DBC{
      * @param int $count
      * @return array
      */
-    public function getAllAlbums($count = 100)
+    public function getAllAlbums($count = 1000)
     {
         $rs = $this->getResult(__FUNCTION__,array("count"=>$count));
         $rows = $rs->fetchAll();
@@ -65,15 +121,31 @@ class photoAlbumDAO extends DBC{
     /**
      * 更新相册
      * @param $id
-     * @param $info
-     * @return mixed
+     * @param $information
+     * @return int|PDOStatement
      */
-    public function updateAlbumById($info){
+    public function updateAlbumById($id, $information)
+    {
+        $info = array();
+        foreach($information as $k=> $v ){
+            array_push($info,"`".$k."`"."="."'".$v."'");
+        }
+        $info = implode(",",$info);
+        $rs = $this->getResult(__FUNCTION__,array("id"=>$id,'info'=>$info));
+        return $rs;
+    }
 
+    /**
+     * 新增相册信息
+     * @param $album_info
+     * @return int|PDOStatement
+     */
+    public function addAlbumById($album_info)
+    {
         $colname = array();
         $value = array();
-        foreach($info as $k=>$v ){
-            array_push($colname,$k);
+        foreach($album_info as $k=>$v ){
+            array_push($colname,"`".$k."`");
             array_push($value,"'".$v."'");
         }
         $colname = implode(",",$colname);
@@ -83,18 +155,14 @@ class photoAlbumDAO extends DBC{
     }
 
     /**
-     * 更新相册 - 兼容文件数据库
-     * @param $id
-     * @param $info
+     * 设置图片为封面
+     * @param $photoId
+     * @return array
      */
-    public function updateItem($id, $info){
-        $info['id'] = $id;
-        $this->updateAlbumById($id,$info);
+    public function setCover($photoId)
+    {
+        $rs = $this->getResult(__FUNCTION__,array("photoId"=>$photoId));
+        return $rs;
     }
 
 }
-//
-//$a = new photoAlbumDAO();
-//var_dump($a);
-////var_dump($a->getAllAlbums());
-//$a->updateAlbumById(array("remark"=>"来自php","editable"=>"true","count"=>3));

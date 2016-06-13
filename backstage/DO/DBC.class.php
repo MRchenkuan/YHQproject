@@ -1,10 +1,6 @@
 <?php
 //error_reporting(0);
-
-require_once($_SERVER['DOCUMENT_ROOT'] . '/backstage/definitions.php');
-require_once($_SERVER['DOCUMENT_ROOT'].'/backstage/TOOLS/Config.class.php');
-
-
+require_once(BACKSTAGE_DIR.'/tools/Config.class.php');
 class DBC{
     private $DAO,$SQL,$fuc;
     public function __construct($DAONAME){
@@ -22,6 +18,8 @@ class DBC{
             $this->pdo = new PDO($dsn, $USERNAME, $PASSWORD);
         }catch (Exception $e){
             var_dump($e);
+            echo $e->getTrace();
+
         }
 
 
@@ -40,7 +38,10 @@ class DBC{
         $this->pdo->query('set names utf8;');
         switch(strtolower($type)){
             case 'select':return $this->pdo->query($sql); break;
-            case 'insert':return $this->pdo->exec($sql); break;
+            case 'insert':
+                $this->pdo->exec($sql);
+                return $this->pdo->lastInsertId();
+                break;
             case 'delete':return $this->pdo->exec($sql); break;
             case 'update':return $this->pdo->exec($sql); break;
             default :return $this->pdo->query($sql);break;

@@ -21,3 +21,4 @@ if(!defined(STATIC_DIR))define('STATIC_DIR',BACKSTAGE_DIR."/PUBLIC/");
 if(!defined(DUSTBIN_DIR))define('DUSTBIN_DIR',BACKSTAGE_DIR."/dustbin/");
 if(!defined(NEWS_FILE_DIR))define('NEWS_FILE_DIR',BACKSTAGE_DIR."/news/");
 if(!defined(IMAGE_BED_DIR))define('IMAGE_BED_DIR',BACKSTAGE_DIR."/image/");
+if(!defined(TOOLS_PATH))define('TOOLS_PATH',BACKSTAGE_DIR."/tools/");

@@ -70,7 +70,7 @@ include_once "functions.php";
                 } ?>
             </ul>
         </div>
-        <div id="albums" style="border:1px solid grey">
+        <div id="albums">
 
         </div>
     </div>
@@ -278,8 +278,13 @@ $(document).ready(function () {
 
             // 每张净尺寸相册的位置
             var albumPosition = {
-                top: albumFullPosition.top + (albumFullHeight-albumHeight)/2,
-                left: albumFullPosition.left + (albumFullWidth-albumWidth)/2
+                // 上下左右边距相等
+//                top: albumFullPosition.top + (albumFullHeight-albumHeight)/2,
+//                left: albumFullPosition.left + (albumFullWidth-albumWidth)/2
+
+                // 上左顶格 3px 表示与副菜单对齐,副菜单有3px的padding
+                top: albumFullPosition.top + 3,
+                left: albumFullPosition.left + 3
             };
 
             // 布局

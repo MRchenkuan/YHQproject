@@ -9,7 +9,7 @@
     }
 })(jQuery);
 
-//---------实现自定义slider插件-------//
+//---------实现首页slider插件-------//
 (function (w, $) {
     var defaults = {
         'auto': false,
@@ -129,5 +129,52 @@
 
     $.fn.sliderauto = function () {
 
+    }
+})(window, jQuery);
+
+//---------实现介绍页小slider插件-------//
+(function (w,$) {
+    var defaults = {
+        autoplay:true
+    };
+    var timer_1;
+
+    $.fn.buildSmallSlider = function () {
+        var $this = $(this);
+        var frameHeight = $this.height();
+        var frameWidth = $this.width();
+        var pices = $this.find("div");
+        var nowPice = 0;
+
+        // 框架样式
+        $this.css({
+            overflow:"hidden"
+        });
+
+        // 轮播图样式
+        pices.each(function(index,ele){
+            $(ele).css({
+                width:frameWidth,
+                height:frameHeight,
+                position:"absolute",
+                left:index * frameWidth,
+                top:0
+            });
+        });
+
+        // 自动播放
+        timer_1 = setInterval(function () {
+            if(!defaults.autoplay){
+                clearInterval(timer_1);
+                return;
+            }
+            nowPice++;
+            if(nowPice>=pices.length){
+                nowPice=0;
+            }
+            $this.animate({
+                scrollLeft:nowPice*frameWidth
+            },500);
+        },2000)
     }
 })(window, jQuery);

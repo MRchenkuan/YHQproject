@@ -280,6 +280,9 @@ a {
 
 .contact_blocks{
     float: left;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 .contact_blocks .lines{
     display: block;
@@ -297,5 +300,17 @@ a {
     position: relative;
 }
 
+#small_slider{
+    height: 50%;
+    width:100%;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+#small_slider>div{
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
 
 

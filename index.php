@@ -79,7 +79,7 @@ include_once "functions.php";
     <!--面板 contact-->
     <div id="contact" class="contentBoard">
         <div class="frame">
-            <img class="contact_blocks" src="./img/ui/avt.jpg">
+            <div class="contact_blocks" style="background-image: url('./img/ui/avt.jpg')"></div>
             <div class="contact_blocks">
                 <span class="lines">我们是一群有爱的摄影师</span>
                 <span class="lines">我们拍摄不同败材的照片</span>
@@ -98,7 +98,17 @@ include_once "functions.php";
                 <span class="lines">We are tooking forward to meeting you and your story</span>
             </div>
             <div class="contact_blocks">
-                fdsadfaf
+                <div id="small_slider">
+                    <?php
+                        try{
+                            foreach($coverList as $item){
+                                echo "<div style=\"background-image: url('".$item['PATH']."')\"></div>";
+                            }
+                        }catch (Exception $e){
+                            var_dump($e->getTrace());
+                        }
+                    ?>
+                </div>
             </div>
         </div>
     </div>
@@ -174,6 +184,7 @@ $(document).ready(function () {
         if (!id || id === '')return;
         var targetElem = $("#" + id);
         var currentElem = $('.currentboard');
+
         if (currentElem.is(":animated"))return;
         //  滑出板块
         currentElem.moveDownOut(500).queue(function(){
@@ -193,7 +204,8 @@ $(document).ready(function () {
                 var frameHeight =$this.height();
                 var frameWidth =$this.width();
                 var aspectRatio = frameWidth/frameHeight;
-
+                var small_slider = $("#small_slider");
+                var $all_blocks = $('.contact_blocks');
                 // 修正宽高
                 if(aspectRatio>1){
                     // 外围框架
@@ -204,7 +216,6 @@ $(document).ready(function () {
                     });
 
                     // 三区块
-                    var $all_blocks = $('.contact_blocks');
                     $all_blocks.css({
                         width:"33%",
                         height:"100%",
@@ -217,13 +228,38 @@ $(document).ready(function () {
                         $this.css({
                             height:$all_blocks.height()/15
                         })
-                    })
+                    });
                 }else{
                     // 竖向样式
-                    $('.contact_blocks').css({
-                        width:"100%"
+
+                    // 三区块
+                    $all_blocks.css({
+                        width:"100%",
+                        padding:0,
+                        marginBottom:10
                     });
+
+                    // 第一块
+                    $all_blocks.eq(0).css({
+                        height:$(this).width()*3/4
+                    });
+
+
+                    // lines样式
+                    $('.lines').css({
+                        padding:0
+                    });
+
+                    // slider样式重置
+                    small_slider.css({
+                        width:"100%",
+                        height:$(this).width()/2
+                    })
+
                 }
+
+                // 构建个人介绍页的silder
+                small_slider.buildSmallSlider();
 
             }
         }).dequeue();
@@ -342,7 +378,7 @@ $(document).ready(function () {
     // 防止浮层起泡
     $photosNav.delegate(".cover,.albumRemark","mouseover",function(e){
         e.stopPropagation();
-    })
+    });
 
 });
 

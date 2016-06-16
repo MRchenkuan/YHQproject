@@ -109,24 +109,6 @@ include_once "functions.php";
                         }
                     ?>
                 </div>
-<!--                <table id="qrcodes">-->
-<!--                    <tr>-->
-<!--                        <td><img class="qrcode" src="img/ui/qrcode1.png"></td>-->
-<!--                        <td>-->
-<!--                            <span class="link">wechart:terryyhq</span>-->
-<!--                            <span class="link">QQ:444010958</span>-->
-<!--                            <span class="link">Weibo:weibo.com/terryyhq</span>-->
-<!--                        </td>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <td><img class="qrcode" src="img/ui/qrcode2.png"></td>-->
-<!--                        <td>-->
-<!--                            <span class="link">Email:444010958@qq.com</spa>-->
-<!--                            <span class="link">Instagram:terryyhq</span>-->
-<!--                            <span class="link">ADD:长沙市阳光100国际新城一期3-23栋301室</span>-->
-<!--                        </td>-->
-<!--                    </tr>-->
-<!--                </table>-->
                 <div id="qrcodes">
                     <div class="one">
                         <img class="qrcode" src="img/ui/qrcode1.png">

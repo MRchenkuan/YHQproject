@@ -261,7 +261,7 @@ a {
     background: #2d2d2d;
     opacity: .7;
     position:absolute;
-    height: 0;
+    /*height: 0;*/
     width: 100%;
     bottom: 0;
     left: 0;
@@ -270,12 +270,14 @@ a {
     text-overflow: ellipsis;
     text-align: center;
     line-height: 1.5;
+    height:20% ;
 
 }
 
 .album:hover .albumRemark{
     transition:all .1s ease;
-    height:20% ;
+    height:0 ;
+    /*opacity: 0;*/
 }
 
 .contact_blocks{

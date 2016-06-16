@@ -123,7 +123,13 @@
                 $albumInfoBar.remove();
                 $navFrame.append($groupNav); // 加入导航条
                 $navFrame.show(); // 由于外部退出,所以需要重新进入
-                $groupNav.fadeIn(200);
+                $groupNav.fadeIn(200).dequeue();
+                $groupNav.css({// 下翻动画
+                    top:-10,
+                    position:"relative"
+                }).animate({
+                    top:0
+                })
             });
         };
 

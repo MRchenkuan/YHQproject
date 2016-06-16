@@ -313,4 +313,38 @@ a {
     background-repeat: no-repeat;
 }
 
+#qrcodes{
+    height: 50%;
+    width:100%;
+}
 
+.one,.tow{
+    height: 50%;
+    width: 100%;
+}
+.one{
+    margin-bottom: 10px;
+}
+
+.qrcode{
+    height: 100%;
+    float: left;
+}
+
+.links{
+    margin-left:20px;
+    height: 100%;
+    float: left;
+    width:auto;
+}
+
+.links .link{
+    height: 33.3%;
+    width: 100%;
+    font-size: 12px;
+    float: left;
+    clear: both;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

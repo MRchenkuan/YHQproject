@@ -109,6 +109,41 @@ include_once "functions.php";
                         }
                     ?>
                 </div>
+<!--                <table id="qrcodes">-->
+<!--                    <tr>-->
+<!--                        <td><img class="qrcode" src="img/ui/qrcode1.png"></td>-->
+<!--                        <td>-->
+<!--                            <span class="link">wechart:terryyhq</span>-->
+<!--                            <span class="link">QQ:444010958</span>-->
+<!--                            <span class="link">Weibo:weibo.com/terryyhq</span>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                        <td><img class="qrcode" src="img/ui/qrcode2.png"></td>-->
+<!--                        <td>-->
+<!--                            <span class="link">Email:444010958@qq.com</spa>-->
+<!--                            <span class="link">Instagram:terryyhq</span>-->
+<!--                            <span class="link">ADD:长沙市阳光100国际新城一期3-23栋301室</span>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                </table>-->
+                <div id="qrcodes">
+                    <div class="one">
+                        <img class="qrcode" src="img/ui/qrcode1.png">
+                        <div class="links">
+                            <span class="link">wechart:terryyhq</span>
+                            <span class="link">QQ:444010958</span>
+                            <span class="link">Weibo:weibo.com/terryyhq</span>
+                        </div>
+                    </div>
+                    <div class="tow">
+                        <img class="qrcode" src="img/ui/qrcode2.png">
+                        <div class="links">
+                            <span class="link">Email:444010958@qq.com</span>
+                            <span class="link">Instagram:terryyhq</span>
+                            <span class="link">ADD:长沙市阳光100国际新城一期3-23栋301室</span>
+                        </div>
+                </div>
             </div>
         </div>
     </div>
@@ -206,8 +241,11 @@ $(document).ready(function () {
                 var aspectRatio = frameWidth/frameHeight;
                 var small_slider = $("#small_slider");
                 var $all_blocks = $('.contact_blocks');
+                var $qrcodes = $("#qrcodes");
+                var $qrcode = $(".qrcode");
                 // 修正宽高
                 if(aspectRatio>1){
+                    // 横向样式
                     // 外围框架
                     $this.css({
                         height  :   $this.parent().height() *.6,
@@ -229,6 +267,15 @@ $(document).ready(function () {
                             height:$all_blocks.height()/15
                         })
                     });
+
+                    // 右下二维码文案部分宽度设置
+                    $(".one,.tow").css({
+                        height:$qrcodes.height()/2 - 10
+                    });
+                    $(".links").css({
+                        width:$qrcodes.width() - $qrcodes.height()/2 - 20,
+                        lineHeight:$(".link").height() + "px"
+                    })
                 }else{
                     // 竖向样式
 
@@ -245,17 +292,30 @@ $(document).ready(function () {
                     });
 
 
-                    // lines样式
+                    // 中间区块样式
                     $('.lines').css({
-                        padding:0
+                        padding:0,
+                        fontSize:"1em"
                     });
 
                     // slider样式重置
                     small_slider.css({
                         width:"100%",
                         height:$(this).width()/2
-                    })
+                    });
 
+                    // 右下二维码文案部分宽度设置
+                    $qrcode.css({
+                        width:"100%"
+                    });
+                    $(".links").css({
+                        width:"100%",
+                        padding:0,
+                        margin:"10px 0"
+                    }).find(".link").css({
+                        fontSize:"1em",
+                        whiteSpace:"normal"
+                    });
                 }
 
                 // 构建个人介绍页的silder

@@ -46,7 +46,12 @@ $musicList = getFileListByType('./media',array("mp3"));
 <div id="boards">
     <!--面板 home-->
     <div id="home" class="contentBoard currentboard">
-        <div id="slider" style="position:relative;width: 100%;height: 100%">
+        <ul class="welcome">
+            <li>Sincerity</li>
+            <li>Memory</li>
+            <li>External</li>
+        </ul>
+        <div id="slider" style="position:relative;width: 100%;height: 80%">
             <!--封面-->
             <?php
             $coverList = getCoverList();
@@ -61,6 +66,11 @@ $musicList = getFileListByType('./media',array("mp3"));
                 var_dump($e->getTrace());
             } ?>
         </div>
+        <ul class="welcome">
+            <li>真挚</li>
+            <li>回忆</li>
+            <li>永恒</li>
+        </ul>
     </div>
 
     <!--面板 相册-->
@@ -177,7 +187,7 @@ $(document).ready(function () {
     // 首页出现
     $('.contentBoard').eq(0).moveDownIn(1000).queue(function(){
         var $slider = $('#slider');
-        $slider.height("100%");
+//        $slider.height("100%");
         var slider = $slider.buildSlider();
         setInterval(function () {
             slider.slidernext()

@@ -280,6 +280,29 @@ a {
     /*opacity: 0;*/
 }
 
+.welcome{
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    width: auto;
+    display: inline-table;
+}
+
+.welcome li{
+    float: left;
+    padding: 0 10px;
+    list-style: none;
+}
+
+.welcome li:nth-child(2){
+    border-left:1px solid grey;
+    border-right:1px solid grey;
+}
+
+#home{
+    text-align: center;
+}
+
 .contact_blocks{
     float: left;
     background-repeat: no-repeat;

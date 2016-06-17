@@ -437,14 +437,20 @@ function soundPlay(src) {
 // 音乐播放列表
 function musicInit() {
     var index = 0;
+    var errcount=0;
     var $music = $("#music");
     $music.attr("src","media/"+musicList[0]);
     $music.bind("ended",function () {
+        if(index>=musicList.length)index = -1;
         var musicName = musicList[++index];
         $(this).attr("src","media/"+musicName);
+        errcount=0;
     }).bind("error",function () {
+        if(errcount>=musicList.length) return;
+        if(index>=musicList.length)index = -1;
         var musicName = musicList[++index];
         $(this).attr("src","media/"+musicName);
+        errcount++;
     })
 }
 

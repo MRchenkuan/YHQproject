@@ -49,3 +49,23 @@ function getAlbumList($groupId){
     $data = $data->getAlbumList($groupId);
     return $data;
 }
+
+/**
+ * 获取目录下所有的文件列表
+ * @param $path :路径
+ * @param $type :类型列表
+ * @return array
+ */
+function getFileListByType($path,$type)
+{
+    $files = scandir($path);
+    $arr = array();
+    foreach ($files as $key => $value) {
+        $fileEnd = substr($value, strrpos($value, '.') + 1);
+        if($value!='.' && $value!='..'){
+            if(in_array($fileEnd, $type))
+            array_push($arr, $value);
+        }
+    }
+    return $arr ;
+}

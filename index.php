@@ -20,9 +20,9 @@ include_once "functions.php";
 </style>
 <body>
 <!--音乐部分-->
-<audio src="media/Laura_Story_Grace.mp3" hidden="true" autoplay="true" loop="true"></audio>
-<audio src="media/783.wav" hidden="true"></audio>
-<audio src="media/1374.wav" hidden="true"></audio>
+<audio id="music" src="media/Laura_Story_Grace.mp3" hidden autoplay></audio>
+<audio src="media/783.wav" hidden></audio>
+<audio src="media/1374.wav" hidden></audio>
 <!--导航部分-->
 <img src="img/ui/logo.png" id="logo">
 <div id="nav" style="overflow: visible">
@@ -157,6 +157,7 @@ include_once "functions.php";
         echo json_encode($allGroup);
         ?>
     ;
+    var musicList = <?php echo json_encode(getFileListByType('./media',array("mp3")));?>
 
 //文档加载入口
 $(document).ready(function () {
@@ -422,6 +423,7 @@ $(document).ready(function () {
         e.stopPropagation();
     });
 
+    musicInit();
 });
 
 // 声音播放
@@ -431,6 +433,21 @@ function soundPlay(src) {
     sound.play();
     sound.remove();
 }
+
+// 音乐播放列表
+function musicInit() {
+    var index = 0;
+    var $music = $("#music");
+    $music.attr("src","media/"+musicList[0]);
+    $music.bind("ended",function () {
+        var musicName = musicList[++index];
+        $(this).attr("src","media/"+musicName);
+    }).bind("error",function () {
+        var musicName = musicList[++index];
+        $(this).attr("src","media/"+musicName);
+    })
+}
+
 
 
 //定义左右动画

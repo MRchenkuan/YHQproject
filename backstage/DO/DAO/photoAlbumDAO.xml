@@ -23,7 +23,8 @@
     <select id="getCoverList" >
         select
         LINK,
-        (select p.PATH from T_PHOTO p where p.id=c.cover) PATH
+        (select p.PATH from T_PHOTO p where p.id=c.cover) PATH,
+        (select p.THUMB from T_PHOTO p where p.id=c.cover) THUMB
         from T_COVER c order by `ORDER`;
     </select>
 

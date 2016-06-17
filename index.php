@@ -1,5 +1,6 @@
 <?php
 include_once "functions.php";
+$musicList = getFileListByType('./media',array("mp3"));
 ?>
 
 <!DOCTYPE html>
@@ -21,6 +22,11 @@ include_once "functions.php";
 <body>
 <!--音乐部分-->
 <audio id="music" src="media/Laura_Story_Grace.mp3" hidden autoplay></audio>
+<?php
+    foreach($musicList as $music){
+        echo "<audio src=\"media/{$music}\" hidden></audio>";
+    }
+?>
 <audio src="media/783.wav" hidden></audio>
 <audio src="media/1374.wav" hidden></audio>
 <!--导航部分-->
@@ -46,6 +52,9 @@ include_once "functions.php";
             $coverList = getCoverList();
             try{
                 foreach($coverList as $item){
+                    if($item['THUMB']){
+                        $item['PATH'] = $item['THUMB'];
+                    }
                     echo "<div class=\"sliderImg\" data-rdrt=\"".$item['LINK']."\" style=\"background-image: url('".$item['PATH']."');\"></div>";
                 }
             }catch (Exception $e){
@@ -157,7 +166,7 @@ include_once "functions.php";
         echo json_encode($allGroup);
         ?>
     ;
-    var musicList = <?php echo json_encode(getFileListByType('./media',array("mp3")));?>
+    var musicList = <?php echo json_encode($musicList);?>
 
 //文档加载入口
 $(document).ready(function () {

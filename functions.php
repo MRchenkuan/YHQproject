@@ -58,14 +58,16 @@ function getAlbumList($groupId){
  */
 function getFileListByType($path,$type)
 {
-    $files = scandir($path);
     $arr = array();
-    foreach ($files as $key => $value) {
-        $fileEnd = substr($value, strrpos($value, '.') + 1);
-        if($value!='.' && $value!='..'){
-            if(in_array($fileEnd, $type))
-            array_push($arr, $value);
+    try{
+        $files = scandir($path);
+        foreach ($files as $key => $value) {
+            $fileEnd = substr($value, strrpos($value, '.') + 1);
+            if($value!='.' && $value!='..'){
+                if(in_array($fileEnd, $type))
+                    array_push($arr, $value);
+            }
         }
-    }
+    }catch (Exception $ignore){}
     return $arr ;
 }

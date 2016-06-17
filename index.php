@@ -405,16 +405,16 @@ $(document).ready(function () {
         soundPlay("media/1374.wav")
     });
 
-    // 相册鼠标移入的声音
-    $albumGroupFrame.delegate(".album","mouseover",function(e){
-        e.preventDefault();
-        soundPlay("media/783.wav")
-    });
+//    // 相册鼠标移入的声音
+//    $albumGroupFrame.delegate(".album","mouseover",function(e){
+//        e.preventDefault();
+//        soundPlay("media/783.wav")
+//    });
 
-    // 相片鼠标移入的声音
-    $albumGroupFrame.delegate(".thumbBox","mouseover",function(e){
-        soundPlay("media/783.wav")
-    });
+//    // 相片鼠标移入的声音
+//    $albumGroupFrame.delegate(".thumbBox","mouseover",function(e){
+//        soundPlay("media/783.wav")
+//    });
 
     // 二级菜单鼠标移入的声音
     $photosNav.delegate(".groups,.backOff","mouseover",function(e){
@@ -422,10 +422,10 @@ $(document).ready(function () {
         soundPlay("media/783.wav")
     });
 
-    // 二级菜单鼠标移入的声音
-    $photosNav.delegate(".groups,.backOff","click",function(){
-        soundPlay("media/783.wav")
-    });
+//    // 二级菜单鼠标移入的声音
+//    $photosNav.delegate(".groups,.backOff","click",function(){
+//        soundPlay("media/783.wav")
+//    });
 
     // 防止浮层起泡
     $photosNav.delegate(".cover,.albumRemark","mouseover",function(e){

@@ -9,7 +9,7 @@
  * @param int $proportion
  * @return bool
  */
-function img2thumb($src_img, $dst_img, $width = 192, $height = 0, $cut = 0, $proportion = 0)
+function img2thumb($src_img, $dst_img, $width = 400, $height = 0, $cut = 0, $proportion = 0)
 {
     if(!is_file($src_img))
     {

@@ -373,3 +373,22 @@ a {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+.btn_turn{
+    height:80px;
+    line-height: 80px;
+    text-align: center;
+    font-size: 24px;
+    color: grey;
+    opacity: .5;
+    width:40px;
+    border: 1px solid white;
+    border-radius: 10px;
+    position: absolute;
+    cursor: pointer;
+    transition: all .5s ease;
+}
+.btn_turn:hover{
+    opacity: 1;
+    border: 1px solid grey;
+}

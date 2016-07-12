@@ -92,6 +92,8 @@ $musicList = getFileListByType('./media',array("mp3"));
         <div id="albums">
 
         </div>
+        <div id="leftward" class="btn_turn"></div>
+        <div id="rightward" class="btn_turn"></div>
     </div>
 
 
@@ -228,19 +230,48 @@ $(document).ready(function () {
             currentElem.removeClass("currentboard");
             targetElem.moveDownIn(1000);
             targetElem.addClass("currentboard");
+
+            var $this = $('#contact').find('.frame');
+            var frameHeight =$this.height();
+            var frameWidth =$this.width();
+            var aspectRatio = frameWidth/frameHeight;
+
             // 展开相册组时,默认点击第一个相册
             if(id =='photos'){
+
+                var $photos = $("#photos");
                 if($albumGroupFrame.children().length<=0){
                     $('.groups').eq(0).click();
                 }
+
+//                if(aspectRatio>1){
+//                    $("#leftward,#rightward").show();
+                    // 配置左右箭头
+                    var $turn_left = $("#leftward");
+                    var $turn_right = $("#rightward");
+
+                    $turn_left.css({
+                        left:20,
+                        top:$photos.height()/2-80/2
+                    }).text("<").click(function(){
+                        turnPage("left")
+                    });
+
+                    $turn_right.css({
+                        right:20,
+                        top:$photos.height()/2-80/2
+                    }).text(">").click(function(){
+                        turnPage("right")
+                    });
+
+//                }else{
+//                    $("#leftward,#rightward").hide();
+//                }
             }
 
             // 展开联系人页面时,默认修改样式
             if(id =='contact'){
-                var $this = $('#contact').find('.frame');
-                var frameHeight =$this.height();
-                var frameWidth =$this.width();
-                var aspectRatio = frameWidth/frameHeight;
+
                 var small_slider = $("#small_slider");
                 var $all_blocks = $('.contact_blocks');
                 var $qrcodes = $("#qrcodes");
@@ -277,7 +308,8 @@ $(document).ready(function () {
                     $(".links").css({
                         width:$qrcodes.width() - $qrcodes.height()/2 - 20,
                         lineHeight:$(".link").height() + "px"
-                    })
+                    });
+
                 }else{
                     // 竖向样式
 
@@ -326,6 +358,7 @@ $(document).ready(function () {
             }
         }).dequeue();
     });
+
 
     // 计算相册图片大小和位置
     $.fn.resizeAlbumsSize = function(){
@@ -376,11 +409,6 @@ $(document).ready(function () {
 
             // 每张净尺寸相册的位置
             var albumPosition = {
-                // 上下左右边距相等
-//                top: albumFullPosition.top + (albumFullHeight-albumHeight)/2,
-//                left: albumFullPosition.left + (albumFullWidth-albumWidth)/2
-
-                // 上左顶格 3px 表示与副菜单对齐,副菜单有3px的padding
                 top: albumFullPosition.top + 3,
                 left: albumFullPosition.left + 3
             };
@@ -415,27 +443,11 @@ $(document).ready(function () {
         soundPlay("media/1374.wav")
     });
 
-//    // 相册鼠标移入的声音
-//    $albumGroupFrame.delegate(".album","mouseover",function(e){
-//        e.preventDefault();
-//        soundPlay("media/783.wav")
-//    });
-
-//    // 相片鼠标移入的声音
-//    $albumGroupFrame.delegate(".thumbBox","mouseover",function(e){
-//        soundPlay("media/783.wav")
-//    });
-
     // 二级菜单鼠标移入的声音
     $photosNav.delegate(".groups,.backOff","mouseover",function(e){
         e.stopPropagation();
         soundPlay("media/783.wav")
     });
-
-//    // 二级菜单鼠标移入的声音
-//    $photosNav.delegate(".groups,.backOff","click",function(){
-//        soundPlay("media/783.wav")
-//    });
 
     // 防止浮层起泡
     $photosNav.delegate(".cover,.albumRemark","mouseover",function(e){
@@ -470,10 +482,34 @@ function musicInit() {
         var musicName = musicList[++index];
         $(this).attr("src","media/"+musicName);
         errcount++;
-    })
+      })
 }
 
+// 翻页方法
+function turnPage (face){
+    var $target;
+    if(window.scrollActive == "photos"){
+        $target = $("#photos_frame");
+    }else{
+        $target = $("#albums");
+    }
 
+    console.log($target);
+
+    if($target.is(":animated"))return;
+
+    if(face=="left") {
+        $target.animate({
+            scrollLeft:"-="+$target.width() *.8
+        },500,"swing")
+    }
+
+    if(face=="right"){
+        $target.animate({
+            scrollLeft:"+="+$target.width() *.8
+        },500,"swing")
+    }
+}
 
 //定义左右动画
 </script>

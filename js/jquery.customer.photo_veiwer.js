@@ -7,8 +7,11 @@
     var $navFrame = $("#photos_nav");
     var $groupNav = $navFrame.find(">ul");
     var cached = {};
+
     // 创建图片浏览器
     var photoViewer = new PhotoViewer();
+
+    // 相册浏览器
     $.fn.createPhotoViewer = function(){
         var $this = $(this);
         var albumId = $this.attr("data-id");
@@ -39,7 +42,7 @@
         var coverEle = document.createElement("div");
         var frame = document.createElement("div");
         var $coverEle = $(coverEle);
-        var $frame = $(frame);
+        var $frame = $(frame);frame.id="photos_frame";
         var backBtn = document.createElement("span");
         var $backBtn = $(backBtn);
         var albumInfoBar = document.createElement("span");
@@ -92,6 +95,9 @@
             });
             // 切换为相册模式
             self.switchToAlbumInfo();
+
+            // 设置滚动窗口
+            window.scrollActive = "photos";
         };
 
         // 隐藏遮罩方法
@@ -104,6 +110,9 @@
             });
             // 切换回相册组模式
             self.switchToGroupNav();
+
+            // 设置滚动窗口
+            window.scrollActive = "albums";
         };
 
         // loading图开关
@@ -336,10 +345,12 @@
         // 图片序号
         $number_index.css({
             position:"absolute",
-            top:0,
-            left:0,
-            fontSize:"24px",
-            color:"#fff"
+            right:10,
+            bottom:10,
+            fontSize:"16px",
+            color:"#fff",
+            fontStyle:"italic",
+            opacity:".5"
         });
 
         // 注册点击事件
@@ -382,8 +393,8 @@
                 border:"none",
                 backgroundImage:"url('"+_image.src+"')",
                 backgroundRepeat:"no-repeat",
-                backgroundPosition:"center",
-                backgroundSize:"contain"
+                backgroundPosition:"center"
+                //backgroundSize:"contain"
             });
 
             // 固定图片位置
@@ -412,10 +423,9 @@
 
             // 初始图片框大小
             $image.css({
-                width:"60%",
-                height:"60%",
-                position:"absolute",
-                border:"1px solid #fff"
+                width:"50%",
+                height:"50%",
+                position:"absolute"
             });
 
             // 初始图片框位置
@@ -434,7 +444,7 @@
             var name = photoObj["name"];
             var url = photoObj["PATH"];
             _image.src = url;
-            $number_index.text(nowIndex);
+            $number_index.text((1+nowIndex)+"/"+photos.length);
         };
 
         // 展示下一张
@@ -446,7 +456,7 @@
             var desc = photoObj["DESC"];
             var name = photoObj["name"];
             var url = photoObj["PATH"];
-            $number_index.text(nowIndex);
+            $number_index.text((nowIndex+1)+"/"+photoObjs.length);
             // 清空当前图
             $image.css({
                 backgroundImage:"none"
@@ -465,7 +475,7 @@
             var desc = photoObj["DESC"];
             var name = photoObj["name"];
             var url = photoObj["PATH"];
-            $number_index.text(nowIndex);
+            $number_index.text((1+nowIndex)+"/"+photoObjs.length);
             // 清空当前图
             $image.css({
                 backgroundImage:"none"

@@ -100,7 +100,20 @@ $musicList = getFileListByType('./media',array("mp3"));
     <!--面板 contact-->
     <div id="contact" class="contentBoard">
         <div class="frame">
-            <div class="contact_blocks" style="background-image: url('./img/ui/avt.jpg')"></div>
+            <div class="contact_blocks">
+                <div id="small_slider">
+                    <?php
+                    try{
+                        foreach($coverList as $item){
+                            echo "<div style=\"background-image: url('".$item['PATH']."')\"></div>";
+                        }
+                    }catch (Exception $e){
+                        var_dump($e->getTrace());
+                    }
+                    ?>
+                </div>
+
+            </div>
             <div class="contact_blocks">
                 <span class="lines">我们是一群有爱的摄影师</span>
                 <span class="lines">我们拍摄不同败材的照片</span>
@@ -118,37 +131,30 @@ $musicList = getFileListByType('./media',array("mp3"));
                 <span class="lines">a kind of emotion and a boundless story</span>
                 <span class="lines">We are tooking forward to meeting you and your story</span>
             </div>
-            <div class="contact_blocks">
-                <div id="small_slider">
-                    <?php
-                        try{
-                            foreach($coverList as $item){
-                                echo "<div style=\"background-image: url('".$item['PATH']."')\"></div>";
-                            }
-                        }catch (Exception $e){
-                            var_dump($e->getTrace());
-                        }
-                    ?>
-                </div>
+            <div class="contact_blocks" style="background-image: url('./img/ui/avt.jpg')">
                 <div id="qrcodes">
                     <div class="one">
                         <img class="qrcode" src="img/ui/qrcode1.png">
+                        <img class="qrcode" src="img/ui/qrcode2.png">
                         <div class="links">
                             <span class="link">wechart:terryyhq</span>
                             <span class="link">QQ:444010958</span>
                             <span class="link">Weibo:weibo.com/terryyhq</span>
+
                         </div>
                     </div>
-                    <div class="tow">
-                        <img class="qrcode" src="img/ui/qrcode2.png">
-                        <div class="links">
-                            <span class="link">Email:444010958@qq.com</span>
-                            <span class="link">Instagram:terryyhq</span>
-                            <span class="link">ADD:长沙市阳光100国际新城一期3-23栋301室</span>
-                        </div>
+<!--                    <div class="tow">-->
+<!--                        <img class="qrcode" src="img/ui/qrcode2.png">-->
+<!--                        <div class="links">-->
+<!--                            <span class="link">Email:444010958@qq.com</span>-->
+<!--                            <span class="link">Instagram:terryyhq</span>-->
+<!--                            <span class="link">ADD:长沙市阳光100国际新城一期3-23栋301室</span>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
             </div>
-        </div>
+
+
     </div>
 
 </div>
@@ -302,11 +308,14 @@ $(document).ready(function () {
                     });
 
                     // 右下二维码文案部分宽度设置
-                    $(".one,.tow").css({
-                        height:$qrcodes.height()/2 - 10
-                    });
+//                    $(".one,.tow").css({
+//                        height:$qrcodes.height()/2 - 10
+//                    });
                     $(".links").css({
-                        width:$qrcodes.width() - $qrcodes.height()/2 - 20,
+                        height:$(".qrcode").height()
+//                        width:$qrcodes.width() - $qrcodes.height()/2 - 20,
+//                        lineHeight:$(".links").height()/3 + "px"
+                    }).css({
                         lineHeight:$(".link").height() + "px"
                     });
 
@@ -335,12 +344,19 @@ $(document).ready(function () {
                     // slider样式重置
                     small_slider.css({
                         width:"100%",
-                        height:$(this).width()/2
+//                        height:$(this).width()/2
+                        height:"100%"
                     });
 
                     // 右下二维码文案部分宽度设置
+                    $qrcodes.css({
+                        position:"relative",
+                        bottom:"auto",
+                        left:"auto"
+                    });
                     $qrcode.css({
-                        width:"100%"
+                        width:"48%"
+
                     });
                     $(".links").css({
                         width:"100%",

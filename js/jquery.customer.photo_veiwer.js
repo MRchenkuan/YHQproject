@@ -393,8 +393,8 @@
                 border:"none",
                 backgroundImage:"url('"+_image.src+"')",
                 backgroundRepeat:"no-repeat",
-                backgroundPosition:"center"
-                //backgroundSize:"contain"
+                backgroundPosition:"center",
+                backgroundSize:"contain"
             });
 
             // 固定图片位置

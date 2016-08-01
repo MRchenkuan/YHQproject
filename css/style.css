@@ -74,7 +74,7 @@ a {
     bottom:0;
 }
 #logo{
-    height:10%;
+    height:13%;
     position:absolute;
     margin:20px 0 0 80px;
     opacity:.65;
@@ -107,7 +107,7 @@ a {
     box-shadow: 0 0 15px #808080;
     border-radius: 3px;
     transition:all 1s ease;
-    background-size:cover;
+    background-size:100% 100%;
     background-position: center;
 }
 

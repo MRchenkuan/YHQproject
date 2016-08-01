@@ -57,9 +57,9 @@ $musicList = getFileListByType('./media',array("mp3"));
             $coverList = getCoverList();
             try{
                 foreach($coverList as $item){
-                    if($item['THUMB']){
-                        $item['PATH'] = $item['THUMB'];
-                    }
+//                    if($item['THUMB']){
+//                        $item['PATH'] = $item['THUMB'];
+//                    }
                     echo "<div class=\"sliderImg\" data-rdrt=\"".$item['LINK']."\" style=\"background-image: url('".$item['PATH']."');\"></div>";
                 }
             }catch (Exception $e){

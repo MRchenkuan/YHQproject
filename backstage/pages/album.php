@@ -218,7 +218,6 @@ if($id=="0")$thisalbum['NAME']="未绑定相册";
                 </div>
                 <div class="col-xs-6 col-md-10" style="overflow: hidden;position: relative;float: none;margin: 0 auto">
                     <div id="imguploadpreview" data-selected="0">
-                        ----->
                     </div>
                     <a href="#" class="uploadbtn">
                         <input id="imageupload" type="file" multiple="multiple" value="选择图片" accept="image/*" style="opacity:0;width:100%;height:100%;position: absolute;top:0;left: 0;">
@@ -241,23 +240,31 @@ if($id=="0")$thisalbum['NAME']="未绑定相册";
                 var albumid = savebtn.getAttribute('data-albumid');
 
                 uploadbtn.addEventListener('change',function(){
+                    var limit = 1000000;
                     var self = this;
                     var files = self.files;
                     console.log(files);
                     for(var i=0;i<files.length;i++){
-                        var eachfile = self.files[i];
+                        var file = self.files[i];
                         /*上传多张图片*/
                         var reader = new FileReader();
                         console.log("ok in event");
                         reader.onload = function(){
                             var img = document.createElement("img");
-                            console.log("ok in each load");
+                            var div = document.createElement("div");
                             img.src = this.result;
-                            uploadprv.appendChild(img);
+                            div.appendChild(img);
+                            uploadprv.appendChild(div);
+                            if(this.isOverSize){
+                                div.style.opacity=".5";
+                            }
                             /*设置为保存标记*/
                             uploadprv.setAttribute('data-selected','1');
                         };
-                        reader.readAsDataURL(eachfile);
+                        if(file.size > limit){// less than 1,000,000
+                            reader.isOverSize = true;
+                        }
+                        reader.readAsDataURL(file);
                     }
                 });
 

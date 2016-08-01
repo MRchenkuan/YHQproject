@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../bootstrap/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="../PUBLIC/css/css.css">
 
     <script src="../PUBLIC/javascripts/jquery.min.js"></script>
     <script src="../bootstrap/bootstrap.min.js"></script>

@@ -110,7 +110,6 @@
         function uploadImg(imgBox) {
             imgBox.setMsg("上传中...");
             var src = imgBox.getSrc();
-            console.log(src)
             $.ajax({
                 url:'Data.php?id=uploadImgAjax',
                 type:'POST',
@@ -135,7 +134,6 @@
                     }
 
                     if(faileCount<=0){
-                        alert("上传完成");
                         location.reload();
                     }else{
                         console.log(imagesPrevBox.successCount+"张上传完成,"+faileCount+"张上传失败,请检查")

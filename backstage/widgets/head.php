@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../PUBLIC/css/css.css">
 
     <script src="../PUBLIC/javascripts/jquery.min.js"></script>
+    <script src="../PUBLIC/javascripts/jquery.customer.image_upload.js"></script>
     <script src="../bootstrap/bootstrap.min.js"></script>
     <style>
         .input-group{margin: 10px auto;}

@@ -6,8 +6,8 @@
      * @param albumId
     * @param saveBtn selector
      */
-    $.fn.imageUploads = function (albumId,saveBtn) {
-        var limit = 1.5*1000*1000; // 1.5 MB
+    $.fn.imageUploads = function (saveBtn) {
+        var limit = 1.5*1000*1000; // limit 1.5 MB
         var $weigetBox = this;
         $weigetBox.successCount = 0;
 
@@ -86,29 +86,8 @@
            }
         });
 
-        /**
-         * 上传事件
-         */
-        var $saveBtn = $(saveBtn);
-        $saveBtn.click(function () {
-
-            if($imagesPrevBox.attr('data-selected')<=0){
-                alert("没有上传任何图片");
-                return;
-            }
-
-            var imgBoxes = imagesPrevBox.childNodes;
-            Array.prototype.some.call(imgBoxes,function (imgBox) {
-                imgBox.setMsg("准备上传");
-                $saveBtn.attr('disabled','disabled');
-                $saveBtn.text('上传中请稍等……');
-                uploadImg(imgBox);
-            });
-        });
-
         // 单图上传方法
-        function uploadImg(imgBox) {
-            imgBox.setMsg("上传中...");
+        function uploadImg(imgBox,albumId) {
             var src = imgBox.getSrc();
             $.ajax({
                 url:'Data.php?id=uploadImgAjax',
@@ -143,6 +122,7 @@
                     imgBox.setMsg(data.statusText);
                 }
             });
+            imgBox.setMsg("上传中...");
         }
 
         // 图片盒子
@@ -229,7 +209,7 @@
             // 获取图片数据
             div.getSrc = function () {
                 return img.src;
-            }
+            };
 
             return div
         }
@@ -270,6 +250,31 @@
 
             return frame;
         }
+        /**
+         * 上传方法
+         */
+        this.upload = function () {
+            if($imagesPrevBox.attr('data-selected')<=0){
+                alert("没有上传任何图片");
+                return;
+            }
 
+            var imgBoxes = imagesPrevBox.childNodes;
+            Array.prototype.some.call(imgBoxes,function (imgBox) {
+                imgBox.setMsg("准备上传");
+                uploadImg(imgBox);
+            });
+            return true
+        };
+
+        /**
+         * 获取整体进度
+         * @returns {number}
+         */
+        this.getProgress = function () {
+            return 0
+        };
+
+        return this;
     }
 })();

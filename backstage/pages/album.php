@@ -232,8 +232,21 @@ if($id=="0")$thisalbum['NAME']="未绑定相册";
 
             <script>
                 var albumid = document.getElementById("saveimg").getAttribute('data-albumid');
-                if(albumid)
-                $("#imageUpload").imageUploads(albumid,"#saveimg");
+                if(albumid){
+                    var widget = $("#imageUpload").imageUploads();
+                    document.querySelector("#saveimg").addEventListener("click",function () {
+                        $(this).attr('disabled','disabled');
+                        $(this).text('上传中请稍等……');
+                        widget.upload(albumid);
+                    });
+
+                    var timer = setInterval(function () {
+                        if(widget.getProgress()==100){
+                            clearInterval(timer);
+                            location.reload();
+                        }
+                    },500);
+                }
             </script>
         </div>
     </div>

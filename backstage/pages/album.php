@@ -216,11 +216,9 @@ if($id=="0")$thisalbum['NAME']="未绑定相册";
                     <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-link"></span></span>
                     <input type="text" class="form-control" placeholder="如果不上传，则在此处填写图片url" id="onlineurl" aria-describedby="basic-addon1">
                 </div>
-                <div class="col-xs-6 col-md-10" style="position: relative;float: none;margin: 0 auto">
-                    <a href="#" class="thumbnail">
-                        <img id="imguploadpreview" name="forupload" data-selected="0" src="../PUBLIC/UI/area-add.png" alt="添加图片">
-                    </a>
-                    <input id="imageupload" type="file" value="选择图片" accept="image/*" style="opacity:0;width:100%;height:100%;position: absolute;top:0;left: 0;">
+                <div style="overflow: hidden;position: relative;float: none;margin: 0 auto">
+                    <div id="imageUpload" data-selected="0">
+                    </div>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-tags"></span></span>
@@ -233,66 +231,22 @@ if($id=="0")$thisalbum['NAME']="未绑定相册";
             </div>
 
             <script>
-                var uploadbtn = document.getElementById('imageupload');
-                var uploadprv = document.getElementById('imguploadpreview');
-                var savebtn = document.getElementById('saveimg');
-                var albumid = savebtn.getAttribute('data-albumid');
-
-                uploadbtn.addEventListener('click',function(){
-                    var self = this;
-                    var reader = new FileReader();
-                    reader.onload = function(){
-                        uploadprv.src = this.result;
-                        /*设置为保存标记*/
-                        uploadprv.setAttribute('data-selected','1');
-                    };
-                    uploadbtn.addEventListener('change',function(){
-                        /*进而可考虑上传多张图片*/
-                        reader.readAsDataURL(self.files[0]);
+                var albumid = document.getElementById("saveimg").getAttribute('data-albumid');
+                if(albumid){
+                    var widget = $("#imageUpload").imageUploads();
+                    document.querySelector("#saveimg").addEventListener("click",function () {
+                        $(this).attr('disabled','disabled');
+                        $(this).text('上传中请稍等……');
+                        widget.upload(albumid);
                     });
-                });
 
-
-
-                savebtn.addEventListener('click',function(){
-                    var imgs = document.getElementsByName('forupload');
-                    var remark = document.getElementById('remark').value;
-                    var onlineurl = document.getElementById('onlineurl').value;
-                    Array.prototype.some.call(imgs,function(it,id,ar){
-                        if(it.getAttribute('data-selected')!=0||onlineurl){
-                            savebtn.setAttribute('disabled','disabled');
-                            savebtn.innerHTML = '上传中请稍等……';
-                            $.ajax({
-                                url:'Data.php?id=uploadImgAjax',
-                                type:'POST',
-                                data:{
-                                    'imgDataString':it.src||'',
-                                    'albumid':albumid,
-                                    'remark':remark,
-                                    'onlineurl':onlineurl
-                                },
-                                success:function(data){
-                                    data = JSON.parse(data);
-                                    alert(data.msg);
-                                    if (data.stat == 200) {
-                                        location.reload();
-                                    } else{
-                                        savebtn.removeAttribute('disabled');
-                                        savebtn.innerHTML = '上传出错，请调试';
-                                    }
-                                },
-                                error:function(data){
-                                    data = JSON.parse(data);
-                                    console.log(data);
-                                    savebtn.removeAttribute('disabled');
-                                    savebtn.innerHTML = 'data.msg';
-                                }
-                            });
-                        }else{
-                            alert('图片没上传或者没有填写网络图片地址！');
+                    var timer = setInterval(function () {
+                        if(widget.getProgress()==100){
+                            clearInterval(timer);
+                            location.reload();
                         }
-                    });
-                })
+                    },500);
+                }
             </script>
         </div>
     </div>

@@ -1,0 +1,21 @@
+#imguploadpreview{
+    overflow: hidden;
+}
+#imguploadpreview div{
+    width:20%;float: left;
+    margin: 5px;
+    border:1px solid grey;
+}
+#imguploadpreview div img{
+    width: 100%;
+}
+.uploadbtn{
+    background-size: cover;
+    background-position: center;
+    border:1px solid grey;
+    width:20%;position:relative;
+    float:left;
+    border-radius: 10px;
+    height: 100px;
+    background-image: url('../../PUBLIC/UI/area-add.png');
+}

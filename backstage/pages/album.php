@@ -219,9 +219,9 @@ if($id=="0")$thisalbum['NAME']="未绑定相册";
                 <div class="col-xs-6 col-md-10" style="overflow: hidden;position: relative;float: none;margin: 0 auto">
                     <div id="imguploadpreview" data-selected="0">
                     </div>
-<!--                    <a href="#" class="uploadbtn">-->
-<!--                        <input id="imageupload" type="file" multiple="multiple" value="选择图片" accept="image/jpg,image/jpeg,image/png" style="opacity:0;width:100%;height:100%;position: absolute;top:0;left: 0;">-->
-<!--                    </a>-->
+                    <a href="#" class="uploadbtn">
+                        <input id="imageupload" type="file" multiple="multiple" value="选择图片" accept="image/*" style="opacity:0;width:100%;height:100%;position: absolute;top:0;left: 0;">
+                    </a>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-tags"></span></span>

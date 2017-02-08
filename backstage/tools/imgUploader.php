@@ -58,7 +58,7 @@ function uploadImage($arr){
         $dao = new photosDAO();
         if (preg_match('/^(data:(\w+)\/(\w+);base64,)/', $imgdatastring, $result)){
             $type = $result[3]; //  图片类型
-            $filename = time().'.'.$type; // 图片文件名
+            $filename = microtime(true).".".substr("000".rand(0,999),-3,3).'.'.$type; // 图片文件名
             $innerFileUrl = $uploaddir. $filename; // 图片服务器地址
             $innerThumbsUrl = $thumbsDir.$filename; // 图片缩略图服务器地址
             $outHostUrl = $imgHostUrl.$relative_path.$filename; // 图片外部访问地址
